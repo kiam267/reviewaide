@@ -6,7 +6,7 @@ import {
   publicRoutes,
 } from './Routes/allRoutes';
 import { Route, Routes } from 'react-router-dom';
-import VerticalLayout from './Layouts/VerticalLayout';
+import VerticalLayout from './Layouts/DashboardLayout';
 import './assets/scss/theme.scss';
 import NonAuthLayout from './Layouts/NonLayout';
 import AuthProtected from './Routes/DashboardAuthProtected';

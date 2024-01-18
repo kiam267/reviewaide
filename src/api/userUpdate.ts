@@ -11,5 +11,5 @@ export const userUpdate = (userUpdate: UserUpdate) => {
   const token: string | null = localStorage.getItem('UserToken');  
   const { email, password, date } = userUpdate;
   
-  return axios.put(USER_UPDATE, { password, email, date, token });
+  return axios.put(USER_UPDATE, { password, email, token });
 };

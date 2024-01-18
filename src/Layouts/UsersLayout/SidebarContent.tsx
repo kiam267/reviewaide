@@ -153,6 +153,12 @@ const SidebarContent = (props: any) => {
                 <span>{props.t('Customer Support')}</span>
               </Link>
             </li>
+            <li>
+              <Link to="/user/profile">
+                <i className="bx bxs-user"></i>
+                <span>{props.t('Update Profile')}</span>
+              </Link>
+            </li>
             {/* <li>
               <Link to="/auth/allUsers">
                 <i className="bx bxs-user-detail"></i>

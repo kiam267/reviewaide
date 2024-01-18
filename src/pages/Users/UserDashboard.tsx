@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import dateFormat from 'dateformat';
-// Redux
-import { Link, useNavigate, Navigate } from 'react-router-dom';
 import {
   Row,
   Col,
@@ -19,37 +17,31 @@ import {
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
-import { useUserAuth } from 'contexts/UserAuth';
-
-// import images
-import profile from '../../assets/images/profile-img.png';
-import logo from '../../assets/images/logo.svg';
-import lightlogo from '../../assets/images/logo-light.svg';
 
 //import thunk
 import {
-  loginuser,
+
   resetLoginMsgFlag,
   socialLogin,
 } from 'slices/auth/login/thunk';
 
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
-import { userUpdate } from 'api/userUpdate';
-import { USER_UPDATE } from '@helpers/url_helper';
-
+import { userSchedule } from 'api/usersSediul';
 
 const UserDashboard = (props: any) => {
-  const { storeToken, isLoggedIn } = useUserAuth();
-  const nevigation = useNavigate();
-  const [show, setShow] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [adminMessage, setAdminMessage] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
   const now = new Date();
   useEffect(() => {
-  setDate(dateFormat(now, 'dddd, mmmm dS, yyyy'))
-  }, []); 
+    setDate(dateFormat(now, 'dddd, mmmm dS, yyyy'));
+    setTimeout(() => {
+      setErrorMessage(null);
+      setAdminMessage(null);
+    }, 3000);
+  }, []);
   const dispatch: any = useDispatch();
 
   //meta title
@@ -71,27 +63,25 @@ const UserDashboard = (props: any) => {
 
     initialValues: {
       email: '',
-      password: '',
+      phone: '',
       date: date,
     },
     validationSchema: Yup.object({
-      email: Yup.string().required('Please Enter Your email'),
-      password: Yup.string().required('Please Enter Your Password'),
+      email: Yup.string().required('Please Enter Your Email'),
+      phone: Yup.string().required('Please Enter Your Phone Number'),
       date: Yup.string().required('Please Enter Your Date'),
     }),
     onSubmit: (values: any) => {
-      userUpdate(values).then(() => {
-        console.log('ok');
-        
+      userSchedule(values).then(res => {
+        if (res.msg.name === 'error') {
+          return setErrorMessage(res.msg.msg);
+        }
+        return setAdminMessage(res.msg.msg);
       });
     },
   });
 
 
-  
-  const signIn = (type: any) => {
-    dispatch(socialLogin(type, props.router.navigate));
-  };
 
   useEffect(() => {
     if (error) {
@@ -138,7 +128,7 @@ const UserDashboard = (props: any) => {
                         <Input
                           name="email"
                           className="form-control"
-                          placeholder="Enter email"
+                          placeholder="Enter Your Email"
                           type="text"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
@@ -155,37 +145,26 @@ const UserDashboard = (props: any) => {
                           </FormFeedback>
                         ) : null}
                       </div>
-
                       <div className="mb-3">
-                        <Label className="form-label">Password</Label>
-                        <div className="input-group auth-pass-inputgroup">
-                          <Input
-                            name="password"
-                            value={validation.values.password || ''}
-                            type={show ? 'text' : 'password'}
-                            placeholder="Enter Password"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            invalid={
-                              validation.touched.password &&
-                              validation.errors.password
-                                ? true
-                                : false
-                            }
-                          />
-                          <button
-                            onClick={() => setShow(!show)}
-                            className="btn btn-light "
-                            type="button"
-                            id="password-addon"
-                          >
-                            <i className="mdi mdi-eye-outline"></i>
-                          </button>
-                        </div>
-                        {validation.touched.password &&
-                        validation.errors.password ? (
+                        {error ? <Alert color="danger">{error}</Alert> : null}
+                        <Label className="form-label">Phone</Label>
+                        <Input
+                          name="phone"
+                          className="form-control"
+                          placeholder="Enter Your Phone Number"
+                          type="text"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.phone || ''}
+                          invalid={
+                            validation.touched.phone && validation.errors.phone
+                              ? true
+                              : false
+                          }
+                        />
+                        {validation.touched.phone && validation.errors.phone ? (
                           <FormFeedback type="invalid">
-                            {validation.errors.password}
+                            {validation.errors.phone}
                           </FormFeedback>
                         ) : null}
                       </div>
@@ -230,7 +209,7 @@ const UserDashboard = (props: any) => {
           </Row>
           <div className="mt-5 text-center">
             <p>
-              © {new Date().getFullYear()} Skote. Crafted with{' '}
+              © {2024} Docapt. Crafted with{' '}
               <i className="mdi mdi-heart text-danger" /> by Copmpany
             </p>
           </div>

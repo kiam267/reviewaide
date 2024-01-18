@@ -17,6 +17,7 @@ import Pages404 from '../pages/pages-404';
 import WelComeback from 'pages/Dashboard/WelComeback';
 import Allusers from 'pages/Dashboard/Allusers';
 import CustomerSupport from 'pages/Users/CustomerSupport';
+import UpdateProfile from 'pages/Users/UpdateProfile';
 
 const authProtectedRoutes = [
   { path: '/auth/dashboard', component: <Dashboard /> },
@@ -47,6 +48,7 @@ const publicRoutes = [
 const UserProtectedRouter = [
   { path: '/user', component: <UserDashboard /> },
   { path: '/user/customer_support', component: <CustomerSupport /> },
+  { path: '/user/profile', component: <UpdateProfile /> },
   {
     path: '/',
     exact: true,
