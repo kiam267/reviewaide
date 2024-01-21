@@ -8,6 +8,5 @@ interface Admin {
 
 export const login = (admin: Admin) => {
   const { email, password } = admin;
-  const isAdmin = false;
-  return axios.post(ADMIN_LOGIN, { password, email, isAdmin });
+  return axios.post(ADMIN_LOGIN, { password, email});
 };

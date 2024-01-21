@@ -12,10 +12,12 @@ import NonAuthLayout from './Layouts/NonLayout';
 import AuthProtected from './Routes/DashboardAuthProtected';
 import UserAuthProtected from 'Routes/UserAuthProtected';
 import UsersLayout from 'Layouts/UsersLayout';
+import Test from 'Test';
 
 function App() {
   return (
     <React.Fragment>
+      {/* <Test/> */}
       <Routes>
         {publicRoutes.map((route, idx) => (
           <Route
@@ -52,6 +54,7 @@ function App() {
           />
         ))}
       </Routes>
+
     </React.Fragment>
   );
 }

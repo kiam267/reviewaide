@@ -20,6 +20,7 @@ export const CREATE_USERS = SERVER_API + '/api/users/create';
 export const USER_LOGIN = SERVER_API + '/api/users/login';
 export const USER_UPDATE = SERVER_API + '/api/users/update';
 export const USER_SCHEDULE = SERVER_API + '/api/users/schedule';
+export const ADMIN_GET = SERVER_API + '/api';
 
 
 //REGISTER
