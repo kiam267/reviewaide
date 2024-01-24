@@ -54,7 +54,6 @@ function App() {
           />
         ))}
       </Routes>
-
     </React.Fragment>
   );
 }

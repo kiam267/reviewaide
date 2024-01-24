@@ -18,6 +18,7 @@ import WelComeback from 'pages/Dashboard/WelComeback';
 import Allusers from 'pages/Dashboard/Allusers';
 import CustomerSupport from 'pages/Users/CustomerSupport';
 import UpdateProfile from 'pages/Users/UpdateProfile';
+import Review from 'pages/Review';
 
 const authProtectedRoutes = [
   { path: '/auth/dashboard', component: <Dashboard /> },
@@ -40,6 +41,7 @@ const publicRoutes = [
   { path: '/auth/login', component: <Login /> },
   { path: '/logout', component: <Logout /> },
   { path: '/forgot-password', component: <ForgotPassword /> },
+  { path: '/review/:clientId', component: <Review /> },
 
   //User Public Router
   { path: '/login', component: <UserLogin /> },
