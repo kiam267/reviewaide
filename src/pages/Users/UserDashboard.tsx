@@ -78,9 +78,9 @@ const UserDashboard = (props: any) => {
     },
     validationSchema: Yup.object({
       username: Yup.string().required('Please Enter Your Patient Name '),
-      email: Yup.string().required('Please Enter Your Patient Email'),
-      phone: Yup.string().required('Please Enter Your Patient Number'),
-      date: Yup.string().required('Please Enter Your Patient Date'),
+      email: Yup.string().email().required('Please Enter Your Patient Email'),
+      phone: Yup.number().required('Please Enter Your Patient Number'),
+      date: Yup.date().required('Please Enter Your Patient Date'),
     }),
     onSubmit: (values: any) => {
       clientVisitor(values, sendMethod).then(res => {
