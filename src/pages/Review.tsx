@@ -17,7 +17,7 @@ import { Rating } from 'react-simple-star-rating';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { getReview, privateReview } from 'api/clientVisitor';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, Link } from 'react-router-dom';
 const Review = () => {
   //meta title
   document.title = 'Rating | Skote - React Admin & Dashboard Template';
@@ -123,7 +123,8 @@ const Review = () => {
                             Please Share Your Review On This Site.
                           </h4>
                           <div className="mt-3">
-                            <button
+                            <Link
+                              to="https://g.page/r/CSdkl6PngXjUEB0/review"
                               className="btn btn-primary d-block m-auto w-75"
                               type="submit"
                             >
@@ -131,7 +132,7 @@ const Review = () => {
                                 className="bx bxl-google"
                                 style={{ fontSize: '40px' }}
                               ></i>
-                            </button>
+                            </Link>
                           </div>
                           <div className="mt-3">
                             <button
