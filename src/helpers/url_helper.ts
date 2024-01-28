@@ -2,7 +2,7 @@
 
 // Server Start
 
-const REACT_APP_SERVER_API = 'http://localhost:8080/'
+const REACT_APP_SERVER_API = 'https://docapt.com/';
 const SERVER_API = REACT_APP_SERVER_API; 
 export const ADMIN_REGISTER = SERVER_API + 'api/auth/register';
 export const ADMIN_LOGIN = SERVER_API + 'api/auth/login';
@@ -14,7 +14,7 @@ export const ADMIN_GET = SERVER_API + 'api';
 export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
 
 
-export const LINK = 'http://localhost:3000/review';
+export const LINK = 'https://docapt.com/review';
 
 
 //REGISTER
