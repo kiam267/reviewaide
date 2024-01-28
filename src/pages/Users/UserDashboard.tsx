@@ -80,7 +80,9 @@ const UserDashboard = (props: any) => {
       username: Yup.string().required('Please Enter Your Patient Name '),
       email: Yup.string().email().required('Please Enter Your Patient Email'),
       phone: Yup.number().required('Please Enter Your Patient Number'),
-      date: Yup.date().required('Please Enter Your Patient Date'),
+      date: Yup.string().required(
+        'Please Enter Your Patient Date'
+      ),
     }),
     onSubmit: (values: any) => {
       clientVisitor(values, sendMethod).then(res => {
