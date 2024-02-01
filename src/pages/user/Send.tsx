@@ -157,7 +157,7 @@ const UserDashboard = (props: any) => {
   }, []);
   useEffect(() => {
     allSendData().then(res => {
-      setSuccessSendData(res.reverse());
+      setSuccessSendData(res.reverse()); 
     });
   }, []);
  var ssm = successSendData.sort(function (a, b) {
