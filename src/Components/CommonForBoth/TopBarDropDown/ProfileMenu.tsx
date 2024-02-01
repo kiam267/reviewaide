@@ -1,47 +1,54 @@
-import React, { useState, useEffect } from "react";
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
-
+import React, { useState, useEffect } from 'react';
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from 'reactstrap';
+import { Avatar, Badge } from 'antd';
 //i18n
-import { withTranslation } from "react-i18next";
+import { withTranslation } from 'react-i18next';
 // Redux
-import { Link } from "react-router-dom";
-import withRouter from "../../Common/withRouter";
+import { Link } from 'react-router-dom';
+import withRouter from '../../Common/withRouter';
 import { createSelector } from 'reselect';
 
 // users
-import user1 from "../../../assets/images/users/avatar-1.jpg";
+import user1 from '../../../assets/images/users/avatar-1.jpg';
 
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
+import { log } from 'console';
 
 const ProfileMenu = (props: any) => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false);
 
-  const [username, setUsername] = useState("Admin");
+  const [username, setUsername] = useState('Admin');
 
   const selectProfileProperties = createSelector(
-    (state: any) => state.Profile,
+    (state: any) => state.Avater,
     (profile) => ({
-      user: profile.user,
+      name: profile.name,
     })
   );
 
-  const { user } = useSelector(selectProfileProperties);
+  // const { user } = useSelector(selectProfileProperties);
+  const {name} = useSelector(selectProfileProperties);
 
-
-  useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-        const obj = JSON.parse(localStorage.getItem("authUser") || "");
-        setUsername(obj.displayName);
-      } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
-      ) {
-        setUsername(user?.username);
-      }
-    }
-  }, [user]);
+  
+  // useEffect(() => {
+  //   if (localStorage.getItem("authUser")) {
+  //     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
+  //       const obj = JSON.parse(localStorage.getItem("authUser") || "");
+  //       setUsername(obj.displayName);
+  //     } else if (
+  //       process.env.REACT_APP_DEFAULTAUTH === "fake" ||
+  //       process.env.REACT_APP_DEFAULTAUTH === "jwt"
+  //     ) {
+  //       setUsername(user?.username);
+  //     }
+  //   }
+  // }, [user]);
 
   return (
     <React.Fragment>
@@ -55,37 +62,35 @@ const ProfileMenu = (props: any) => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          <img
-            className="rounded-circle header-profile-user"
-            src={user1}
-            alt="Header Avatar"
-          />
-          <span className="d-none d-xl-inline-block ms-2 me-1">{username || "admin"}</span>
+          <Avatar   size="default">
+            {name}
+          </Avatar>
+          <span className="d-none d-xl-inline-block ms-2 me-1">
+            {username || 'admin'}
+          </span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">
-          <DropdownItem tag="a" href={process.env.PUBLIC_URL + "/profile"}>
-            {" "}
+          <DropdownItem tag="a" href="/user/profile">
             <i className="bx bx-user font-size-16 align-middle me-1" />
-            {props.t("Profile")}{" "}
+            {props.t('Profile')}
           </DropdownItem>
-          <DropdownItem tag="a" href={process.env.PUBLIC_URL + "/crypto-wallet"}>
-            <i className="bx bx-wallet font-size-16 align-middle me-1" />
-            {props.t("My Wallet")}
+
+          <DropdownItem tag="a" href={'/user/customer_support'}>
+            <i className="bx bx-support font-size-16 align-middle me-1" />
+            {props.t('Support')}{' '}
+            <Badge style={{ background: '#d9d9d9' }} count="BETA" />
           </DropdownItem>
-          <DropdownItem tag="a" href="#">
-            <span className="badge bg-success float-end">11</span>
-            <i className="bx bx-wrench font-size-16 align-middle me-1" />
-            {props.t("Settings")}
-          </DropdownItem>
-          <DropdownItem tag="a" href={process.env.PUBLIC_URL + "/auth-lock-screen"}>
+          <DropdownItem tag="a" href={'/user/profile'}>
             <i className="bx bx-lock-open font-size-16 align-middle me-1" />
-            {props.t("Lock screen")}
+            {props.t('Lock screen')}
+            <Badge style={{ background: '#d9d9d9' }} count="BETA" />
           </DropdownItem>
+
           <div className="dropdown-divider" />
           <Link to="/logout" className="dropdown-item">
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger" />
-            <span>{props.t("Logout")}</span>
+            <span>{props.t('Logout')}</span>
           </Link>
         </DropdownMenu>
       </Dropdown>

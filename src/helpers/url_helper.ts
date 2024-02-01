@@ -2,14 +2,16 @@
 
 // Server Start
 
-const REACT_APP_SERVER_API = 'https://docapt.com/';
+ const REACT_APP_SERVER_API = 'https://docapt.com/';
 const SERVER_API = REACT_APP_SERVER_API; 
 export const ADMIN_REGISTER = SERVER_API + 'api/auth/register';
 export const ADMIN_LOGIN = SERVER_API + 'api/auth/login';
 export const CREATE_USERS = SERVER_API + 'api/users/create';
+export const GET_USERS = SERVER_API + 'api/users/users';
 export const USER_LOGIN = SERVER_API + 'api/users/login';
 export const USER_UPDATE = SERVER_API + 'api/users/update';
 export const CLIENT_VISITOR = SERVER_API + 'api/client/';
+export const CLIENT_VISITOR_GET = SERVER_API + 'api/client/review';
 export const ADMIN_GET = SERVER_API + 'api';
 export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
 
@@ -86,7 +88,7 @@ export const UPDATE_TASKS = "/update/task";
 export const DELETE_TASKS = "/delete/task";
 
 //CONTACTS
-export const GET_USERS = "/apps/users";
+// export const GET_USERS = "/apps/users";
 export const ADD_NEW_USERS = "/apps/users";
 export const UPDATE_USERS = "/apps/users";
 export const DELETE_USERS = "/delete/users/";

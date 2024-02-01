@@ -1,24 +1,22 @@
 import { Navigate } from 'react-router-dom';
-import Dashboard from '../pages/Dashboard';
+import Dashboard from '../pages/admin';
 
 // Auth
-import Login from 'pages/Authentication/login';
-import Logout from 'pages/Authentication/Logout';
-import UserProfile from 'pages/Authentication/user-profile';
-import ForgotPassword from 'pages/Authentication/ForgotPassword';
-import SignUp from 'pages/Authentication/Register';
-import Email from 'pages/Dashboard/Email';
-import PrivateReview from 'pages/Dashboard/PrivateReview';
-import PublicReview from 'pages/Dashboard/PublicReview';
-import CreateUsers from 'pages/Dashboard/CreateUsers';
-import UserLogin from 'pages/Authentication/userLogin';
-import UserDashboard from 'pages/Users/UserDashboard';
+import Login from 'pages/auth/login';
+import Logout from 'pages/auth/Logout';
+import ForgotPassword from 'pages/auth/ForgotPassword';
+import SignUp from 'pages/auth/Register';
+import Email from 'pages/admin/Email';
+import PrivateReview from 'pages/review/PrivateReview';
+import PublicReview from 'pages/review/PublicReview';
+import CreateUsers from 'pages/admin/CreateUsers';
+import UserLogin from 'pages/auth/userLogin';
 import Pages404 from '../pages/pages-404';
-import WelComeback from 'pages/Dashboard/WelComeback';
-import Allusers from 'pages/Dashboard/Allusers';
-import CustomerSupport from 'pages/Users/CustomerSupport';
-import UpdateProfile from 'pages/Users/UpdateProfile';
-import Review from 'pages/Review';
+import Allusers from 'pages/admin/Allusers';
+import CustomerSupport from 'pages/user/CustomerSupport';
+import Review from 'pages/review/Review';
+
+import {Dashboard as userDashboard, Profile, Send, Chat, TeamWork} from 'pages/user'
 
 const authProtectedRoutes = [
   { path: '/auth/dashboard', component: <Dashboard /> },
@@ -42,19 +40,19 @@ const publicRoutes = [
   { path: '/logout', component: <Logout /> },
   { path: '/forgot-password', component: <ForgotPassword /> },
   { path: '/review/:clientId', component: <Review /> },
+  // { path: '/review', component: <Review /> },
 
   //User Public Router
   { path: '/login', component: <UserLogin /> },
   { path: '*', component: <Pages404 /> },
 ];
 const UserProtectedRouter = [
-  { path: '/user', component: <UserDashboard /> },
-  { path: '/user/customer_support', component: <CustomerSupport /> },
-  { path: '/user/profile', component: <UpdateProfile /> },
-  {
-    path: '/',
-    exact: true,
-    component: <Navigate to="/login" />,
-  },
+  { path: '/user', component: userDashboard },
+  { path: '/user/send', component: Send },
+  { path: '/user/chat', component: Chat },
+  { path: '/user/teamwork', component: TeamWork },
+  { path: '/user/private', component: PrivateReview },
+  { path: '/user/customer_support', component: CustomerSupport },
+  { path: '/user/profile', component: Profile },
 ];
 export { authProtectedRoutes, publicRoutes, UserProtectedRouter };

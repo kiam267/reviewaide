@@ -5,8 +5,10 @@ const AuthProtected = (props) => {
   if (!localStorage.getItem('adToken')) {
     return <Navigate to={{ pathname: '/auth/login' }} />;
   }
-  return (<React.Fragment>
+  return (
+    <React.Fragment>
     {props.children}
+
   </React.Fragment>);
 };
 
