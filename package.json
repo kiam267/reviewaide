@@ -85,6 +85,7 @@
     "react-number-format": "^5.2.1",
     "react-optimized-image": "^0.4.1",
     "react-perfect-scrollbar": "^1.5.8",
+    "react-phone-number-input": "^3.3.9",
     "react-rangeslider": "^2.2.0",
     "react-redux": "^9.0.1",
     "react-responsive-carousel": "^3.2.23",

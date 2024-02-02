@@ -48,6 +48,8 @@ import {
   saveArrayToLocalStorage,
 } from '../../helpers/localstorage';
 import { use } from 'i18next';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
 
 const UserDashboard = (props: any) => {
   const [date, setDate] = useState<string | null>(null);
@@ -62,6 +64,7 @@ const UserDashboard = (props: any) => {
   const [buttonloading, setButtonLoading] = useState(false);
   const [method, setMethod] = useState('email');
   const [successSendData, setSuccessSendData] = useState([]);
+  const [value, setValue] = useState();
   const miniMessage = (type, content) => {
     messageApi.open({
       type: type,
@@ -122,7 +125,6 @@ const UserDashboard = (props: any) => {
     initialValues: {
       username: '',
       email: '',
-      phone: '',
       date: date,
     },
     validationSchema: Yup.object({
@@ -130,11 +132,11 @@ const UserDashboard = (props: any) => {
         .required('Please Enter Your Patient Name ')
         .max(10),
       email: Yup.string().email().required('Please Enter Your Patient Email'),
-      phone: Yup.number().required('Please Enter Your Patient Number'),
       date: Yup.string().required('Please Enter Your Patient Date'),
     }),
     onSubmit: (values: any, { resetForm }) => {
-      pushDataToArray(getLocalSendData, values);
+      const data = { ...values, phone: value };
+      pushDataToArray(getLocalSendData, data);
       saveArrayToLocalStorage('proccess_send_data', getLocalSendData);
       setProcessData(getLocalSendData);
       miniMessage('success', 'success added');
@@ -157,14 +159,14 @@ const UserDashboard = (props: any) => {
   }, []);
   useEffect(() => {
     allSendData().then(res => {
-      setSuccessSendData(res.reverse()); 
+      setSuccessSendData(res.reverse());
     });
   }, []);
- var ssm = successSendData.sort(function (a, b) {
-   return b - a;
- });
+  var ssm = successSendData.sort(function (a, b) {
+    return b - a;
+  });
   console.log(ssm);
-  
+
   return (
     <CustomeContainer>
       {contextHolder}
@@ -241,25 +243,16 @@ const UserDashboard = (props: any) => {
           <div className="mb-3">
             {error ? <Alert color="danger">{error}</Alert> : null}
             <Label className="form-label">Phone</Label>
-            <Input
+            <PhoneInput
+              style={{
+                padding: '10px',
+              }}
               name="phone"
-              className="form-control"
-              placeholder="Enter Your Patient Phone Number"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.phone || ''}
-              invalid={
-                validation.touched.phone && validation.errors.phone
-                  ? true
-                  : false
-              }
+              international
+              defaultCountry="US"
+              value={value}
+              onChange={(value?: undefined) => setValue(value) as void}
             />
-            {validation.touched.phone && validation.errors.phone ? (
-              <FormFeedback type="invalid">
-                {validation.errors.phone}
-              </FormFeedback>
-            ) : null}
           </div>
 
           <div className="mb-3">
