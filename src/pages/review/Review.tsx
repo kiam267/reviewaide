@@ -23,7 +23,7 @@ const Review = () => {
   document.title = 'Rating | Skote - React Admin & Dashboard Template';
   const [textareabadge, settextareabadge] = useState(0) as any[];
   const [textcount, settextcount] = useState(0);
-  const [rating, setRating] = useState<number>(1);
+  const [rating, setRating] = useState<number>(4);
   const [show, setshow] = useState<boolean>();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [adminMessage, setAdminMessage] = useState<string | null>(null);
