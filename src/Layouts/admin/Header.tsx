@@ -19,7 +19,7 @@ import dropbox from '../../assets/images/brands/dropbox.png';
 import mail_chimp from '../../assets/images/brands/mail_chimp.png';
 import slack from '../../assets/images/brands/slack.png';
 
-import logo from '../../assets/images/logo.svg';
+import logo from '../../assets/images/logo.png';
 import logoLightSvg from '../../assets/images/logo-light.svg';
 
 //i18n
@@ -93,7 +93,7 @@ const Header = (props: any) => {
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
-                  <img src={logoLightSvg} alt="" height="22" />
+                  <img src={logo} alt="" height="22" />
                 </span>
               </Link>
             </div>

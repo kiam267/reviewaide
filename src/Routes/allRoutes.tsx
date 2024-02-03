@@ -16,7 +16,13 @@ import Allusers from 'pages/admin/Allusers';
 import CustomerSupport from 'pages/user/CustomerSupport';
 import Review from 'pages/review/Review';
 
-import {Dashboard as userDashboard, Profile, Send, Chat, TeamWork} from 'pages/user'
+import {
+  Dashboard as userDashboard,
+  Profile,
+  Send,
+  PatientRecord,
+  TeamWork,
+} from 'pages/user';
 
 const authProtectedRoutes = [
   { path: '/auth/dashboard', component: <Dashboard /> },
@@ -49,7 +55,7 @@ const publicRoutes = [
 const UserProtectedRouter = [
   { path: '/user', component: userDashboard },
   { path: '/user/send', component: Send },
-  { path: '/user/chat', component: Chat },
+  { path: '/user/patient_record', component: PatientRecord },
   { path: '/user/teamwork', component: TeamWork },
   { path: '/user/private', component: PrivateReview },
   { path: '/user/customer_support', component: CustomerSupport },

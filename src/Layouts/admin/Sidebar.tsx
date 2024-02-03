@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import SidebarContent from "./SidebarContent";
 
 //import images
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 import logoLightPng from "../../assets/images/logo-light.png";
 import logoLightSvg from "../../assets/images/logo-light.svg";
 import logoDark from "../../assets/images/logo-dark.png";
@@ -20,16 +20,16 @@ const Sidebar = (props: any) => {
               <img src={logo} alt="" height="22" />
             </span>
             <span className="logo-lg">
-              <img src={logoDark} alt="" height="17" />
+              <img src={logo} alt="" height="17" />
             </span>
           </Link>
 
           <Link to="/" className="logo logo-light">
             <span className="logo-sm">
-              <img src={logoLightSvg} alt="" height="22" />
+              <img src={logo} alt="" height="22" />
             </span>
             <span className="logo-lg">
-              <img src={logoLightPng} alt="" height="19" />
+              <img src={logo} alt="" height="19" />
             </span>
           </Link>
         </div>

@@ -25,23 +25,38 @@ import { resetLoginMsgFlag } from 'slices/auth/login/thunk';
 
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
-import { login } from 'api/login';
 import { useUserAuth } from 'contexts/UserAuth';
 import { userUpdate } from 'api/userUpdate';
-import AllContainer from 'Components/Common/CustomeContainer';
-import { avater } from 'slices/avaterReducer';
+import CustomeInput from 'Components/CustomeInput';
+import CustomeContainer from 'Components/Common/CustomeContainer';
+import { Button, Modal, Space, Steps, message } from 'antd';
+import PersonalInfoForm from 'Components/PersonalForm';
+import CompnayDetailForm from 'Components/CompanyDetailForm';
+import dateFormat from 'dateformat';
+import { getUser } from 'api/createUsers';
+const steps = [
+  {
+    title: 'Personal Detail',
+  },
+  {
+    title: 'Compnany Detail',
+  },
+];
 
 const UpdateProfile = (props: any) => {
   const [show, setShow] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [adminMessage, setAdminMessage] = useState<string | null>(null);
   const { storeToken } = useUserAuth();
   const dispatch: any = useDispatch();
-
+  const items = steps.map(item => ({ key: item.title, title: item.title }));
+  const [open, setOpen] = useState(true);
+  const [current, setCurrent] = useState(0);
   const navigation = useNavigate();
-  //meta title
-  document.title = 'Update  | Docapt - User';
-
+  const [date, setDate] = useState<string | null>(null);
+  const [isValid, setIsValid] = useState(
+    Boolean(Number(localStorage.getItem('isValid')))
+  );
+  console.log('oks');
+  
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({
@@ -49,7 +64,18 @@ const UpdateProfile = (props: any) => {
     })
   );
 
+  useEffect(() => {
+    getUser().then(user => {
+      setIsValid(user.isValid);
+      localStorage.setItem('isValid', user.isValid);
+    });
+  }, []);
+
   const { error } = useSelector(selectProperties);
+  useEffect(() => {
+    const now = new Date();
+    setDate(dateFormat(now, 'ddd, mmm dS, yyyy'));
+  }, []);
 
   // Form validation
   const validation: any = useFormik({
@@ -57,23 +83,43 @@ const UpdateProfile = (props: any) => {
     enableReinitialize: true,
 
     initialValues: {
+      username: '',
       email: '',
       password: '',
+      phone: '',
+      companyName: '',
+      google: '',
+      facebook: '',
+      temporray: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().required('Please Enter Your email'),
+      username: Yup.string().required('Please Enter Your Username'),
+      email: Yup.string()
+        .email('Email Not Valid')
+        .required('Please Enter Your email'),
+      phone: Yup.number().required('Please Enter Your email'),
+
       password: Yup.string().required('Please Enter Your Password'),
+      companyName: Yup.string().required('Please Enter Your Company Name'),
+      google: Yup.string().required('Please Enter Your google Link'),
+      facebook: Yup.string().required('Please Enter Your Facebook Link'),
+      temporray: Yup.number().required('Please Enter Your Facebook Link'),
     }),
     onSubmit: (values: any) => {
-      userUpdate(values).then(res => {
+      const data = { ...values, date };
+      userUpdate(data).then(res => {
         if (res.msg.name === 'error') {
-          return setErrorMessage(res.msg.msg);
+          return message.error(res.msg.msg);
         }
         if (res.msg.name === 'ZodError') {
-          return setErrorMessage(res.msg.issues[0].message);
+          return message.error(res.msg.issues[0].message);
         }
         storeToken(res.token);
-        setAdminMessage(res.msg.msg);
+        localStorage.setItem('isValid', res.isValid);
+        message.success(res.msg.msg);
+        navigation('/send');
+        console.log('ok');
+
         return;
       });
     },
@@ -83,123 +129,63 @@ const UpdateProfile = (props: any) => {
     if (error) {
       setTimeout(() => {
         dispatch(resetLoginMsgFlag());
-        
       }, 3000);
     }
   }, [dispatch, error]);
 
-  useEffect(() => {
-    setInterval(() => {
-      setErrorMessage('');
-    }, 3000);
-  }, []);
+  if (isValid) {
+    return navigation('/user');
+  }
+  const next = () => {
+    setCurrent(current + 1);
+  };
+  const prev = () => {
+    setCurrent(current - 1);
+  };
 
   return (
-    <React.Fragment>
-      <div className="account-pages  pt-sm-5 mt-3 mt-lg-0">
-        <AllContainer>
-          <Row className="justify-content-center  py-lg-5">
-            <Col md={8} lg={6} xl={5}>
-              <Card className="overflow-hidden py-lg-5  ">
-                <CardBody className="pt-0">
-                  <Alert
-                    color="danger"
-                    className={`${errorMessage ? 'd-block' : 'd-none'} mt-3`}
-                  >
-                    {errorMessage}
-                  </Alert>
-                  <Alert
-                    color="success"
-                    className={`${
-                      adminMessage ? 'd-block' : 'd-none'
-                    } fw-bold mt-3`}
-                  >
-                    {adminMessage}
-                  </Alert>
-                  <div className="p-2">
-                    <Form
-                      className="form-horizontal"
-                      onSubmit={e => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
-                      }}
-                    >
-                      <div className="mb-3">
-                        {error ? <Alert color="danger">{error}</Alert> : null}
-                        <Label className="form-label">Email</Label>
-                        <Input
-                          name="email"
-                          className="form-control"
-                          placeholder="Enter email"
-                          type="text"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.email || ''}
-                          invalid={
-                            validation.touched.email && validation.errors.email
-                              ? true
-                              : false
-                          }
-                        />
-                        {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">
-                            {validation.errors.email}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
+    <CustomeContainer>
+      <Modal open={open} footer={<></>} className="">
+        <Steps current={current} items={items} className="mt-5" />
 
-                      <div className="mb-3">
-                        <Label className="form-label">Password</Label>
-                        <div className="input-group auth-pass-inputgroup">
-                          <Input
-                            name="password"
-                            value={validation.values.password || ''}
-                            type={show ? 'text' : 'password'}
-                            placeholder="Enter Password"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            invalid={
-                              validation.touched.password &&
-                              validation.errors.password
-                                ? true
-                                : false
-                            }
-                          />
-                          <button
-                            onClick={() => setShow(!show)}
-                            className="btn btn-light "
-                            type="button"
-                            id="password-addon"
-                          >
-                            <i className="mdi mdi-eye-outline"></i>
-                          </button>
-                        </div>
-                        {validation.touched.password &&
-                        validation.errors.password ? (
-                          <FormFeedback type="invalid">
-                            {validation.errors.password}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
+        <Form
+          className="form-horizontal mt-5"
+          onSubmit={e => {
+            e.preventDefault();
+            validation.handleSubmit();
+            return false;
+          }}
+        >
+          <div>
+            {current === 0 ? (
+              <PersonalInfoForm validation={validation} error={error} />
+            ) : (
+              <CompnayDetailForm validation={validation} error={error} />
+            )}
+          </div>
 
-                      <div className="mt-3 d-grid">
-                        <button
-                          className="btn btn-primary btn-block "
-                          type="submit"
-                        >
-                          Update Profile
-                        </button>
-                      </div>
-                    </Form>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </AllContainer>
-      </div>
-    </React.Fragment>
+          <div style={{ marginTop: 24 }}>
+            {current === steps.length - 1 && (
+              <Button type="primary" htmlType="submit">
+                Done
+              </Button>
+            )}
+            {current > 0 && (
+              <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                Previous
+              </Button>
+            )}
+          </div>
+        </Form>
+        <div style={{ marginTop: 24 }}>
+          {current < steps.length - 1 && (
+            <Button type="primary" onClick={() => next()}>
+              Next
+            </Button>
+          )}
+        </div>
+      </Modal>
+    </CustomeContainer>
   );
 };
 

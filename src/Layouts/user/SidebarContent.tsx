@@ -156,20 +156,16 @@ const SidebarContent = (props: any) => {
             <li>
               <Link to="/user/send">
                 <i className="bx bxs-send"></i>
-                <span>{props.t('Send')}</span>
+                <span>{props.t('Send Message')}</span>
               </Link>
             </li>
             <li>
-              <Badge
-                style={{ background: '#85a5ff', border: 'none' }}
-                count="BETA"
-              >
-                <Link to="/user/chat">
-                  <i className="bx bxs-chat"></i>
-                  <span>{props.t('Chat')}</span>
-                </Link>
-              </Badge>
+              <Link to="/user/patient_record">
+                <i className="bx bxs-receipt"></i>
+                <span>{props.t('Patient Record')}</span>
+              </Link>
             </li>
+
             <li>
               <Badge
                 style={{ background: '#85a5ff', border: 'none' }}

@@ -7,9 +7,9 @@ interface UserUpdate {
   password: string;
   date: string;
 }
-export const userUpdate = (userUpdate: UserUpdate) => {
+export const userUpdate = (userUpdate) => {
   const token: string | null = localStorage.getItem('UserToken');  
   const { email, password, date } = userUpdate;
   
-  return axios.put(USER_UPDATE, { password, email, token });
+  return axios.put(USER_UPDATE, {...userUpdate, token });
 };

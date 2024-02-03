@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import {
   UserProtectedRouter,
@@ -11,8 +11,14 @@ import './assets/scss/theme.scss';
 import AuthProtected from './Routes/DashboardAuthProtected';
 import UserAuthProtected from 'Routes/UserAuthProtected';
 import UsersLayout from 'Layouts/user';
+import { Profile } from 'pages/user';
 
 function App() {
+  const [isNew, setIsNew] = useState(
+    Boolean(Number(localStorage.getItem('isValid')))
+  );
+
+
   return (
     <React.Fragment>
       <Routes>
@@ -37,7 +43,16 @@ function App() {
               path={route.path}
               element={
                 <UserAuthProtected>
-                  <UsersLayout>{<route.component />}</UsersLayout>
+                  <div style={{ pointerEvents: isNew ? 'painted' : 'none' }}>
+                    {isNew ? (
+                      <UsersLayout>{<route.component />}</UsersLayout>
+                    ) : (
+                      <UsersLayout>
+                        {' '}
+                        <Profile />
+                      </UsersLayout>
+                    )}
+                  </div>
                 </UserAuthProtected>
               }
             />

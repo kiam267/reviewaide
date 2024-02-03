@@ -13,6 +13,15 @@ export const createUsres = (admin: Uesrs) => {
   const date = dateFormat(now, 'dddd, mmmm dS, yyyy');
   return axios.post(CREATE_USERS, { password, email, date });
 };
+
+export const getUser = () => {
+ const token  = localStorage.getItem('UserToken');
+  return axios.get(CREATE_USERS, {
+    params: {
+      token
+    },
+  });
+};
 export const Users = () => {
   return axios.get(GET_USERS, {
     params: {

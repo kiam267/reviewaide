@@ -111,7 +111,7 @@ const Review = () => {
                         </h5>
                         <Rating
                           size={45}
-                          initialValue={1}
+                          initialValue={4}
                           transition
                           onClick={e => setRating(e)}
                         />

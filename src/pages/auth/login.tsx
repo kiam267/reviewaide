@@ -108,9 +108,7 @@ const Login = (props: any) => {
         <Container>
           <Card className="overflow-hidden py-lg-5 ">
             <Row className="justify-content-center  py-lg-5">
-              <Col lg={6} xl={5} className="d-none d-lg-block">
-                <img src={profile} alt="" className="img-fluid" />
-              </Col>
+          
               <Col md={8} lg={6} xl={5}>
                 <div className="bg-primary-subtle">
                   <Row className="d-block d-lg-none">
@@ -233,12 +231,6 @@ const Login = (props: any) => {
               </Col>
             </Row>
           </Card>
-          <div className="mt-5 text-center">
-            <p>
-              © {new Date().getFullYear()} Skote. Crafted with{' '}
-              <i className="mdi mdi-heart text-danger" /> by Copmpany
-            </p>
-          </div>
         </Container>
       </div>
     </React.Fragment>
