@@ -66,6 +66,7 @@ const UpdateProfile = (props: any) => {
 
   useEffect(() => {
     getUser().then(user => {
+      console.log(user, 'day');
       setIsValid(user.isValid);
       localStorage.setItem('isValid', user.isValid);
     });
@@ -117,7 +118,7 @@ const UpdateProfile = (props: any) => {
         storeToken(res.token);
         localStorage.setItem('isValid', res.isValid);
         message.success(res.msg.msg);
-        navigation('/send');
+        navigation('/user');
         console.log('ok');
 
         return;

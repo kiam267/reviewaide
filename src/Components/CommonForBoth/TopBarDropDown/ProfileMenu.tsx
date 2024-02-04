@@ -62,9 +62,7 @@ const ProfileMenu = (props: any) => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          <Avatar   size="default">
-            {name}
-          </Avatar>
+          <Avatar size="default">{name}</Avatar>
           <span className="d-none d-xl-inline-block ms-2 me-1">
             {username || 'admin'}
           </span>
@@ -88,7 +86,7 @@ const ProfileMenu = (props: any) => {
           </DropdownItem>
 
           <div className="dropdown-divider" />
-          <Link to="/logout" className="dropdown-item">
+          <Link to="/user/logout" className="dropdown-item">
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger" />
             <span>{props.t('Logout')}</span>
           </Link>

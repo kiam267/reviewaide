@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo } from 'react';
+import { createContext, useContext, useState, useMemo, useEffect } from 'react';
 export const AuthContext = createContext<any | null>(null);
 
 interface Auth {
@@ -13,6 +13,7 @@ export const UserAuthProvider = ({ children }) => {
     localStorage.getItem('UserToken')
   );
   let isLoggedIn = !!token;
+
 
   const storeToken = (serverToken: string) => {
     setToken(serverToken);

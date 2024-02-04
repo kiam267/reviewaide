@@ -60,5 +60,6 @@ const UserProtectedRouter = [
   { path: '/user/private', component: PrivateReview },
   { path: '/user/customer_support', component: CustomerSupport },
   { path: '/user/profile', component: Profile },
+  { path: '/user/logout', component: Logout },
 ];
 export { authProtectedRoutes, publicRoutes, UserProtectedRouter };

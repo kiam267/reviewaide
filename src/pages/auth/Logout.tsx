@@ -1,35 +1,16 @@
-import React, { useEffect } from "react"
-import withRouter from "Components/Common/withRouter";
-import { Navigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import withRouter from 'Components/Common/withRouter';
+import { Navigate } from 'react-router-dom';
 
-import { logoutUser } from "../../slices/thunk";
-
-//redux
-import { useSelector, useDispatch } from "react-redux";
-import { createSelector } from 'reselect';
+import { useUserAuth } from '../../contexts/UserAuth';
 
 const Logout = () => {
-  const dispatch = useDispatch<any>();
-
-  const selectProperties = createSelector(
-    (state: any) => state.Login,
-    (login) => ({
-      isUserLogout : login.isUserLogout
-    })
-  );
-
-  const { isUserLogout } = useSelector(selectProperties);
-
+  const { isLoggedIn, LogoutUser } = useUserAuth();
   useEffect(() => {
-    dispatch(logoutUser());
-  }, [dispatch]);
+    LogoutUser();
+  }, [isLoggedIn]);
 
-  if (isUserLogout) {
-    return <Navigate to="/login" />;
-  }
+  return <Navigate to="/login" />;
+};
 
-  return <></>;
-}
-
-
-export default withRouter(Logout)
+export default withRouter(Logout);
