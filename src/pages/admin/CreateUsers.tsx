@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Link, useNavigate, Navigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate, useNavigation } from 'react-router-dom';
 import {
   Row,
   Col,
@@ -24,11 +24,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import { createSelector } from 'reselect';
 import { createUsres } from 'api/createUsers';
-
+import { useAuth } from 'contexts/auth';
+import Logout from 'pages/auth/Logout';
+import AdminLogout from 'pages/auth/AdminLogout';
+import axios from 'axios';
+import { CREATE_USERS } from '../../helpers/url_helper';
+import dateFormat from 'dateformat';
 function CreateUsers(props) {
   const [show, setShow] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [adminMessage, setAdminMessage] = useState<string | null>(null);
+  const [validCookie, setValidCookie] = useState(true);
   const dispatch: any = useDispatch();
   //meta title
   document.title = 'Create users | Docapt -  Admin & Dashboard ';
@@ -60,15 +66,25 @@ function CreateUsers(props) {
       password: Yup.string().required('Please Enter Your Password'),
     }),
     onSubmit: (values: any, { resetForm }) => {
-      createUsres(values).then((res: any) => {
-        if (res.msg.name === 'error') {
-          return setErrorMessage(res.msg.msg);
-        }
-        if (res.msg.name === 'success') {
-          setAdminMessage(res.msg.msg);
-          return resetForm();
-        }
-      });
+      const token = localStorage.getItem('adToken');
+      const now = new Date();
+      const date = dateFormat(now, 'dddd, mmmm dS, yyyy');
+      const data = { ...values, date };
+      axios
+        .post(CREATE_USERS, data, { headers: { token } })
+        .then((res: any) => {
+          if (res?.msg?.name === 'error') {
+            return setErrorMessage(res?.msg?.msg);
+          }
+
+          if (res?.msg?.name === 'success') {
+            setAdminMessage(res?.msg?.msg);
+            return resetForm();
+          }
+          if (res.msg.name === 'auth') {
+            setValidCookie(false);
+          }
+        });
     },
   });
 
@@ -80,6 +96,9 @@ function CreateUsers(props) {
     }
   }, [dispatch, error]);
 
+  if (!validCookie) {
+    return <AdminLogout />;
+  }
   return (
     <React.Fragment>
       <div className="account-pages  pt-sm-5 mt-3 mt-lg-0">

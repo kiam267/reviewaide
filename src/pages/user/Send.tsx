@@ -50,6 +50,10 @@ import {
 import { use } from 'i18next';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
+import { CLIENT_VISITOR, LINK } from '../../helpers/url_helper';
+import axios from 'axios';
+import { Navigate } from 'react-router-dom';
+import Logout from 'pages/auth/Logout';
 
 const UserDashboard = (props: any) => {
   const [date, setDate] = useState<string | null>(null);
@@ -64,6 +68,7 @@ const UserDashboard = (props: any) => {
   const [buttonloading, setButtonLoading] = useState(false);
   const [method, setMethod] = useState('email');
   const [successSendData, setSuccessSendData] = useState([]);
+  const [validCookie, setValidCookie] = useState(false);
   const [value, setValue] = useState();
   const miniMessage = (type, content) => {
     messageApi.open({
@@ -93,18 +98,37 @@ const UserDashboard = (props: any) => {
   };
   const submitHandler = id => {
     const updatedData = getLocalSendData.filter(item => item?.id === id);
-    setButtonLoading(true);
-    clientVisitor(updatedData, method).then(res => {
-      if (res.msg.name === 'error') {
-        miniMessage('error', res.msg.msg);
-        return setButtonLoading(false);
-      }
-      const updatedData = getLocalSendData.filter(item => item?.id !== id);
-      saveArrayToLocalStorage('proccess_send_data', updatedData);
-      setProcessData(updatedData);
-      miniMessage('success', res.msg.msg);
-      return setButtonLoading(false);
-    });
+    const mainData = updatedData[0];
+    console.log(mainData);
+
+    // setButtonLoading(true);
+    const token = localStorage.getItem('UserToken');
+
+    axios
+      .post(
+        CLIENT_VISITOR,
+        { ...mainData, LINK, token, method },
+        { headers: { token } }
+      )
+      .then(res => {
+        console.log(res);
+
+        if (res?.msg?.name === 'error') {
+          miniMessage('error', res.msg.msg);
+          return setButtonLoading(false);
+        }
+        if (res?.msg?.name === 'success') {
+          const updatedData = getLocalSendData.filter(item => item?.id !== id);
+          saveArrayToLocalStorage('proccess_send_data', updatedData);
+          setProcessData(updatedData);
+          miniMessage('success', res.msg.msg);
+          return setButtonLoading(false);
+        }
+
+        if (res.msg.name === 'auth') {
+          return setValidCookie(true);
+        }
+      });
   };
 
   const selectProperties = createSelector(
@@ -158,15 +182,18 @@ const UserDashboard = (props: any) => {
     }, 1000);
   }, []);
   useEffect(() => {
-    allSendData().then(res => {
-      setSuccessSendData(res.reverse());
-    });
+    // allSendData().then(res => {
+    //   setSuccessSendData(res.reverse());
+    // });
   }, []);
-  var ssm = successSendData.sort(function (a, b) {
-    return b - a;
-  });
-  console.log(ssm);
+  // var ssm = successSendData.sort(function (a, b) {
+  //   return b - a;
+  // });
+  // console.log(ssm);
 
+  if (validCookie) {
+    return <Logout />;
+  }
   return (
     <CustomeContainer>
       {contextHolder}

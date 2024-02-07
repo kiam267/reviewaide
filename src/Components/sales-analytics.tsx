@@ -18,22 +18,35 @@ interface ChartOptions {
   };
 }
 
-const SalesAnalytics = ({ dataColors }: any) => {
-  const series: number[] = [26, 38];
+const SalesAnalytics = ({ name, data }: any) => {
+  interface DataItem {
+    total: number;
+    name: string;
+    color: string;
+    // Add other properties as needed
+  }
+
+  const labels: string[] = [];
+  const series: number[] = [];
+  const colors: string[] = [];
+  console.log(data);
+
+  data.map((label: DataItem) => labels.push(label?.name));
+  data.map((label: DataItem) => series.push(label?.total));
+  data.map((label: DataItem) => colors.push(label?.color));
 
   const options: ChartOptions = {
-    labels: ['Series A', 'Series B'],
-    colors: ['#155e75', '#556EE6'],
+    labels: labels,
+    colors: colors,
     legend: { show: !1 },
     plotOptions: {
       pie: {
         donut: {
-          size: '70%',
+          size: '60%',
         },
       },
     },
   };
-
 
   return (
     <React.Fragment>
@@ -41,7 +54,7 @@ const SalesAnalytics = ({ dataColors }: any) => {
         <Card>
           <CardBody>
             <CardTitle tag="h4" className="mb-4">
-              Online Schededuling
+              {name}
             </CardTitle>
             <div>
               <div id="donut-chart">
@@ -52,39 +65,25 @@ const SalesAnalytics = ({ dataColors }: any) => {
                   height={260}
                   className="apex-charts"
                 />
-
               </div>
             </div>
 
             <div className="text-center text-muted">
               <Row>
-                <Col xs={4}>
-                  <div className="mt-4">
-                    <p className="mb-2 text-truncate">
-                      <i className="mdi mdi-circle text-primary me-1" /> Product
-                      A
-                    </p>
-                    <h5>$ 2,132</h5>
-                  </div>
-                </Col>
-                <Col xs={4}>
-                  <div className="mt-4">
-                    <p className="mb-2 text-truncate">
-                      <i className="mdi mdi-circle text-success me-1" /> Product
-                      B
-                    </p>
-                    <h5>$ 1,763</h5>
-                  </div>
-                </Col>
-                <Col xs={4}>
-                  <div className="mt-4">
-                    <p className="mb-2 text-truncate">
-                      <i className="mdi mdi-circle text-danger me-1" /> Product
-                      C
-                    </p>
-                    <h5>$ 973</h5>
-                  </div>
-                </Col>
+                {data?.map((chartData, inx) => (
+                  <Col key={inx}>
+                    <div className="mt-4">
+                      <p className="mb-2 text-truncate">
+                        <i
+                          className="mdi mdi-circle me-1"
+                          style={{ color: chartData.color }}
+                        />
+                        {chartData.name}
+                      </p>
+                      <h5> {chartData.total}</h5>
+                    </div>
+                  </Col>
+                ))}
               </Row>
             </div>
           </CardBody>

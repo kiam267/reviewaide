@@ -2,16 +2,39 @@ import React, { useEffect, useState } from 'react';
 
 import Breadcrumb from 'Components/Common/Breadcrumb';
 import CustomeContainer from 'Components/Common/CustomeContainer';
-import { Card, Col, List, Rate, Row, Skeleton } from 'antd';
+import { Card, Col, List, Rate, Row, Skeleton, message } from 'antd';
 import { getPrivateReview } from 'api/clientVisitor';
+import axios from 'axios';
+import { PRIVATE_REVIEW } from '../../helpers/url_helper';
+import Logout from 'pages/auth/Logout';
 
 function PrivateReview(props) {
   const [review, setReview] = useState([]);
+    const [validCookie, setValidCookie] = useState(false);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    getPrivateReview().then((res) => {
-      setReview(res.reverse());
-    });
+    const token = localStorage.getItem('UserToken');
+    axios
+      .get(PRIVATE_REVIEW, {
+        headers: {
+          token,
+        },
+      })
+      .then(res => {
+        console.log(res);
+          if (res?.msg?.name === 'error') {
+            message.error(res?.msg?.msg);
+          }
+          if (res?.msg?.name === 'success') {
+            // setAllData(res.msg[0].data);
+            setReview(res.msg[0].data);
+          }
+
+          if (res.msg.name === 'auth') {
+            return setValidCookie(true);
+          }
+        
+      });
   }, []);
   useEffect(() => {
     setTimeout(() => {
@@ -19,6 +42,9 @@ function PrivateReview(props) {
     }, 1000);
   }, []);
 
+   if (validCookie) {
+     return <Logout />;
+   }
   return (
     <CustomeContainer>
       <Breadcrumb title="private Review" breadcrumbItem="Private Review" />
@@ -45,9 +71,7 @@ function PrivateReview(props) {
                   <Col span={24} className="text-body-tertiary">
                     {item?.textarea}
                   </Col>
-                  <Col
-                    className="fw-semibold fs-6 bg-info rounded-5 px-3 py-2 text-white"
-                  >
+                  <Col className="fw-semibold fs-6 bg-info rounded-5 px-3 py-2 text-white">
                     {item?.date}
                   </Col>
                 </Row>

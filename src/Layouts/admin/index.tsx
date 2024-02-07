@@ -19,7 +19,7 @@ const VerticalLayout = (props: any) => {
       layoutWidthTypes: layout.layoutWidthTypes,
       topbarThemeTypes: layout.topbarThemeTypes,
       leftSidebarTypes: layout.leftSidebarTypes,
-      leftSideBarThemeTypes: 'colored',
+      leftSideBarThemeTypes: 'white',
       leftSidebarImageTypes: layout.leftSidebarImageTypes,
     })
   );

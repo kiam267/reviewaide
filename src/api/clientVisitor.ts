@@ -28,7 +28,6 @@ export const clientVisitor = (visitor, sendMethod) => {
     username,
     email,
     phone,
-    date,
     link,
     token,
     sendMethod,

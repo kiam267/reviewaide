@@ -71,10 +71,10 @@ const Login = (props: any) => {
     }),
     onSubmit: (values: any) => {
       login(values).then((res: any) => {
-        if (res.msg.name === 'error') {
+        if (res?.msg?.name === 'error') {
           return setErrorMessage(res.msg.msg);
         }
-        if (!res.isAdmin) {
+        if (!res?.isAdmin) {
           return setAdminMessage(
             'Please wait for admin approval and got to login'
           );
@@ -108,7 +108,6 @@ const Login = (props: any) => {
         <Container>
           <Card className="overflow-hidden py-lg-5 ">
             <Row className="justify-content-center  py-lg-5">
-          
               <Col md={8} lg={6} xl={5}>
                 <div className="bg-primary-subtle">
                   <Row className="d-block d-lg-none">

@@ -13,8 +13,8 @@ const Dashboard = () => {
     <div>
       <AllContainer>
         <Row>
-          <SalesAnalytics />
-          <TopCities />
+          {/* <SalesAnalytics /> */}
+          {/* <TopCities /> */}
           <Empty className='mt-5 py-5' image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"></Empty>
         </Row>
       </AllContainer>

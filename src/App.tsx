@@ -11,14 +11,12 @@ import './assets/scss/theme.scss';
 import AuthProtected from './Routes/DashboardAuthProtected';
 import UserAuthProtected from 'Routes/UserAuthProtected';
 import UsersLayout from 'Layouts/user';
-import { Profile } from 'pages/user';
+import Profile from './pages/user/Profile';
+import { useUserAuth } from 'contexts/UserAuth';
 
 function App() {
-  const [isNew, setIsNew] = useState(
-    Boolean(Number(localStorage.getItem('isValid')))
-  );
-
-
+  const { IsValidUSER } = useUserAuth();
+  console.log(IsValidUSER);
 
   return (
     <React.Fragment>
@@ -43,18 +41,7 @@ function App() {
             <Route
               path={route.path}
               element={
-                <UserAuthProtected>
-                  <div style={{ pointerEvents: isNew ? 'painted' : 'none' }}>
-                    {isNew ? (
-                      <UsersLayout>{<route.component />}</UsersLayout>
-                    ) : (
-                      <UsersLayout>
-                        {' '}
-                        <Profile />
-                      </UsersLayout>
-                    )}
-                  </div>
-                </UserAuthProtected>
+                <UserAuthProtected>{<route.component />}</UserAuthProtected>
               }
             />
             <Route path="/" element={<Navigate to="/login" />} />

@@ -26,14 +26,17 @@ import { resetLoginMsgFlag } from 'slices/auth/login/thunk';
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
 import { useUserAuth } from 'contexts/UserAuth';
-import { userUpdate } from 'api/userUpdate';
+import { userGet, userUpdate } from 'api/userUpdate';
 import CustomeInput from 'Components/CustomeInput';
 import CustomeContainer from 'Components/Common/CustomeContainer';
 import { Button, Modal, Space, Steps, message } from 'antd';
 import PersonalInfoForm from 'Components/PersonalForm';
 import CompnayDetailForm from 'Components/CompanyDetailForm';
 import dateFormat from 'dateformat';
-import { getUser } from 'api/createUsers';
+import type { GetProp, UploadProps } from 'antd';
+import axios from 'axios';
+import { CREATE_USERS, USER_UPDATE } from '../../helpers/url_helper';
+import { useResetIconStyle } from 'antd/es/theme/internal';
 const steps = [
   {
     title: 'Personal Detail',
@@ -45,39 +48,72 @@ const steps = [
 
 const UpdateProfile = (props: any) => {
   const [show, setShow] = useState(false);
-  const { storeToken } = useUserAuth();
+  const { storeToken, LogoutUser, token, IsValidUSER, isNewUser, avater } =
+    useUserAuth();
   const dispatch: any = useDispatch();
   const items = steps.map(item => ({ key: item.title, title: item.title }));
   const [open, setOpen] = useState(true);
   const [current, setCurrent] = useState(0);
   const navigation = useNavigate();
   const [date, setDate] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>();
+  const [imageURL, setImageURL] = useState<any>();
   const [isValid, setIsValid] = useState(
     Boolean(Number(localStorage.getItem('isValid')))
   );
-  console.log('oks');
-  
+  const [checkFirstUser, setCheckFirstUser] = useState();
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({
       error: login.error,
     })
   );
-
-  useEffect(() => {
-    getUser().then(user => {
-      console.log(user, 'day');
-      setIsValid(user.isValid);
-      localStorage.setItem('isValid', user.isValid);
-    });
-  }, []);
-
+  const nevigation = useNavigate();
   const { error } = useSelector(selectProperties);
   useEffect(() => {
     const now = new Date();
     setDate(dateFormat(now, 'ddd, mmm dS, yyyy'));
   }, []);
 
+  // useEffect(() => {
+  //   axios
+  //     .get(CREATE_USERS, {
+  //       headers: { token: token },
+  //     })
+  //     .then(user => {
+  //       // if (!user.valid) {
+  //       //   LogoutUser();
+  //       // }
+  //       console.log(user);
+  //       localStorage.setItem('isValid', user.isValid);
+  //       setCheckFirstUser(user.isValid);
+  //       return;
+  //     });
+  // }, []);
+
+  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+  const getBase64 = (img: FileType, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string));
+    reader.readAsDataURL(img);
+  };
+
+  const onFileChanged = info => {
+    setImageURL(info.file.originFileObj);
+    if (info.file.status === 'uploading') {
+      setLoading(true);
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+
+      setLoading(false);
+      getBase64(info.file.originFileObj as FileType, url => {
+        setImageUrl(url);
+      });
+    }
+  };
   // Form validation
   const validation: any = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -99,29 +135,29 @@ const UpdateProfile = (props: any) => {
         .email('Email Not Valid')
         .required('Please Enter Your email'),
       phone: Yup.number().required('Please Enter Your email'),
-
       password: Yup.string().required('Please Enter Your Password'),
       companyName: Yup.string().required('Please Enter Your Company Name'),
       google: Yup.string().required('Please Enter Your google Link'),
       facebook: Yup.string().required('Please Enter Your Facebook Link'),
       temporray: Yup.number().required('Please Enter Your Facebook Link'),
     }),
-    onSubmit: (values: any) => {
-      const data = { ...values, date };
-      userUpdate(data).then(res => {
+    onSubmit: async (values: any, { setValues }) => {
+      const data = { imageURL, ...values, date, token };
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          token: token,
+        },
+      };
+      axios.put(USER_UPDATE, data, config).then(res => {
         if (res.msg.name === 'error') {
           return message.error(res.msg.msg);
         }
-        if (res.msg.name === 'ZodError') {
-          return message.error(res.msg.issues[0].message);
-        }
         storeToken(res.token);
-        localStorage.setItem('isValid', res.isValid);
+        isNewUser(1);
+        avater(`/uploads/${res.avater}`, res.username);
         message.success(res.msg.msg);
-        navigation('/user');
-        console.log('ok');
-
-        return;
+        return navigation('/');
       });
     },
   });
@@ -134,9 +170,6 @@ const UpdateProfile = (props: any) => {
     }
   }, [dispatch, error]);
 
-  if (isValid) {
-    return navigation('/user');
-  }
   const next = () => {
     setCurrent(current + 1);
   };
@@ -144,10 +177,13 @@ const UpdateProfile = (props: any) => {
     setCurrent(current - 1);
   };
 
+  if (checkFirstUser) {
+    nevigation('/user');
+  }
   return (
     <CustomeContainer>
       <Modal open={open} footer={<></>} className="">
-        <Steps current={current} items={items} className="mt-5" />
+        <Steps current={current} items={items} className="mt-5"  />
 
         <Form
           className="form-horizontal mt-5"
@@ -159,7 +195,13 @@ const UpdateProfile = (props: any) => {
         >
           <div>
             {current === 0 ? (
-              <PersonalInfoForm validation={validation} error={error} />
+              <PersonalInfoForm
+                validation={validation}
+                error={error}
+                onFileChanged={onFileChanged}
+                isLoding={loading}
+                setURL={imageUrl}
+              />
             ) : (
               <CompnayDetailForm validation={validation} error={error} />
             )}
@@ -167,7 +209,11 @@ const UpdateProfile = (props: any) => {
 
           <div style={{ marginTop: 24 }}>
             {current === steps.length - 1 && (
-              <Button type="primary" htmlType="submit">
+              <Button
+                style={{ background: '#F77857' }}
+                className="text-white fw-semibold"
+                htmlType="submit"
+              >
                 Done
               </Button>
             )}
@@ -180,7 +226,11 @@ const UpdateProfile = (props: any) => {
         </Form>
         <div style={{ marginTop: 24 }}>
           {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => next()}>
+            <Button
+              style={{ background: '#F77857' }}
+              className="text-white fw-semibold"
+              onClick={() => next()}
+            >
               Next
             </Button>
           )}

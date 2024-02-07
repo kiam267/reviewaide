@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import dateFormat from 'dateformat';
+// import * from ''
 import {
   Row,
   Col,
@@ -18,6 +20,10 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { getReview, privateReview } from 'api/clientVisitor';
 import { useParams, Navigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import { CLIENT_VISITOR_GET, CLIENT_VISITOR_METHODS, PRIVATE_REVIEW } from '../../helpers/url_helper';
+import UserLogin from 'pages/auth/userLogin';
+import Logout from 'pages/auth/Logout';
 const Review = () => {
   //meta title
   document.title = 'Rating | Skote - React Admin & Dashboard Template';
@@ -27,12 +33,38 @@ const Review = () => {
   const [show, setshow] = useState<boolean>();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [adminMessage, setAdminMessage] = useState<string | null>(null);
-
+  const [LINK, SETLINK] = useState({ google_link: '', facebook_link: '' });
+  const [retingShow, setRatingShow] = useState(true);
+  const [validCookie, setValidCookie] = useState(false);
+  const [data, setData] = useState([]);
   const { clientId } = useParams();
 
+
   useEffect(() => {
-    getReview(clientId).then(res => setshow(res.isSend));
+    const token = localStorage.getItem('UserToken');
+    axios
+      .get(CLIENT_VISITOR_GET, { headers: { token, clientId: clientId } })
+      .then(res => {
+        console.log(res);
+        
+        if (res.msg.name === 'success') {
+          SETLINK({ ...res.msg[0] });
+          return setshow(res.msg[0].isSend);
+        }
+        if (res.msg.name === 'error') {
+          return setshow(res.isSend);
+        }
+        if (res.msg.name === 'auth') {
+          setValidCookie(true);
+        }
+      });
   }, [show]);
+
+  const handelMethods = item => {
+     const now = new Date();
+     const dateData = (dateFormat(now, 'ddd, mmm dS, yyyy'));
+    axios.put(CLIENT_VISITOR_METHODS, { clientId: clientId, item, dateData });
+  };
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({
@@ -65,21 +97,34 @@ const Review = () => {
       textarea: Yup.string().required('Please Enter Your Textarea'),
     }),
     onSubmit: (values: any) => {
-      privateReview(values).then(res => {
-        if (res.msg.name === 'error') {
-          return setErrorMessage(res.msg.msg);
-        }
-        if (res.msg.name === 'ZodError') {
-          return setErrorMessage(res.msg.issues[0].message);
-        }
-        setAdminMessage(res.msg.msg);
-        return;
-      });
+    const now = new Date();
+    const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
+        return axios
+          .post(PRIVATE_REVIEW, {
+            ...values,
+            private: 'private',
+            dateData,
+            clientId,
+          })
+          .then(res => {
+            if (res.msg.name === 'error') {
+              return setErrorMessage(res.msg.msg);
+            }
+            if (res.msg.name === 'ZodError') {
+              return setErrorMessage(res.msg.issues[0].message);
+            }
+            setAdminMessage(res.msg.msg);
+            return;
+          });
     },
   });
 
+
   if (show) {
     return <Navigate to="/werwer" />;
+  }
+  if (validCookie) {
+    return <Logout/>
   }
   return (
     <React.Fragment>
@@ -105,106 +150,118 @@ const Review = () => {
                   </Alert>
                   <Row className="justify-content-center">
                     <Col>
-                      <div className="p-4 text-center">
-                        <h5 className="font-16 m-b-15">
-                          Please! Share Your Review
-                        </h5>
-                        <Rating
-                          size={45}
-                          initialValue={4}
-                          transition
-                          onClick={e => setRating(e)}
-                        />
-                      </div>
-                      {rating > 3 ? (
-                        <div className="mt-5">
-                          <h4 className="fs-5 text-center fw-semibold">
-                            Please Share Your Review On This Site.
-                          </h4>
-                          <div className="mt-3">
-                            <Link
-                              to="https://g.page/r/CSdkl6PngXjUEB0/review"
-                              className="btn btn-primary d-block m-auto w-75"
-                              type="submit"
-                            >
-                              <i
-                                className="bx bxl-google"
-                                style={{ fontSize: '40px' }}
-                              ></i>
-                            </Link>
-                          </div>
-                          <div className="mt-3">
-                            <button
-                              className="btn btn-primary d-block m-auto w-75"
-                              type="submit"
-                              disabled
-                            >
-                              <i
-                                className="bx bxl-facebook-circle"
-                                style={{ fontSize: '40px' }}
-                              ></i>
-                            </button>
-                          </div>
+                      {retingShow ? (
+                        <div className="p-4 text-center">
+                          <h5 className="font-16 m-b-15">
+                            Please share your feedback on your recent visit to
+                            Docapt
+                          </h5>
+                          <Rating
+                            size={45}
+                            initialValue={4}
+                            transition
+                            onClick={e => {
+                              setRating(e);
+                              setRatingShow(false);
+                            }}
+                          />
                         </div>
                       ) : (
                         <>
-                          <div className="mt-3">
-                            <Form
-                              className="form-horizontal"
-                              onSubmit={e => {
-                                e.preventDefault();
-                                validation.handleSubmit();
-                                return false;
-                              }}
-                            >
-                              <div className="mb-3">
-                                {error ? (
-                                  <Alert color="danger">{error}</Alert>
-                                ) : null}
-                                <Label>Textarea</Label>
-                                <Input
-                                  name="textarea"
-                                  type="textarea"
-                                  id="textarea"
-                                  onChange={e => {
-                                    textareachange(e);
-                                    validation.handleChange(e);
-                                  }}
-                                  onBlur={validation.handleBlur}
-                                  value={validation.values.textarea || ''}
-                                  invalid={
-                                    validation.touched.textarea &&
-                                    validation.errors.textarea
-                                      ? true
-                                      : false
-                                  }
-                                  maxLength={350}
-                                  rows="3"
-                                  placeholder="Please describe Our Problem."
-                                />
-                                {validation.touched.textarea &&
-                                validation.errors.textarea ? (
-                                  <FormFeedback type="invalid">
-                                    {validation.errors.textarea}
-                                  </FormFeedback>
-                                ) : null}
-                                {textareabadge ? (
-                                  <span className="badgecount badge bg-success">
-                                    {' '}
-                                    {textcount} / 350{' '}
-                                  </span>
-                                ) : null}
-                              </div>
-                              <div className="mt-3 d-block w-25 mx-auto">
-                                <button
-                                  className="btn btn-primary btn-block "
+                          {rating > 3 ? (
+                            <div className="mt-5">
+                              <h4 className="fs-5 text-center fw-semibold">
+                                Please share your review at Google/ Facebook
+                                Media
+                              </h4>
+                              <div className="mt-3">
+                                <Link
+                                  to={LINK.google_link}
+                                  className="btn btn-primary d-block m-auto w-75"
                                   type="submit"
+                                  onClick={() => handelMethods('google')}
                                 >
-                                  Submit
-                                </button>
+                                  <i
+                                    className="bx bxl-google"
+                                    style={{ fontSize: '40px' }}
+                                  ></i>
+                                </Link>
                               </div>
-                            </Form>
-                          </div>
+                              <div className="mt-3">
+                                <Link
+                                  to={LINK.facebook_link}
+                                  className="btn btn-primary d-block m-auto w-75"
+                                  type="submit"
+                                  onClick={() => handelMethods('facebook')}
+                                >
+                                  <i
+                                    className="bx bxl-facebook-circle"
+                                    style={{ fontSize: '40px' }}
+                                  ></i>
+                                </Link>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="mt-3">
+                                <Form
+                                  className="form-horizontal"
+                                  onSubmit={e => {
+                                    e.preventDefault();
+                                    validation.handleSubmit();
+                                    return false;
+                                  }}
+                                >
+                                  <div className="mb-3">
+                                    {error ? (
+                                      <Alert color="danger">{error}</Alert>
+                                    ) : null}
+                                    <Label>Write your Feedback.</Label>
+                                    <Input
+                                      name="textarea"
+                                      type="textarea"
+                                      id="textarea"
+                                      onChange={e => {
+                                        textareachange(e);
+                                        validation.handleChange(e);
+                                      }}
+                                      onBlur={validation.handleBlur}
+                                      value={validation.values.textarea || ''}
+                                      invalid={
+                                        validation.touched.textarea &&
+                                        validation.errors.textarea
+                                          ? true
+                                          : false
+                                      }
+                                      maxLength={350}
+                                      rows="3"
+                                      placeholder="Write your Feedback...."
+                                    />
+                                    {validation.touched.textarea &&
+                                    validation.errors.textarea ? (
+                                      <FormFeedback type="invalid">
+                                        {validation.errors.textarea}
+                                      </FormFeedback>
+                                    ) : null}
+                                    {textareabadge ? (
+                                      <span className="badgecount badge bg-success">
+                                        {' '}
+                                        {textcount} / 350{' '}
+                                      </span>
+                                    ) : null}
+                                  </div>
+                                  <div className="mt-3 d-block w-25 mx-auto">
+                                    <button
+                                      className="btn btn-primary btn-block "
+                                      type="submit"
+                                    >
+                                      Submit
+                                    </button>
+                                  </div>
+                                </Form>
+                              </div>
+                            </>
+                          )}
                         </>
                       )}
                     </Col>

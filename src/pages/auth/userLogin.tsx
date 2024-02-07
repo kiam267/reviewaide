@@ -39,7 +39,7 @@ import { profile } from 'console';
 import { message } from 'antd';
 
 const UserLogin = (props: any) => {
-  const { storeToken, isLoggedIn } = useUserAuth();
+  const { storeToken, isLoggedIn, avater, isNewUser } = useUserAuth();
   const nevigation = useNavigate();
   const [show, setShow] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -77,8 +77,9 @@ const UserLogin = (props: any) => {
         if (res.msg.name === 'error') {
           return message.error(res.msg.msg);
         }
+        avater(`/uploads/${res.avater}`, res.username);
         storeToken(res.token);
-        localStorage.setItem('isValid', res.isValid);
+        isNewUser(res.isValid);
         return nevigation('/user');
       });
     },
@@ -100,7 +101,6 @@ const UserLogin = (props: any) => {
     <div>
       <Row
         className="d-flex align-items-center"
-        noGutters
         style={{
           overflow: 'hidden',
           height: '100vh',
@@ -187,7 +187,7 @@ const UserLogin = (props: any) => {
                   </div>
                   <Link
                     className="fs-6 text-decoration-none text-black fw-semibold"
-                    to="/forget-password"
+                    to="/user/forgot-password"
                   >
                     Forget Password
                   </Link>

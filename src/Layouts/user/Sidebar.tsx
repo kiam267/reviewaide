@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import SidebarContent from './SidebarContent';
 
 //import images
-import logo from '../../assets/images/logo.svg';
-import logoLightPng from '../../assets/images/logo-light.png';
-import logoLightSvg from '../../assets/images/logo-light.svg';
-import logoDark from '../../assets/images/logo-dark.png';
+import logo from '../../assets/images/logo.png';
+import logoLightPng from '../../assets/images/logo.png';
+import logoLightSvg from '../../assets/images/logo.png';
+import logoDark from '../../assets/images/logo.png';
 
 const Sidebar = (props: any) => {
   return (

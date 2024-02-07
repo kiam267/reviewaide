@@ -1,73 +1,55 @@
-import React from "react"
-import { Card, CardBody, CardTitle, Progress, Table, Col, Row } from "reactstrap"
+import React from 'react';
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Progress,
+  Table,
+  Col,
+  Row,
+} from 'reactstrap';
 
-const TopCities: React.FC = () => {
-
+const TopCities = ({ name, method, total, data }) => {
+  const p1 = (40 / 100) * 100;
+  const p2 = (25 / 100) * 100;
   return (
     <React.Fragment>
       <Col lg={6}>
         <Card>
           <CardBody>
-            <CardTitle className="mb-4">Top Cities Selling Product</CardTitle>
+            <CardTitle className="mb-4">{name}</CardTitle>
             <div className="text-center">
               <div className="mb-4">
-                <i className="bx bx-map-pin text-primary display-4" />
+                <i
+                  className="bx bxs-send text-primary display-4"
+                  style={{ transform: 'rotate(-20deg)' }}
+                />
               </div>
-              <h3>1,456</h3>
-              <p>San Francisco</p>
+              <h3>{total}</h3>
+              <p>{method}</p>
             </div>
 
             <div className="table-responsive mt-4">
               <Table className="align-middle table-nowrap">
                 <tbody>
-                  <tr>
-                    <td style={{ width: '30%' }}>
-                      <p className="mb-0">San Francisco</p>
-                    </td>
-                    <td style={{ width: '25%' }}>
-                      <h5 className="mb-0">1,456</h5>
-                    </td>
-                    <td>
-                      <Progress
-                        value="94"
-                        color="primary"
-                        className="bg-transparent progress-sm"
-                        size="sm"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p className="mb-0">Los Angeles</p>
-                    </td>
-                    <td>
-                      <h5 className="mb-0">1,123</h5>
-                    </td>
-                    <td>
-                      <Progress
-                        value="82"
-                        color="success"
-                        className="bg-transparent progress-sm"
-                        size="sm"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <p className="mb-0">San Diego</p>
-                    </td>
-                    <td>
-                      <h5 className="mb-0">1,026</h5>
-                    </td>
-                    <td>
-                      <Progress
-                        value="70"
-                        color="warning"
-                        className="bg-transparent progress-sm"
-                        size="sm"
-                      />
-                    </td>
-                  </tr>
+                  {data.map((method, inx) => (
+                    <tr key={inx}>
+                      <td style={{ width: '30%' }}>
+                        <p className="mb-0">{method.name}</p>
+                      </td>
+                      <td style={{ width: '25%' }}>
+                        <h5 className="mb-0">{method.total}</h5>
+                      </td>
+                      <td>
+                        <Progress
+                          value={method.percentage}
+                          color={method.color}
+                          className="bg-gray progress-sm"
+                          size="sm"
+                        />
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </div>
@@ -76,6 +58,6 @@ const TopCities: React.FC = () => {
       </Col>
     </React.Fragment>
   );
-}
+};
 
-export default TopCities
+export default TopCities;

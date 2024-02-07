@@ -12,30 +12,38 @@ import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import withRouter from '../../Common/withRouter';
 import { createSelector } from 'reselect';
-
+import { useUserAuth } from '../../../contexts/UserAuth';
 // users
 import user1 from '../../../assets/images/users/avatar-1.jpg';
 
 import { useSelector } from 'react-redux';
 import { log } from 'console';
+import axios from 'axios';
+import { REACT_APP_SERVER_API } from '../../../helpers/url_helper';
 
 const ProfileMenu = (props: any) => {
   // Declare a new state variable, which we'll call "menu"
+  // const { avater } = useUserAuth();
+
+  const avater: string | undefined =
+    localStorage.getItem('avater') ?? undefined;
+  const serverUsername: string | undefined =
+    localStorage.getItem('name') ?? undefined;
+
   const [menu, setMenu] = useState(false);
 
   const [username, setUsername] = useState('Admin');
 
   const selectProfileProperties = createSelector(
     (state: any) => state.Avater,
-    (profile) => ({
+    profile => ({
       name: profile.name,
     })
   );
 
   // const { user } = useSelector(selectProfileProperties);
-  const {name} = useSelector(selectProfileProperties);
+  const { name } = useSelector(selectProfileProperties);
 
-  
   // useEffect(() => {
   //   if (localStorage.getItem("authUser")) {
   //     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
@@ -62,9 +70,12 @@ const ProfileMenu = (props: any) => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          <Avatar size="default">{name}</Avatar>
+          {/* http://localhost:8080 */}
+          <Avatar size="default" src={`${avater}`}>
+            {name}
+          </Avatar>
           <span className="d-none d-xl-inline-block ms-2 me-1">
-            {username || 'admin'}
+            {serverUsername || 'admin'}
           </span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>

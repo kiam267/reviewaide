@@ -1,14 +1,23 @@
 import { getUser } from 'api/createUsers';
-import { Profile } from 'pages/user';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
-
+import UsersLayout from 'Layouts/user';
+import Profile from 'pages/user/Profile';
 const UserAuthProtected = props => {
   if (!localStorage.getItem('UserToken')) {
     return <Navigate to={{ pathname: '/login' }} />;
   }
+  if (!Boolean(Number(localStorage.getItem('isValid')))) {
+    return (
+      <div style={{ pointerEvents: 'none' }}>
+        <UsersLayout>
+          <Profile />
+        </UsersLayout>
+      </div>
+    );
+  }
 
-  return <React.Fragment>{props.children}</React.Fragment>;
+  return <UsersLayout>{props.children}</UsersLayout>;
 };
 
 export default UserAuthProtected;

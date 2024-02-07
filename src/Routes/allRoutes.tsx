@@ -18,11 +18,14 @@ import Review from 'pages/review/Review';
 
 import {
   Dashboard as userDashboard,
-  Profile,
   Send,
   PatientRecord,
   TeamWork,
+  UpdateProfile,
 } from 'pages/user';
+import AdminLogout from 'pages/auth/AdminLogout';
+import Profile from 'Layouts/admin/Profile';
+import ResetPassword from 'pages/user/ResetPassword';
 
 const authProtectedRoutes = [
   { path: '/auth/dashboard', component: <Dashboard /> },
@@ -44,8 +47,11 @@ const publicRoutes = [
   { path: '/auth/register', component: <SignUp /> },
   { path: '/auth/login', component: <Login /> },
   { path: '/logout', component: <Logout /> },
-  { path: '/forgot-password', component: <ForgotPassword /> },
+  { path: '/auth/logout', component: <AdminLogout /> },
+  // { path: '/forgot-password', component: <ForgotPassword /> },
+  { path: '/user/forgot-password', component: <ForgotPassword /> },
   { path: '/review/:clientId', component: <Review /> },
+  { path: '/user/reset-password/:id/:token', component: <ResetPassword /> },
   // { path: '/review', component: <Review /> },
 
   //User Public Router
@@ -58,8 +64,10 @@ const UserProtectedRouter = [
   { path: '/user/patient_record', component: PatientRecord },
   { path: '/user/teamwork', component: TeamWork },
   { path: '/user/private', component: PrivateReview },
+  { path: '/user/publice', component: PublicReview },
   { path: '/user/customer_support', component: CustomerSupport },
-  { path: '/user/profile', component: Profile },
+  { path: '/user/profile', component: UpdateProfile },
   { path: '/user/logout', component: Logout },
+  { path: '/user/newProfie', component: Profile },
 ];
 export { authProtectedRoutes, publicRoutes, UserProtectedRouter };
