@@ -2,14 +2,14 @@ import React, { ChangeEvent, FocusEvent, useState } from 'react';
 import { Alert, FormFeedback, Input, Label } from 'reactstrap';
 
 interface CustomInputProps {
-  err: boolean;
+  err?: boolean;
   name: string;
   placeholder: string;
   value: string;
-  validationError: boolean;
+  validationError: boolean | undefined;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: FocusEvent<HTMLInputElement>) => void;
-  touchedError: boolean;
+  touchedError: boolean | undefined;
 }
 
 function CustomePass({

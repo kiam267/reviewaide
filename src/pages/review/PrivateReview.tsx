@@ -10,8 +10,10 @@ import Logout from 'pages/auth/Logout';
 
 function PrivateReview(props) {
   const [review, setReview] = useState([]);
-    const [validCookie, setValidCookie] = useState(false);
+  const [validCookie, setValidCookie] = useState(false);
   const [loading, setLoading] = useState(true);
+  console.log(review);
+
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
     axios
@@ -22,18 +24,17 @@ function PrivateReview(props) {
       })
       .then(res => {
         console.log(res);
-          if (res?.msg?.name === 'error') {
-            message.error(res?.msg?.msg);
-          }
-          if (res?.msg?.name === 'success') {
-            // setAllData(res.msg[0].data);
-            setReview(res.msg[0].data);
-          }
+        if (res?.msg?.name === 'error') {
+          message.error(res?.msg?.msg);
+        }
+        if (res?.msg?.name === 'success') {
+          // setAllData(res.msg[0].data);
+          setReview(res.msg[0].data);
+        }
 
-          if (res.msg.name === 'auth') {
-            return setValidCookie(true);
-          }
-        
+        if (res.msg.name === 'auth') {
+          return setValidCookie(true);
+        }
       });
   }, []);
   useEffect(() => {
@@ -42,9 +43,9 @@ function PrivateReview(props) {
     }, 1000);
   }, []);
 
-   if (validCookie) {
-     return <Logout />;
-   }
+  if (validCookie) {
+    return <Logout />;
+  }
   return (
     <CustomeContainer>
       <Breadcrumb title="private Review" breadcrumbItem="Private Review" />
@@ -53,6 +54,7 @@ function PrivateReview(props) {
         size="large"
         dataSource={review}
         renderItem={(item: {
+          email: string;
           rating?: string;
           textarea: string;
           username?: string;
@@ -67,6 +69,9 @@ function PrivateReview(props) {
                   </Col>
                   <Col span={24}>
                     <h3 className="fs-3 text-capitalize">{item?.username}</h3>
+                  </Col>
+                  <Col span={24}>
+                    <h6 className="fs-6 text-capitalize">{item?.email}</h6>
                   </Col>
                   <Col span={24} className="text-body-tertiary">
                     {item?.textarea}

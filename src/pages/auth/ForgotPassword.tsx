@@ -37,6 +37,7 @@ import {
   FORGET_PASSWORD_USER,
   RESETPASSWORD_LINK,
 } from '../../helpers/url_helper';
+import { message } from 'antd';
 
 const ForgetPasswordPage = props => {
   const [isSendMessage, setIsSendMessage] = useState(false);
@@ -55,9 +56,12 @@ const ForgetPasswordPage = props => {
     }),
     onSubmit: values => {
       const link = RESETPASSWORD_LINK;
-      axios.post(FORGET_PASSWORD_USER, {
+      axios.get(FORGET_PASSWORD_USER, {
         headers: { ...values, link },
-      }).then(re => {
+      }).then(res => {
+        if (res.msg.name === 'error') {
+          message.error(res.msg.msg)
+         }        
         setIsSendMessage(true);
       });
     },

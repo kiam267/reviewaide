@@ -69,7 +69,7 @@ const UserLogin = (props: any) => {
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().required('Please Enter Your email'),
+      email: Yup.string().required('Please Enter Your email').trim(),
       password: Yup.string().required('Please Enter Your Password'),
     }),
     onSubmit: (values: any) => {

@@ -1,6 +1,7 @@
 // Server Start
 
 export const REACT_APP_SERVER_API = 'https://docapt.com/';
+// export const REACT_APP_SERVER_API = 'http://localhost:8080/';
 const SERVER_API = REACT_APP_SERVER_API;
 export const ADMIN_REGISTER = SERVER_API + 'api/auth/register';
 export const ADMIN_LOGIN = SERVER_API + 'api/auth/login';
@@ -18,8 +19,10 @@ export const CLIENT_VISITOR_METHODS = SERVER_API + 'api/client/methods';
 export const ADMIN_GET = SERVER_API + 'api';
 export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
 
+// export const LINK = 'http://localhost:3000/review';
 export const LINK = 'https://docapt.com/review';
-export const RESETPASSWORD_LINK = 'https://docapt.com:3000';
+// export const RESETPASSWORD_LINK = 'http://localhost:3000';
+export const RESETPASSWORD_LINK = 'https://docapt.com';
 
 //REGISTER
 export const POST_FAKE_REGISTER = '/post-fake-register';

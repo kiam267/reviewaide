@@ -41,11 +41,12 @@ import {
   RESET_PASSWORD_USER,
 } from '../../helpers/url_helper';
 import { message } from 'antd';
+import CustomePass from 'Components/CustomePass';
 function ResetPassword() {
   const { id, token } = useParams();
   const [isSendMessage, setIsSendMessage] = useState(false);
   const dispatch = useDispatch<any>();
-
+  const [show, setShow] = useState(false);
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -97,6 +98,8 @@ function ResetPassword() {
   const { forgetError, forgetSuccessMsg } = useSelector(selectProperties);
   console.log(isSendMessage);
 
+  console.log(validation.errors.password);
+
   if (isSendMessage) {
     return <Navigate to="/login" />;
   }
@@ -145,22 +148,32 @@ function ResetPassword() {
                       }}
                     >
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
-                        <Input
-                          name="password"
-                          className="form-control"
-                          placeholder="Enter email"
-                          type="password"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.password || ''}
-                          invalid={
-                            validation.touched.password &&
-                            validation.errors.password
-                              ? true
-                              : false
-                          }
-                        />
+                        <Label className="form-label">Password</Label>
+                        <div className="input-group auth-pass-inputgroup">
+                          <Input
+                            name="password"
+                            className="form-control"
+                            placeholder="Enter password"
+                            type={show ? 'text' : 'password'}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.password || ''}
+                            invalid={
+                              validation.touched.password &&
+                              validation.errors.password
+                                ? true
+                                : false
+                            }
+                          />
+                          <button
+                            onClick={() => setShow(!show)}
+                            className="btn btn-light "
+                            type="button"
+                            id="password-addon"
+                          >
+                            <i className="mdi mdi-eye-outline"></i>
+                          </button>
+                        </div>
                         {validation.touched.password &&
                         validation.errors.password ? (
                           <FormFeedback type="invalid">
