@@ -9,6 +9,7 @@ function PublicReview(props: Props) {
 
   return (
     <CustomeContainer>
+      <h5 className='text-gray opacity-5 '>🌟 Exciting News: Something Amazing is Coming Soon! 🌟 .</h5>
       <Breadcrumb title="private Review" breadcrumbItem="Publice Review" />
     </CustomeContainer>
   );

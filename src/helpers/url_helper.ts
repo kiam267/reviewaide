@@ -11,6 +11,8 @@ export const POST_RESET_PASSWORD_USER =
   SERVER_API + 'api/users/post-reset-password';
 export const CREATE_USERS = SERVER_API + 'api/users/create';
 export const GET_USERS = SERVER_API + 'api/users/users';
+export const GET_USERS_DASHBOARD = SERVER_API + 'api/users/';
+export const GET_USERS_MINI_UPDATE = SERVER_API + 'api/users/mini-update';
 export const USER_LOGIN = SERVER_API + 'api/users/login';
 export const USER_UPDATE = SERVER_API + 'api/users/update';
 export const CLIENT_VISITOR = SERVER_API + 'api/client/';

@@ -4,8 +4,15 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Form,
+  FormFeedback,
+  Input,
+  Label,
+  Alert,
+  Row,
+  Col,
 } from 'reactstrap';
-import { Avatar, Badge } from 'antd';
+import { Avatar, Badge, Button, Card, message } from 'antd';
 //i18n
 import { withTranslation } from 'react-i18next';
 // Redux
@@ -20,13 +27,28 @@ import { useSelector } from 'react-redux';
 import { log } from 'console';
 import axios from 'axios';
 import CustomeContainer from 'Components/Common/CustomeContainer';
-
+import {
+  GET_USERS_DASHBOARD,
+  GET_USERS_MINI_UPDATE,
+} from '../../helpers/url_helper';
+import Logout from 'pages/auth/Logout';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 const UpdateProfile = (props: any) => {
   // Declare a new state variable, which we'll call "menu"
   // const { avater } = useUserAuth();
 
-  const [menu, setMenu] = useState(false);
-
+  const [menu, setMenu] = useState(true);
+  const [alldata, setAllData] = useState([
+    {
+      username: '',
+      phone: '',
+      company_name: '',
+      facebook_link: '',
+      google_link: '',
+    },
+  ]);
+  const [validCookie, setValidCookie] = useState(false);
   const selectProfileProperties = createSelector(
     (state: any) => state.Avater,
     profile => ({
@@ -34,128 +56,234 @@ const UpdateProfile = (props: any) => {
     })
   );
 
-  // const { user } = useSelector(selectProfileProperties);
+  useEffect(() => {
+    const token = localStorage.getItem('UserToken');
+    axios.get(GET_USERS_MINI_UPDATE, { headers: { token } }).then(res => {
+      console.log(res);
+
+      if (res?.msg?.name === 'error') {
+        message.error('error', res.msg.msg);
+      }
+      if (res?.msg?.name === 'success') {
+        setAllData(res.msg[0].data);
+        return;
+      }
+      if (res.msg.name === 'auth') {
+        return setValidCookie(true);
+      }
+    });
+  }, []);
+
+  const validation: any = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+      username: alldata[0].username,
+      phone: alldata[0].phone,
+      companyName: alldata[0].company_name,
+      google: alldata[0].google_link,
+      facebook: alldata[0].facebook_link,
+    },
+    validationSchema: Yup.object({
+      username: Yup.string().required('Please Enter Your Username'),
+      phone: Yup.number().required('Please Enter Your email'),
+      companyName: Yup.string().required('Please Enter Your Company Name'),
+      google: Yup.string().required('Please Enter Your google Link'),
+      facebook: Yup.string().required('Please Enter Your Facebook Link'),
+    }),
+    onSubmit: async (values: any, { setValues }) => {
+      const token = localStorage.getItem('UserToken');
+      axios
+        .put(GET_USERS_DASHBOARD, { ...values }, { headers: { token } })
+        .then(res => {
+          console.log('ok...');
+
+          if (res?.msg?.name === 'error') {
+            message.error('error', res.msg.msg);
+            return;
+          }
+          if (res?.msg?.name === 'success') {
+            message.success('success', res.msg.msg);
+            return;
+          }
+          if (res.msg.name === 'auth') {
+            return setValidCookie(true);
+          }
+        });
+    },
+  });
   const { name } = useSelector(selectProfileProperties);
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("authUser")) {
-  //     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-  //       const obj = JSON.parse(localStorage.getItem("authUser") || "");
-  //       setUsername(obj.displayName);
-  //     } else if (
-  //       process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-  //       process.env.REACT_APP_DEFAULTAUTH === "jwt"
-  //     ) {
-  //       setUsername(user?.username);
-  //     }
-  //   }
-  // }, [user]);
-
+  const selectProperties = createSelector(
+    (state: any) => state.Login,
+    login => ({
+      error: login.error,
+    })
+  );
+  const { error } = useSelector(selectProperties);
+  if (validCookie) {
+    return <Logout />;
+  }
   return (
-    // <React.Fragment>
-    //   <Dropdown
-    //     isOpen={menu}
-    //     toggle={() => setMenu(!menu)}
-    //     classNameName="d-inline-block"
-    //   >
-    //     <DropdownToggle
-    //       classNameName="btn header-item "
-    //       id="page-header-user-dropdown"
-    //       tag="button"
-    //     >
-    //       {/* http://localhost:8080 */}
-    //       <Avatar size="default">{name}</Avatar>
-    //       <span classNameName="d-none d-xl-inline-block ms-2 me-1">{'admin'}</span>
-    //       <i classNameName="mdi mdi-chevron-down d-none d-xl-inline-block" />
-    //     </DropdownToggle>
-    //     <DropdownMenu classNameName="dropdown-menu-end">
-    //       <DropdownItem tag="a" href="/user/profile">
-    //         <i classNameName="bx bx-user font-size-16 align-middle me-1" />
-    //         {props.t('Profile')}
-    //       </DropdownItem>
-    //       {/*
-    //       <DropdownItem tag="a" href={'/user/customer_support'}>
-    //         <i classNameName="bx bx-support font-size-16 align-middle me-1" />
-    //         {props.t('Support')}{' '}
-    //         <Badge style={{ background: '#d9d9d9' }} count="BETA" />
-    //       </DropdownItem> */}
-    //       <DropdownItem tag="a" href={'/auth/profile'}>
-    //         <i classNameName="bx bx-lock-open font-size-16 align-middle me-1" />
-    //         {props.t('Lock screen')}
-    //         <Badge style={{ background: '#d9d9d9' }} count="BETA" />
-    //       </DropdownItem>
-
-    //       <div classNameName="dropdown-divider" />
-    //       <Link to="/auth/logout" classNameName="dropdown-item">
-    //         <i classNameName="bx bx-power-off font-size-16 align-middle me-1 text-danger" />
-    //         <span>{props.t('Logout')}</span>
-    //       </Link>
-    //     </DropdownMenu>
-    //   </Dropdown>
-    // </React.Fragment>
     <CustomeContainer>
-      <div className="accordion" id="accordionExample">
-        <div className="accordion-item">
-          <h2 className="accordion-header">
-            <button
-              className="accordion-button"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseOne"
-              aria-expanded="true"
-              aria-controls="collapseOne"
+      <Row className="justify-content-center">
+        <Col sm={12} lg={6}>
+          <Card>
+            <Form
+              className="form-horizontal"
+              onSubmit={e => {
+                e.preventDefault();
+                validation.handleSubmit();
+                return false;
+              }}
             >
-              Accordion Item #1
-            </button>
-          </h2>
-          <div
-            id="collapseOne"
-            className="accordion-collapse collapse show"
-            data-bs-parent="#accordionExample"
-          >
-            <div className="accordion-body">
-              <strong>This is the first item's accordion body.</strong> It is
-              shown by default, until the collapse plugin adds the appropriate
-              classNamees that we use to style each element. These classNamees
-              control the overall appearance, as well as the showing and hiding
-              via CSS transitions. You can modify any of this with custom CSS or
-              overriding our default variables. It's also worth noting that just
-              about any HTML can go within the <code>.accordion-body</code>,
-              though the transition does limit overflow.
-            </div>
-          </div>
-        </div>
-        <div className="accordion-item">
-          <h2 className="accordion-header">
-            <button
-              className="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseTwo"
-              aria-expanded="false"
-              aria-controls="collapseTwo"
-            >
-              Accordion Item #2
-            </button>
-          </h2>
-          <div
-            id="collapseTwo"
-            className="accordion-collapse collapse"
-            data-bs-parent="#accordionExample"
-          >
-            <div className="accordion-body">
-              <strong>This is the second item's accordion body.</strong> It is
-              hidden by default, until the collapse plugin adds the appropriate
-              classNamees that we use to style each element. These classNamees
-              control the overall appearance, as well as the showing and hiding
-              via CSS transitions. You can modify any of this with custom CSS or
-              overriding our default variables. It's also worth noting that just
-              about any HTML can go within the <code>.accordion-body</code>,
-              though the transition does limit overflow.
-            </div>
-          </div>
-        </div>
-      </div>
+              <div className="mb-3">
+                {error ? <Alert color="danger">{error}</Alert> : null}
+                <Label className="form-label">username</Label>
+                <Input
+                  name="username"
+                  className="form-control"
+                  placeholder="Enter username"
+                  type="text"
+                  disabled={menu}
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.username || ''}
+                  invalid={
+                    validation.touched.username && validation.errors.username
+                      ? true
+                      : false
+                  }
+                />
+                {validation.touched.username && validation.errors.username ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.username}
+                  </FormFeedback>
+                ) : null}
+              </div>
+              <div className="mb-3">
+                {error ? <Alert color="danger">{error}</Alert> : null}
+                <Label className="form-label">phone</Label>
+                <Input
+                  name="phone"
+                  className="form-control"
+                  placeholder="Enter a phone"
+                  disabled={menu}
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.phone || ''}
+                  invalid={
+                    validation.touched.phone && validation.errors.phone
+                      ? true
+                      : false
+                  }
+                />
+                {validation.touched.phone && validation.errors.phone ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.phone}
+                  </FormFeedback>
+                ) : null}
+              </div>
+              <div className="mb-3">
+                {error ? <Alert color="danger">{error}</Alert> : null}
+                <Label className="form-label">companyName</Label>
+                <Input
+                  name="companyName"
+                  className="form-control"
+                  disabled={menu}
+                  placeholder="Enter a companyName"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.companyName || ''}
+                  invalid={
+                    validation.touched.companyName &&
+                    validation.errors.companyName
+                      ? true
+                      : false
+                  }
+                />
+                {validation.touched.companyName &&
+                validation.errors.companyName ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.companyName}
+                  </FormFeedback>
+                ) : null}
+              </div>
+              <div className="mb-3">
+                {error ? <Alert color="danger">{error}</Alert> : null}
+                <Label className="form-label">google</Label>
+                <Input
+                  name="google"
+                  disabled={menu}
+                  className="form-control"
+                  placeholder="Enter  a google"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.google || ''}
+                  invalid={
+                    validation.touched.google && validation.errors.google
+                      ? true
+                      : false
+                  }
+                />
+                {validation.touched.google && validation.errors.google ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.google}
+                  </FormFeedback>
+                ) : null}
+              </div>
+              <div className="mb-3">
+                {error ? <Alert color="danger">{error}</Alert> : null}
+                <Label className="form-label">facebook</Label>
+                <Input
+                  name="facebook"
+                  disabled={menu}
+                  className="form-control"
+                  placeholder="Enter facebook"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.facebook || ''}
+                  invalid={
+                    validation.touched.facebook && validation.errors.facebook
+                      ? true
+                      : false
+                  }
+                />
+                {validation.touched.facebook && validation.errors.facebook ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.facebook}
+                  </FormFeedback>
+                ) : null}
+              </div>
+
+              <div className="mt-3 d-grid">
+                {menu ? (
+                  <div
+                    className="btn btn-block fw-bold text-white fs-5"
+                    style={{ background: '#FE9150' }}
+                    onClick={() => setMenu(false)}
+                  >
+                    Edit
+                  </div>
+                ) : (
+                  <button
+                    className="btn btn-block fw-bold text-white fs-5"
+                    type="submit"
+                    style={{ background: '#FE9150' }}
+                  >
+                    Update
+                  </button>
+                )}
+              </div>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
     </CustomeContainer>
   );
 };

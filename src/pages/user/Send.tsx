@@ -152,10 +152,11 @@ const UserDashboard = (props: any) => {
       date: date,
     },
     validationSchema: Yup.object({
-      username: Yup.string()
-        .required('Please Enter Your Patient Name ')
-        .max(10),
-      email: Yup.string().email().required('Please Enter Your Patient Email'),
+      username: Yup.string().required('Please Enter Your Patient Name '),
+      email: Yup.string()
+        .email()
+        .required('Please Enter Your Patient Email')
+        .trim(),
       date: Yup.string().required('Please Enter Your Patient Date'),
     }),
     onSubmit: (values: any, { resetForm }) => {
