@@ -21,9 +21,14 @@ import { createSelector } from 'reselect';
 import { getReview, privateReview } from 'api/clientVisitor';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { CLIENT_VISITOR_GET, CLIENT_VISITOR_METHODS, PRIVATE_REVIEW } from '../../helpers/url_helper';
+import {
+  CLIENT_VISITOR_GET,
+  CLIENT_VISITOR_METHODS,
+  PRIVATE_REVIEW,
+} from '../../helpers/url_helper';
 import UserLogin from 'pages/auth/userLogin';
 import Logout from 'pages/auth/Logout';
+import { Button } from 'antd';
 const Review = () => {
   //meta title
   document.title = 'Rating | Skote - React Admin & Dashboard Template';
@@ -39,14 +44,13 @@ const Review = () => {
   const [data, setData] = useState([]);
   const { clientId } = useParams();
 
-
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
     axios
       .get(CLIENT_VISITOR_GET, { headers: { token, clientId: clientId } })
       .then(res => {
         console.log(res);
-        
+
         if (res.msg.name === 'success') {
           SETLINK({ ...res.msg[0] });
           return setshow(res.msg[0].isSend);
@@ -61,8 +65,8 @@ const Review = () => {
   }, [show]);
 
   const handelMethods = item => {
-     const now = new Date();
-     const dateData = (dateFormat(now, 'ddd, mmm dS, yyyy'));
+    const now = new Date();
+    const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
     axios.put(CLIENT_VISITOR_METHODS, { clientId: clientId, item, dateData });
   };
   const selectProperties = createSelector(
@@ -97,34 +101,33 @@ const Review = () => {
       textarea: Yup.string().required('Please Enter Your Textarea'),
     }),
     onSubmit: (values: any) => {
-    const now = new Date();
-    const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
-        return axios
-          .post(PRIVATE_REVIEW, {
-            ...values,
-            private: 'private',
-            dateData,
-            clientId,
-          })
-          .then(res => {
-            if (res.msg.name === 'error') {
-              return setErrorMessage(res.msg.msg);
-            }
-            if (res.msg.name === 'ZodError') {
-              return setErrorMessage(res.msg.issues[0].message);
-            }
-            setAdminMessage(res.msg.msg);
-            return;
-          });
+      const now = new Date();
+      const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
+      return axios
+        .post(PRIVATE_REVIEW, {
+          ...values,
+          private: 'private',
+          dateData,
+          clientId,
+        })
+        .then(res => {
+          if (res.msg.name === 'error') {
+            return setErrorMessage(res.msg.msg);
+          }
+          if (res.msg.name === 'ZodError') {
+            return setErrorMessage(res.msg.issues[0].message);
+          }
+          setAdminMessage(res.msg.msg);
+          return;
+        });
     },
   });
-
 
   if (show) {
     return <Navigate to="/werwer" />;
   }
   if (validCookie) {
-    return <Logout/>
+    return <Logout />;
   }
   return (
     <React.Fragment>
@@ -132,7 +135,7 @@ const Review = () => {
         <Container fluid={true}>
           <Row className="justify-content-center">
             <Col className="col-md-12 col-lg-7">
-              <Card>
+              <Card className='rounded-5 p-3'>
                 <CardBody>
                   <Alert
                     color="danger"
@@ -152,9 +155,10 @@ const Review = () => {
                     <Col>
                       {retingShow ? (
                         <div className="p-4 text-center">
-                          <h5 className="font-16 m-b-15">
-                            Please share your feedback on your recent visit to
-                            Docapt
+                          <h5 className="font-16 m-b-15 fs-4">
+                            We kindly invite you to rate our service using
+                            below. Your feedback is greatly valued and helps us
+                            improve.
                           </h5>
                           <Rating
                             size={45}
@@ -162,17 +166,33 @@ const Review = () => {
                             transition
                             onClick={e => {
                               setRating(e);
-                              setRatingShow(false);
                             }}
                           />
+                          <div className="d-block position-absolute bottom-0 end-0">
+                            <Button
+                              value="large"
+                              type="primary"
+                              danger
+                              // style={{ background: '#F77857' }}
+                              // className='text-white'
+                              onClick={() => setRatingShow(false)}
+                            >
+                              <i
+                                className="bx bx-right-arrow-alt fs-2"
+                                style={{ color: '#fff' }}
+                              ></i>
+                            </Button>
+                          </div>
                         </div>
                       ) : (
                         <>
                           {rating > 3 ? (
-                            <div className="mt-5">
-                              <h4 className="fs-5 text-center fw-semibold">
-                                Please share your review at Google/ Facebook
-                                Media
+                            <div className="mt-5 mb-3 rounded-4">
+                              <h4 className=" text-center mb-4 lh-base">
+                                Thank you for planning to review us! If you
+                                could share your experience on Google or social
+                                media, it would greatly benefit our community
+                                and help us grow.
                               </h4>
                               <div className="mt-3">
                                 <Link
@@ -216,11 +236,15 @@ const Review = () => {
                                     {error ? (
                                       <Alert color="danger">{error}</Alert>
                                     ) : null}
-                                    <Label>Write your Feedback.</Label>
+                                    <Label className="fs-4">
+                                      Thanks for reviewing! Your feedback below
+                                      supports our growth. Write Feedback Here
+                                    </Label>
                                     <Input
                                       name="textarea"
                                       type="textarea"
-                                      id="textarea"
+                                          id="textarea"
+                                          className='fs-5'
                                       onChange={e => {
                                         textareachange(e);
                                         validation.handleChange(e);
@@ -252,7 +276,7 @@ const Review = () => {
                                   </div>
                                   <div className="mt-3 d-block w-25 mx-auto">
                                     <button
-                                      className="btn btn-primary btn-block "
+                                      className="btn btn-primary btn-block w-50 fs-5"
                                       type="submit"
                                     >
                                       Submit
