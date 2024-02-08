@@ -123,9 +123,9 @@ const Review = () => {
     },
   });
 
-  if (show) {
-    return <Navigate to="/werwer" />;
-  }
+  // if (show) {
+  //   return <Navigate to="/werwer" />;
+  // }
   if (validCookie) {
     return <Logout />;
   }
