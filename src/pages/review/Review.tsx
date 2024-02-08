@@ -135,7 +135,7 @@ const Review = () => {
         <Container fluid={true}>
           <Row className="justify-content-center">
             <Col className="col-md-12 col-lg-7">
-              <Card className='rounded-5 p-3'>
+              <Card className="rounded-5 p-3">
                 <CardBody>
                   <Alert
                     color="danger"
@@ -155,7 +155,7 @@ const Review = () => {
                     <Col>
                       {retingShow ? (
                         <div className="p-4 text-center">
-                          <h5 className="font-16 m-b-15 fs-4">
+                          <h5 className="font-16 m-b-15 fs-5">
                             We kindly invite you to rate our service using
                             below. Your feedback is greatly valued and helps us
                             improve.
@@ -188,7 +188,7 @@ const Review = () => {
                         <>
                           {rating > 3 ? (
                             <div className="mt-5 mb-3 rounded-4">
-                              <h4 className=" text-center mb-4 lh-base">
+                              <h4 className=" text-center mb-4 fs-5 lh-base">
                                 Thank you for planning to review us! If you
                                 could share your experience on Google or social
                                 media, it would greatly benefit our community
@@ -236,15 +236,15 @@ const Review = () => {
                                     {error ? (
                                       <Alert color="danger">{error}</Alert>
                                     ) : null}
-                                    <Label className="fs-4">
+                                    <Label className="fs-5">
                                       Thanks for reviewing! Your feedback below
                                       supports our growth. Write Feedback Here
                                     </Label>
                                     <Input
                                       name="textarea"
                                       type="textarea"
-                                          id="textarea"
-                                          className='fs-5'
+                                      id="textarea"
+                                     
                                       onChange={e => {
                                         textareachange(e);
                                         validation.handleChange(e);
@@ -276,7 +276,7 @@ const Review = () => {
                                   </div>
                                   <div className="mt-3 d-block w-25 mx-auto">
                                     <button
-                                      className="btn btn-primary btn-block w-50 fs-5"
+                                      className="btn btn-primary btn-block fs-6"
                                       type="submit"
                                     >
                                       Submit
