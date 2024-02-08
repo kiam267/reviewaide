@@ -20,6 +20,7 @@ export const CLIENT_VISITOR_GET = SERVER_API + 'api/client/review';
 export const CLIENT_VISITOR_METHODS = SERVER_API + 'api/client/methods';
 export const ADMIN_GET = SERVER_API + 'api';
 export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
+export const CUSSTOMER_SUPPORT_EMAIL = SERVER_API + 'api/customer/email';
 
 // export const LINK = 'http://localhost:3000/review';
 export const LINK = 'https://docapt.com/review';

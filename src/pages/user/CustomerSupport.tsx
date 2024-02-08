@@ -13,8 +13,13 @@ import {
 } from 'reactstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
+import { CUSSTOMER_SUPPORT_EMAIL } from '../../helpers/url_helper';
+import Logout from 'pages/auth/Logout';
+import { message } from 'antd';
 
 function CustomerSupport(props) {
+  const [validCookie, setValidCookie] = useState(false);
   const nestedformik: any = useFormik({
     initialValues: {
       email: '',
@@ -28,13 +33,33 @@ function CustomerSupport(props) {
       msg: Yup.string().required('This field is required'),
     }),
 
-    onSubmit: (value: any) => {
-      console.log(value);
+    onSubmit: (value: any, { resetForm }) => {
+      const token = localStorage.getItem('UserToken');
+      axios
+        .post(CUSSTOMER_SUPPORT_EMAIL, { ...value }, { headers: { token } })
+        .then(res => {
+          if (res?.msg?.name === 'error') {
+            message.error(res.msg.msg);
+            return;
+          }
+          if (res?.msg?.name === 'success') {
+            message.success(res.msg.msg);
+            resetForm();
+            return;
+          }
+
+          if (res.msg.name === 'auth') {
+            return setValidCookie(true);
+          }
+        });
 
       // console.log("value", values.password);
     },
   });
 
+  if (validCookie) {
+    return <Logout />;
+  }
   return (
     <AllContainer>
       <Row className="justify-content-center">
