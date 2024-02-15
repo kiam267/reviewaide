@@ -58,8 +58,8 @@ const UpdateProfile = (props: any) => {
 
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
-    axios.get(GET_USERS_MINI_UPDATE, { headers: { token } }).then(res => {
-      console.log(res);
+    axios.get(GET_USERS_MINI_UPDATE, { headers: { token } }).then(resp => {
+      const res = resp.data;
 
       if (res?.msg?.name === 'error') {
         message.error('error', res.msg.msg);

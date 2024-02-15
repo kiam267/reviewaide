@@ -48,8 +48,8 @@ const Review = () => {
     const token = localStorage.getItem('UserToken');
     axios
       .get(CLIENT_VISITOR_GET, { headers: { token, clientId: clientId } })
-      .then(res => {
-        console.log(res);
+      .then(resp => {
+        const res = resp.data;
 
         if (res.msg.name === 'success') {
           SETLINK({ ...res.msg[0] });
@@ -164,6 +164,7 @@ const Review = () => {
                             size={45}
                             initialValue={4}
                             transition
+                            
                             onClick={e => {
                               setRating(e);
                             }}
@@ -244,7 +245,6 @@ const Review = () => {
                                       name="textarea"
                                       type="textarea"
                                       id="textarea"
-                                     
                                       onChange={e => {
                                         textareachange(e);
                                         validation.handleChange(e);
@@ -257,7 +257,7 @@ const Review = () => {
                                           ? true
                                           : false
                                       }
-                                      maxLength={350}
+                                      maxLength={900}
                                       rows="3"
                                       placeholder="Write your Feedback...."
                                     />
@@ -270,7 +270,7 @@ const Review = () => {
                                     {textareabadge ? (
                                       <span className="badgecount badge bg-success">
                                         {' '}
-                                        {textcount} / 350{' '}
+                                        {textcount} / 900{' '}
                                       </span>
                                     ) : null}
                                   </div>

@@ -27,7 +27,7 @@ import Breadcrumb from "Components/Common/Breadcrumb";
 
 import avatar from "../../assets/images/users/avatar-1.jpg";
 
-import { editProfile, resetProfileFlag } from "slices/thunk";
+// import { editProfile, resetProfileFlag } from "slices/thunk";
 import { createSelector } from 'reselect';
 
 const UserProfile = () => {
@@ -69,9 +69,9 @@ const UserProfile = () => {
         setEmail(user?.email);
         setIdx(user?.uid);
       }
-      setTimeout(() => {
-        dispatch(resetProfileFlag());
-      }, 3000);
+      // setTimeout(() => {
+      //   dispatch(resetProfileFlag());
+      // }, 3000);
     }
   }, [dispatch, user]);
 
@@ -87,7 +87,7 @@ const UserProfile = () => {
       username: Yup.string().required("Please Enter Your UserName"),
     }),
     onSubmit: (values) => {
-      dispatch(editProfile(values));
+      // dispatch(editProfile(values));
     }
   });
 

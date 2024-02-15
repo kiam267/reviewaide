@@ -22,8 +22,8 @@ function PrivateReview(props) {
           token,
         },
       })
-      .then(res => {
-        console.log(res);
+      .then(resp => {
+       const res = resp.data;
         if (res?.msg?.name === 'error') {
           message.error(res?.msg?.msg);
         }

@@ -13,11 +13,11 @@ import {
   FormFeedback,
   Alert,
 } from 'reactstrap';
-import {
-  loginuser,
-  resetLoginMsgFlag,
-  socialLogin,
-} from 'slices/auth/login/thunk';
+// import {
+//   loginuser,
+//   resetLoginMsgFlag,
+//   socialLogin,
+// } from 'slices/auth/login/thunk';
 // Formik validation
 import * as Yup from 'yup';
 import { useSelector, useDispatch } from 'react-redux';
@@ -72,7 +72,8 @@ function CreateUsers(props) {
       const data = { ...values, date };
       axios
         .post(CREATE_USERS, data, { headers: { token } })
-        .then((res: any) => {
+        .then((resp: any) => {
+          const res = resp.data;
           if (res?.msg?.name === 'error') {
             return setErrorMessage(res?.msg?.msg);
           }
@@ -88,13 +89,13 @@ function CreateUsers(props) {
     },
   });
 
-  useEffect(() => {
-    if (error) {
-      setTimeout(() => {
-        dispatch(resetLoginMsgFlag());
-      }, 3000);
-    }
-  }, [dispatch, error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     setTimeout(() => {
+  //       dispatch(resetLoginMsgFlag());
+  //     }, 3000);
+  //   }
+  // }, [dispatch, error]);
 
   if (!validCookie) {
     return <AdminLogout />;

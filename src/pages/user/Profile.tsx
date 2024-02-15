@@ -21,7 +21,7 @@ import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
 //import thunk
-import { resetLoginMsgFlag } from 'slices/auth/login/thunk';
+// import { resetLoginMsgFlag } from 'slices/auth/login/thunk';
 
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
@@ -127,7 +127,9 @@ const UpdateProfile = (props: any) => {
       companyName: '',
       google: '',
       facebook: '',
-      temporray: '',
+      temporary: '',
+      editEmail: '',
+      editSms: '',
     },
     validationSchema: Yup.object({
       username: Yup.string().required('Please Enter Your Username'),
@@ -139,7 +141,9 @@ const UpdateProfile = (props: any) => {
       companyName: Yup.string().required('Please Enter Your Company Name'),
       google: Yup.string().required('Please Enter Your google Link'),
       facebook: Yup.string().required('Please Enter Your Facebook Link'),
-      temporray: Yup.number().required('Please Enter Your Facebook Link'),
+      temporary: Yup.number().required('Please Enter Your Facebook Link'),
+      editEmail: Yup.string().required('Please Edit Your Email'),
+      editSms: Yup.string().required('Please Edit Your SMS'),
     }),
     onSubmit: async (values: any, { setValues }) => {
       const data = { imageURL, ...values, date, token };
@@ -162,13 +166,13 @@ const UpdateProfile = (props: any) => {
     },
   });
 
-  useEffect(() => {
-    if (error) {
-      setTimeout(() => {
-        dispatch(resetLoginMsgFlag());
-      }, 3000);
-    }
-  }, [dispatch, error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     setTimeout(() => {
+  //       dispatch(resetLoginMsgFlag());
+  //     }, 3000);
+  //   }
+  // }, [dispatch, error]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -183,7 +187,7 @@ const UpdateProfile = (props: any) => {
   return (
     <CustomeContainer>
       <Modal open={open} footer={<></>} className="">
-        <Steps current={current} items={items} className="mt-5"  />
+        <Steps current={current} items={items} className="mt-5" />
 
         <Form
           className="form-horizontal mt-5"

@@ -26,11 +26,11 @@ import logo from '../../assets/images/logo.svg';
 import lightlogo from '../../assets/images/logo-light.svg';
 
 //import thunk
-import {
-  loginuser,
-  resetLoginMsgFlag,
-  socialLogin,
-} from 'slices/auth/login/thunk';
+// import {
+//   loginuser,
+//   resetLoginMsgFlag,
+//   socialLogin,
+// } from 'slices/auth/login/thunk';
 
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
@@ -85,13 +85,13 @@ const Login = (props: any) => {
     },
   });
 
-  useEffect(() => {
-    if (error) {
-      setTimeout(() => {
-        dispatch(resetLoginMsgFlag());
-      }, 3000);
-    }
-  }, [dispatch, error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     setTimeout(() => {
+  //       dispatch(resetLoginMsgFlag());
+  //     }, 3000);
+  //   }
+  // }, [dispatch, error]);
 
   useEffect(() => {
     setInterval(() => {

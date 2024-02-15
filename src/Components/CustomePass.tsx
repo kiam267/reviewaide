@@ -27,7 +27,7 @@ function CustomePass({
     <div>
       <div className="mb-3">
         {err ? <Alert color="danger">{err}</Alert> : null}
-        <Label className="form-label">{name}</Label>
+        <Label className="form-label text-capitalize">{name}</Label>
         <div className="input-group auth-pass-inputgroup">
           <Input
             name={name}

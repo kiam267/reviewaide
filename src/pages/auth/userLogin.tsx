@@ -26,11 +26,11 @@ import backgroundImage from '../../assets/img/Docapt.png';
 // import Video from '../../assets/images/docapt.mp4';
 
 //import thunk
-import {
-  loginuser,
-  resetLoginMsgFlag,
-  socialLogin,
-} from 'slices/auth/login/thunk';
+// import {
+//   loginuser,
+//   resetLoginMsgFlag,
+//   socialLogin,
+// } from 'slices/auth/login/thunk';
 import { Img, Svg } from 'react-optimized-image';
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
@@ -73,7 +73,8 @@ const UserLogin = (props: any) => {
       password: Yup.string().required('Please Enter Your Password'),
     }),
     onSubmit: (values: any) => {
-      userLogin(values).then((res: any) => {
+      userLogin(values).then((resp: any) => {
+        const res = resp.data;
         if (res.msg.name === 'error') {
           return message.error(res.msg.msg);
         }
@@ -85,13 +86,13 @@ const UserLogin = (props: any) => {
     },
   });
 
-  useEffect(() => {
-    if (error) {
-      setTimeout(() => {
-        dispatch(resetLoginMsgFlag());
-      }, 3000);
-    }
-  }, [dispatch, error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     setTimeout(() => {
+  //       dispatch(resetLoginMsgFlag());
+  //     }, 3000);
+  //   }
+  // }, [dispatch, error]);
 
   if (isLoggedIn) {
     return <Navigate to="/user" />;

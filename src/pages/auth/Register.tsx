@@ -17,7 +17,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
 // action
-import { registerUser, apiError } from '../../slices/thunk';
+// import { registerUser, apiError } from '../../slices/thunk';
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -82,9 +82,9 @@ const Register = () => {
 
   const { user, registrationError } = useSelector(selectProperties);
 
-  useEffect(() => {
-    dispatch(apiError());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(apiError());
+  // }, [dispatch]);
 
   useEffect(() => {
     setInterval(() => {

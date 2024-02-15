@@ -34,7 +34,7 @@ import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
 //import thunk
-import { resetLoginMsgFlag, socialLogin } from 'slices/auth/login/thunk';
+// import { resetLoginMsgFlag, socialLogin } from 'slices/auth/login/thunk';
 import Breadcrumbs from '../../Components/Common/Breadcrumb';
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
@@ -110,9 +110,8 @@ const UserDashboard = (props: any) => {
         { ...mainData, LINK, token, method },
         { headers: { token } }
       )
-      .then(res => {
-        console.log(res);
-
+      .then(resp => {
+        const res = resp.data;
         if (res?.msg?.name === 'error') {
           miniMessage('error', res.msg.msg);
           return setButtonLoading(false);
@@ -149,6 +148,7 @@ const UserDashboard = (props: any) => {
     initialValues: {
       username: '',
       email: '',
+      phone: '',
       date: date,
     },
     validationSchema: Yup.object({
@@ -157,6 +157,7 @@ const UserDashboard = (props: any) => {
         .email()
         .required('Please Enter Your Patient Email')
         .trim(),
+      phone: Yup.number().required('Please Enter Your Patient Number '),
       date: Yup.string().required('Please Enter Your Patient Date'),
     }),
     onSubmit: (values: any, { resetForm }) => {
@@ -169,28 +170,19 @@ const UserDashboard = (props: any) => {
     },
   });
 
-  useEffect(() => {
-    if (error) {
-      setTimeout(() => {
-        dispatch(resetLoginMsgFlag());
-      }, 3000);
-    }
-  }, [dispatch, error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     setTimeout(() => {
+  //       dispatch(resetLoginMsgFlag());
+  //     }, 3000);
+  //   }
+  // }, [dispatch, error]);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1000);
   }, []);
-  useEffect(() => {
-    // allSendData().then(res => {
-    //   setSuccessSendData(res.reverse());
-    // });
-  }, []);
-  // var ssm = successSendData.sort(function (a, b) {
-  //   return b - a;
-  // });
-  // console.log(ssm);
 
   if (validCookie) {
     return <Logout />;
@@ -200,8 +192,15 @@ const UserDashboard = (props: any) => {
       {contextHolder}
 
       <Row gutter={[16, 16]} className="justify-content-end">
+        <Col className="col-12">
+          <Breadcrumbs title="Process" breadcrumbItem="Process" />
+        </Col>
         <Col sm={6}>
-          <button className="rounded d-block m-auto" onClick={showModal}>
+          <button
+            className="rounded-4 d-block m-auto "
+            style={{ borderColor: '#F6653F', outline: 'none' }}
+            onClick={showModal}
+          >
             <Popover content="Add Message" trigger="hover">
               <i className="bx bx-plus fs-1 pe-auto"></i>
             </Popover>
@@ -228,7 +227,7 @@ const UserDashboard = (props: any) => {
             <Input
               name="username"
               className="form-control"
-              placeholder="Enter Your Patient Name"
+              placeholder="jon"
               type="text"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -251,7 +250,7 @@ const UserDashboard = (props: any) => {
             <Input
               name="email"
               className="form-control"
-              placeholder="Enter Your Patient Email"
+              placeholder="jon@gmail.com"
               type="text"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -271,16 +270,25 @@ const UserDashboard = (props: any) => {
           <div className="mb-3">
             {error ? <Alert color="danger">{error}</Alert> : null}
             <Label className="form-label">Phone</Label>
-            <PhoneInput
-              style={{
-                padding: '10px',
-              }}
+            <Input
               name="phone"
-              international
-              defaultCountry="US"
-              value={value}
-              onChange={(value?: undefined) => setValue(value) as void}
+              className="form-control"
+              placeholder="+1 4843734025"
+              type="text"
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.phone || ''}
+              invalid={
+                validation.touched.phone && validation.errors.phone
+                  ? true
+                  : false
+              }
             />
+            {validation.touched.phone && validation.errors.phone ? (
+              <FormFeedback type="invalid">
+                {validation.errors.phone}
+              </FormFeedback>
+            ) : null}
           </div>
 
           <div className="mb-3">
@@ -304,7 +312,11 @@ const UserDashboard = (props: any) => {
             ) : null}
           </div>
           <div className="mt-3 d-grid">
-            <button className="btn btn-primary btn-block " type="submit">
+            <button
+              className="btn btn-block fw-bold text-white "
+              type="submit"
+              style={{ background: '#F6653F' }}
+            >
               Add
             </button>
           </div>
@@ -312,9 +324,6 @@ const UserDashboard = (props: any) => {
       </Modal>
 
       <Row className="mt-5">
-        <Col className="col-12">
-          <Breadcrumbs title="Process" breadcrumbItem="Process" />
-        </Col>
         <Col className="col-12">
           <List
             itemLayout="vertical"
@@ -329,8 +338,11 @@ const UserDashboard = (props: any) => {
             }) => (
               <List.Item key={item?.id}>
                 <Skeleton loading={loading} active paragraph={{ rows: 1 }}>
-                  <Card className="red-3" style={{ background: '#4096ff' }}>
-                    <Row gutter={[15, 32]} className="text-white">
+                  <Card
+                    className="red-3  shadow-sm rounded-5"
+                    style={{ background: '#FFF6E9' }}
+                  >
+                    <Row gutter={[15, 32]} className="text-black">
                       <Col className="fw-bold">{item?.username}</Col>
                       <Col>{item?.email}</Col>
                       <Col>{item?.phone}</Col>
@@ -339,44 +351,48 @@ const UserDashboard = (props: any) => {
                         <Radio.Group
                           onChange={onChange}
                           value={method}
-                          className="text-white"
+                          className="text-black "
                         >
-                          <Radio className="text-white" value={'email'}>
+                          <Radio className="text-black" value={'email'}>
                             Email
                           </Radio>
-                          <Radio className="text-white" value={'sms'}>
+                          <Radio className="text-black" value={'sms'}>
                             SMS
                           </Radio>
-                          <Radio className="text-white" value={'both'}>
+                          <Radio className="text-black" value={'both'}>
                             Both
                           </Radio>
                         </Radio.Group>
                       </Col>
                       <Col>
-                        <Button
-                          type="primary"
-                          shape="round"
-                          danger
-                          onClick={() => deleteHandler(item?.id)}
-                          icon={<i className="bx bxs-trash"></i>}
-                          size={'middle'}
-                        />
+                        <Popover content="Delete Message " trigger="hover">
+                          <Button
+                            type="primary"
+                            shape="round"
+                            danger
+                            onClick={() => deleteHandler(item?.id)}
+                            icon={<i className="bx bxs-trash"></i>}
+                            size={'middle'}
+                          />
+                        </Popover>
                       </Col>
                       <Col>
-                        <Button
-                          disabled={buttonloading}
-                          type="primary"
-                          shape="round"
-                          onClick={() => submitHandler(item?.id)}
-                          icon={
-                            buttonloading ? (
-                              <i className="bx bx-loader"></i>
-                            ) : (
-                              <i className="bx bxs-send"></i>
-                            )
-                          }
-                          size={'middle'}
-                        />
+                        <Popover content="Send Message " trigger="hover">
+                          <Button
+                            disabled={buttonloading}
+                            type="primary"
+                            shape="round"
+                            onClick={() => submitHandler(item?.id)}
+                            icon={
+                              buttonloading ? (
+                                <i className="bx bx-loader"></i>
+                              ) : (
+                                <i className="bx bxs-send"></i>
+                              )
+                            }
+                            size={'middle'}
+                          />
+                        </Popover>
                       </Col>
                     </Row>
                   </Card>
@@ -386,45 +402,6 @@ const UserDashboard = (props: any) => {
           />
         </Col>
       </Row>
-
-      <Breadcrumbs title="Send" breadcrumbItem="Send" />
-
-      <List
-        itemLayout="vertical"
-        size="large"
-        dataSource={successSendData}
-        renderItem={(item: {
-          id?: number;
-          client_name?: string;
-          email?: string;
-          date?: string;
-          phone?: string;
-        }) => (
-          <List.Item key={item?.id}>
-            <Skeleton loading={loading} active paragraph={{ rows: 1 }}>
-              <Card className="red-3" style={{ background: '#f5f5f5' }}>
-                <Row
-                  gutter={[15, 32]}
-                  className="text-black justify-content-around"
-                >
-                  <Row gutter={[15, 32]}>
-                    <Col className="fw-bold">{item?.client_name}</Col>
-                    <Col>{item?.email}</Col>
-                    <Col>{item?.phone}</Col>
-                    <Col>{item?.date}</Col>
-                  </Row>
-                  <Col
-                    offset={8}
-                    className="rounded-5 bg-success text-white fw-semibold py-1 px-4"
-                  >
-                    Success
-                  </Col>
-                </Row>
-              </Card>
-            </Skeleton>
-          </List.Item>
-        )}
-      />
     </CustomeContainer>
   );
 };

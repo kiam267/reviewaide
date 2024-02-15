@@ -2,7 +2,6 @@ import CustomeContainer from 'Components/Common/CustomeContainer';
 import { Avatar, Card, Col, Empty, Row, Skeleton, Switch } from 'antd';
 
 import { Users } from 'api/createUsers';
-import { use } from 'i18next';
 
 import React, { useEffect, useState } from 'react';
 const { Meta } = Card;
@@ -11,7 +10,8 @@ function Allusers(props) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    Users().then(res => {
+    Users().then(resp => {
+      const res = resp.data;
       setUsers(res);
     });
   }, []);

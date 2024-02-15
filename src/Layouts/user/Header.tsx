@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 // Reactstrap
 import { Row, Col, Dropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
 
-// Import menuDropdown
-import LanguageDropdown from '../../Components/Common/LanguageDropdown';
+
 import NotificationDropDown from '../../Components/CommonForBoth/NotificationDropDown';
 import ProfileMenu from '../../Components/CommonForBoth/TopBarDropDown/ProfileMenu';
 import megamenuImg from '../../assets/images/megamenu-img.png';

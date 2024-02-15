@@ -26,7 +26,7 @@ import { useFormik } from 'formik';
 import logodark from '../../assets/images/logo-dark.png';
 import logolight from '../../assets/images/logo-light.png';
 // action
-import { userForgetPassword } from '../../slices/thunk';
+// import { userForgetPassword } from '../../slices/thunk';
 
 // import images
 import profile from '../../assets/images/logo.png';

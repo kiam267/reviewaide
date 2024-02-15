@@ -22,41 +22,6 @@ interface DataType {
 
 type DataIndex = keyof DataType;
 
-const data: DataType[] = [
-  {
-    method: 'Both',
-    name: 'Abid Hasan',
-    email: 'kiamhsan@gmail.com',
-    number: '01305420085',
-    date: 'sun, 12-02-204',
-    review_method: 'facebook',
-  },
-  {
-    method: 'Email',
-    name: 'Abid Hasan',
-    email: 'kiamhsan@gmail.com',
-    number: '01305420085',
-    date: 'sun, 12-02-204',
-    review_method: 'sms',
-  },
-  {
-    method: 'SMS',
-    name: 'Abid Hasan',
-    email: 'kiamhsan267@gmail.com',
-    number: '01305420085',
-    date: 'sun, 12-02-204',
-    review_method: 'pending',
-  },
-  {
-    method: 'SMS',
-    name: 'Abid Hasan',
-    email: 'kiamhsan267@gmail.com',
-    number: '01305420085',
-    date: 'sun, 12-02-204',
-    review_method: 'Private',
-  },
-];
-
 const App: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -71,12 +36,13 @@ const App: React.FC = () => {
     },
   ]);
   console.log(allData);
-  
+
   const searchInput = useRef<InputRef>(null);
   const [validCookie, setValidCookie] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
-    axios.get(CLIENT_VISITOR, { headers: { token } }).then(res => {
+    axios.get(CLIENT_VISITOR, { headers: { token } }).then(resp => {
+      const res = resp.data;
       if (res?.msg?.name === 'error') {
         message.error(res?.msg?.msg);
       }

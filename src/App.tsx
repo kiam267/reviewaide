@@ -10,14 +10,8 @@ import VerticalLayout from './Layouts/admin';
 import './assets/scss/theme.scss';
 import AuthProtected from './Routes/DashboardAuthProtected';
 import UserAuthProtected from 'Routes/UserAuthProtected';
-import UsersLayout from 'Layouts/user';
-import Profile from './pages/user/Profile';
-import { useUserAuth } from 'contexts/UserAuth';
 
 function App() {
-  const { IsValidUSER } = useUserAuth();
-  console.log(IsValidUSER);
-
   return (
     <React.Fragment>
       <Routes>

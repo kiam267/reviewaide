@@ -26,7 +26,7 @@ function CustomeInput({
     <div>
       <div className="mb-3">
         {err ? <Alert color="danger">{err}</Alert> : null}
-        <Label className="form-label">{name}</Label>
+        <Label className="form-label text-capitalize">{name}</Label>
         <Input
           name={name}
           className="form-control"

@@ -48,7 +48,8 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
-    axios.get(GET_USERS_DASHBOARD, { headers: { token } }).then(res => {
+    axios.get(GET_USERS_DASHBOARD, { headers: { token } }).then(resp => {
+      const res = resp.data;
       if (res?.msg?.name === 'error') {
         message.error('error', res.msg.msg);
         return;
