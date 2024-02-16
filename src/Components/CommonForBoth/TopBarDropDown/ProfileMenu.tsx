@@ -70,7 +70,6 @@ const ProfileMenu = (props: any) => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          <img src={`${avater}`} alt="" />
           {/* http://localhost:8080 */}
           <Avatar size="default" src={`${AVATER_IMAGE_URL + avater}`}>
             {name}
