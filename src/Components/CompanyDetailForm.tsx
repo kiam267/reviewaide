@@ -47,36 +47,39 @@ function CompnayDetailForm({ validation, error }) {
         validationError={validation.errors.temporary}
         err={error}
       />
+
+      <div className="my-3">
+        <Label className="text-capitalize">edit email</Label>
+        <Input
+          name="editEmail"
+          type="textarea"
+          id="textarea"
+          onChange={e => validation.handleChange(e)}
+          onBlur={validation.handleBlur}
+          value={validation.values.editEmail || ''}
+          invalid={
+            validation.touched.editEmail && validation.errors.editEmail
+              ? true
+              : false
+          }
+          placeholder="We hope you found value in your visit today..."
+        />
+        {validation.touched.editEmail && validation.errors.editEmail ? (
+          <FormFeedback type="invalid">
+            {validation.errors.editEmail}
+          </FormFeedback>
+        ) : null}
+      </div>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Alert
-          message="you must use ${name}, ${compnayName}, ${link}  "
+          message="you must use ${name}, ${comName}, ${link}  "
           type="info"
         />
       </Space>
-      <Label className="text-capitalize">edit email</Label>
-      <Input
-        name="editEmail"
-        type="textarea"
-        id="textarea"
-        onChange={e => validation.handleChange(e)}
-        onBlur={validation.handleBlur}
-        value={validation.values.editEmail || ''}
-        invalid={
-          validation.touched.editEmail && validation.errors.editEmail
-            ? true
-            : false
-        }
-        placeholder="Hi ${name} Thanks for visiting ${compnayName}!. Shere your feedback at ${link}"
-      />
-      {validation.touched.editEmail && validation.errors.editEmail ? (
-        <FormFeedback type="invalid">
-          {validation.errors.editEmail}
-        </FormFeedback>
-      ) : null}
 
-      <Label>edit sms</Label>
+      <Label className="text-capitalize">edit sms</Label>
       <Input
-        name="Edit SMS"
+        name="editSms"
         type="textarea"
         id="textarea"
         onChange={e => validation.handleChange(e)}
@@ -85,7 +88,7 @@ function CompnayDetailForm({ validation, error }) {
         invalid={
           validation.touched.editSms && validation.errors.editSms ? true : false
         }
-        placeholder="Hi ${name} Thanks for visiting ${compnayName}!. Shere your feedback at ${link}"
+        placeholder="Hi ${name} Thanks for visiting ${comName}!. Shere your feedback at ${link}."
       />
       {validation.touched.editSms && validation.errors.editSms ? (
         <FormFeedback type="invalid">{validation.errors.editSms}</FormFeedback>

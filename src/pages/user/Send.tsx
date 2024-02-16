@@ -54,6 +54,9 @@ import { CLIENT_VISITOR, LINK } from '../../helpers/url_helper';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 import Logout from 'pages/auth/Logout';
+import csvToJson from 'convert-csv-to-json';
+
+
 
 const UserDashboard = (props: any) => {
   const [date, setDate] = useState<string | null>(null);
@@ -99,7 +102,6 @@ const UserDashboard = (props: any) => {
   const submitHandler = id => {
     const updatedData = getLocalSendData.filter(item => item?.id === id);
     const mainData = updatedData[0];
-    console.log(mainData);
 
     // setButtonLoading(true);
     const token = localStorage.getItem('UserToken');
@@ -161,7 +163,7 @@ const UserDashboard = (props: any) => {
       date: Yup.string().required('Please Enter Your Patient Date'),
     }),
     onSubmit: (values: any, { resetForm }) => {
-      const data = { ...values, phone: value };
+      const data = { ...values };
       pushDataToArray(getLocalSendData, data);
       saveArrayToLocalStorage('proccess_send_data', getLocalSendData);
       setProcessData(getLocalSendData);

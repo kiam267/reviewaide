@@ -50,10 +50,7 @@ function Dashboard() {
     const token = localStorage.getItem('UserToken');
     axios.get(GET_USERS_DASHBOARD, { headers: { token } }).then(resp => {
       const res = resp.data;
-      if (res?.msg?.name === 'error') {
-        message.error('error', res.msg.msg);
-        return;
-      }
+
       if (res?.msg?.name === 'success') {
         // message.success('success', res.msg.msg);
         setAllUsers(res.msg[0].data.length);
@@ -93,22 +90,15 @@ function Dashboard() {
         setMethod(SmsCount + EmailCount + BothCount);
         return;
       }
+      // if (res?.msg?.name === 'error') {
+      //   message.error('error', res.msg.msg);
+      //   return;
+      // }
 
       if (res.msg.name === 'auth') {
         return setValidCookie(true);
       }
     });
-    //GET_USERS_DASHBOARD
-    // userGet().then(user => {
-    //   console.log(user);
-    //   // if (!user?.valid) {
-    //   //   LogoutUser();
-    //   // }
-    //   // localStorage.setItem('isValid', user.isValid);
-    // });
-    /* 
-    
-    */
   }, []);
   const data = [
     {

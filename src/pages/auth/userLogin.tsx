@@ -78,7 +78,7 @@ const UserLogin = (props: any) => {
         if (res.msg.name === 'error') {
           return message.error(res.msg.msg);
         }
-        avater(`/uploads/${res.avater}`, res.username);
+        avater(`api/uploads/${res.avater}`, res.username);
         storeToken(res.token);
         isNewUser(res.isValid);
         return nevigation('/user');

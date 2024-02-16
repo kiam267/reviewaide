@@ -12,7 +12,15 @@ import {
   Row,
   Col,
 } from 'reactstrap';
-import { Avatar, Badge, Button, Card, message } from 'antd';
+import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  Space,
+  message,
+  Alert as ANTDAlert,
+} from 'antd';
 //i18n
 import { withTranslation } from 'react-i18next';
 // Redux
@@ -46,8 +54,11 @@ const UpdateProfile = (props: any) => {
       company_name: '',
       facebook_link: '',
       google_link: '',
+      email_message: '',
+      sms_message: '',
     },
   ]);
+
   const [validCookie, setValidCookie] = useState(false);
   const selectProfileProperties = createSelector(
     (state: any) => state.Avater,
@@ -84,6 +95,8 @@ const UpdateProfile = (props: any) => {
       companyName: alldata[0].company_name,
       google: alldata[0].google_link,
       facebook: alldata[0].facebook_link,
+      editEmail: alldata[0].email_message,
+      editSms: alldata[0].sms_message,
     },
     validationSchema: Yup.object({
       username: Yup.string().required('Please Enter Your Username'),
@@ -91,13 +104,15 @@ const UpdateProfile = (props: any) => {
       companyName: Yup.string().required('Please Enter Your Company Name'),
       google: Yup.string().required('Please Enter Your google Link'),
       facebook: Yup.string().required('Please Enter Your Facebook Link'),
+      editEmail: Yup.string().required('Please Enter Your Email Message'),
+      editSms: Yup.string().required('Please Enter Your SMS Message'),
     }),
     onSubmit: async (values: any, { setValues }) => {
       const token = localStorage.getItem('UserToken');
       axios
         .put(GET_USERS_DASHBOARD, { ...values }, { headers: { token } })
-        .then(res => {
-          console.log('ok...');
+        .then(resp => {
+          const res = resp.data;
 
           if (res?.msg?.name === 'error') {
             message.error('error', res.msg.msg);
@@ -140,7 +155,7 @@ const UpdateProfile = (props: any) => {
             >
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label">username</Label>
+                <Label className="form-label text-capitalize ">username</Label>
                 <Input
                   name="username"
                   className="form-control"
@@ -164,7 +179,7 @@ const UpdateProfile = (props: any) => {
               </div>
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label">phone</Label>
+                <Label className="form-label text-capitalize">phone</Label>
                 <Input
                   name="phone"
                   className="form-control"
@@ -188,7 +203,9 @@ const UpdateProfile = (props: any) => {
               </div>
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label">companyName</Label>
+                <Label className="form-label text-capitalize">
+                  companyName
+                </Label>
                 <Input
                   name="companyName"
                   className="form-control"
@@ -214,7 +231,7 @@ const UpdateProfile = (props: any) => {
               </div>
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label">google</Label>
+                <Label className="form-label text-capitalize">google</Label>
                 <Input
                   name="google"
                   disabled={menu}
@@ -238,7 +255,7 @@ const UpdateProfile = (props: any) => {
               </div>
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label">facebook</Label>
+                <Label className="form-label text-capitalize">facebook</Label>
                 <Input
                   name="facebook"
                   disabled={menu}
@@ -260,6 +277,57 @@ const UpdateProfile = (props: any) => {
                   </FormFeedback>
                 ) : null}
               </div>
+
+              <div className="my-3">
+                <Label className="text-capitalize">edit email</Label>
+                <Input
+                  name="editEmail"
+                  type="textarea"
+                  id="textarea"
+                  disabled={menu}
+                  onChange={e => validation.handleChange(e)}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.editEmail || ''}
+                  invalid={
+                    validation.touched.editEmail && validation.errors.editEmail
+                      ? true
+                      : false
+                  }
+                  placeholder="We hope you found value in your visit today..."
+                />
+                {validation.touched.editEmail && validation.errors.editEmail ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.editEmail}
+                  </FormFeedback>
+                ) : null}
+              </div>
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <ANTDAlert
+                  message="you must use ${name}, ${comName}, ${link}  "
+                  type="info"
+                />
+              </Space>
+
+              <Label className="text-capitalize">edit sms</Label>
+              <Input
+                name="editSms"
+                type="textarea"
+                id="textarea"
+                disabled={menu}
+                onChange={e => validation.handleChange(e)}
+                onBlur={validation.handleBlur}
+                value={validation.values.editSms || ''}
+                invalid={
+                  validation.touched.editSms && validation.errors.editSms
+                    ? true
+                    : false
+                }
+              />
+              {validation.touched.editSms && validation.errors.editSms ? (
+                <FormFeedback type="invalid">
+                  {validation.errors.editSms}
+                </FormFeedback>
+              ) : null}
 
               <div className="mt-3 d-grid">
                 {menu ? (

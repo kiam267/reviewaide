@@ -153,7 +153,8 @@ const UpdateProfile = (props: any) => {
           token: token,
         },
       };
-      axios.put(USER_UPDATE, data, config).then(res => {
+      axios.put(USER_UPDATE, data, config).then(resp => {
+           const res = resp.data;
         if (res.msg.name === 'error') {
           return message.error(res.msg.msg);
         }

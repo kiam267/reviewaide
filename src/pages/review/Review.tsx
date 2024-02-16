@@ -25,10 +25,13 @@ import {
   CLIENT_VISITOR_GET,
   CLIENT_VISITOR_METHODS,
   PRIVATE_REVIEW,
+  REVIEW_LOGO_LINK,
 } from '../../helpers/url_helper';
 import UserLogin from 'pages/auth/userLogin';
 import Logout from 'pages/auth/Logout';
 import { Button } from 'antd';
+
+import boopSfx from '../../assets/sounds/ping.mp3';
 const Review = () => {
   //meta title
   document.title = 'Rating | Skote - React Admin & Dashboard Template';
@@ -36,14 +39,22 @@ const Review = () => {
   const [textcount, settextcount] = useState(0);
   const [rating, setRating] = useState<number>(4);
   const [show, setshow] = useState<boolean>();
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [adminMessage, setAdminMessage] = useState<string | null>(null);
-  const [LINK, SETLINK] = useState({ google_link: '', facebook_link: '' });
+  const [LINK, SETLINK] = useState({
+    google_link: '',
+    facebook_link: '',
+    logo: '',
+  });
   const [retingShow, setRatingShow] = useState(true);
   const [validCookie, setValidCookie] = useState(false);
   const [data, setData] = useState([]);
   const { clientId } = useParams();
 
+  function paly() {
+    new Audio(boopSfx).play();
+  }
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
     axios
@@ -136,6 +147,12 @@ const Review = () => {
           <Row className="justify-content-center">
             <Col className="col-md-12 col-lg-7">
               <Card className="rounded-5 p-3">
+                <img
+                  className="d-block m-auto rounded-2"
+                  style={{ height: '80px', width: '150px', objectFit: 'cover' }}
+                  src={`${REVIEW_LOGO_LINK}/api/uploads/${LINK.logo}`}
+                  alt="LOGO"
+                />
                 <CardBody>
                   <Alert
                     color="danger"
@@ -164,8 +181,8 @@ const Review = () => {
                             size={45}
                             initialValue={4}
                             transition
-                            
                             onClick={e => {
+                              paly();
                               setRating(e);
                             }}
                           />
