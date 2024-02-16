@@ -21,6 +21,7 @@ function CustomePass({
   handleChange,
   handleBlur,
   touchedError,
+  ...other
 }: CustomInputProps) {
   const [show, setShow] = useState(false);
   return (
@@ -38,9 +39,11 @@ function CustomePass({
             onBlur={handleBlur}
             value={value || ''}
             invalid={touchedError && validationError}
+            {...other}
           />
           <button
             onClick={() => setShow(!show)}
+            style={{ background: '#FE9150' }}
             className="btn btn-light "
             type="button"
             id="password-addon"

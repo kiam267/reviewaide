@@ -37,6 +37,7 @@ import { createSelector } from 'reselect';
 import { userLogin } from 'api/usersLogin';
 import { profile } from 'console';
 import { message } from 'antd';
+import CustomePass from 'Components/CustomePass';
 
 const UserLogin = (props: any) => {
   const { storeToken, isLoggedIn, avater, isNewUser } = useUserAuth();
@@ -67,10 +68,12 @@ const UserLogin = (props: any) => {
     initialValues: {
       email: '',
       password: '',
+      temporary: '',
     },
     validationSchema: Yup.object({
       email: Yup.string().required('Please Enter Your email').trim(),
       password: Yup.string().required('Please Enter Your Password'),
+      temporary: Yup.number().required('Please Enter Your Temporary Code'),
     }),
     onSubmit: (values: any) => {
       userLogin(values).then((resp: any) => {
@@ -109,7 +112,7 @@ const UserLogin = (props: any) => {
           background: '#C2C3C8',
         }}
       >
-        <Col>
+        <Col sm={12} lg={6}>
           <Card className="rounded-5 w-50 d-block m-auto ">
             <CardBody className="py-5 px-3">
               <div>
@@ -151,20 +154,30 @@ const UserLogin = (props: any) => {
                       </FormFeedback>
                     ) : null}
                   </div>
+                  <CustomePass
+                    name="password"
+                    handleBlur={validation.handleBlur}
+                    handleChange={validation.handleChange}
+                    placeholder="Enter your password"
+                    touchedError={validation.touched.password}
+                    validationError={validation.errors.password}
+                    value={validation.values.password}
+
+                  />
 
                   <div className="mb-3">
-                    <Label className="form-label">Password</Label>
+                    <Label className="form-label">Temporary Code</Label>
                     <div className="input-group auth-pass-inputgroup">
                       <Input
-                        name="password"
-                        value={validation.values.password || ''}
+                        name="temporary"
+                        value={validation.values.temporary || ''}
                         type={show ? 'text' : 'password'}
-                        placeholder="Enter Password"
+                        placeholder="Enter Temporary Code"
                         onChange={validation.handleChange}
                         onBlur={validation.handleBlur}
                         invalid={
-                          validation.touched.password &&
-                          validation.errors.password
+                          validation.touched.temporary &&
+                          validation.errors.temporary
                             ? true
                             : false
                         }
@@ -179,10 +192,10 @@ const UserLogin = (props: any) => {
                         <i className="mdi mdi-eye-outline"></i>
                       </button>
                     </div>
-                    {validation.touched.password &&
-                    validation.errors.password ? (
+                    {validation.touched.temporary &&
+                    validation.errors.temporary ? (
                       <FormFeedback type="invalid">
-                        {validation.errors.password}
+                        {validation.errors.temporary}
                       </FormFeedback>
                     ) : null}
                   </div>
