@@ -26,6 +26,7 @@ import {
 import AdminLogout from 'pages/auth/AdminLogout';
 import Profile from 'Layouts/admin/Profile';
 import ResetPassword from 'pages/user/ResetPassword';
+import Unsubscribe from 'pages/user/Unsubscribe';
 
 const authProtectedRoutes = [
   { path: '/auth/dashboard', component: <Dashboard /> },
@@ -52,6 +53,7 @@ const publicRoutes = [
   { path: '/user/forgot-password', component: <ForgotPassword /> },
   { path: '/review/:clientId', component: <Review /> },
   { path: '/user/reset-password/:id/:token', component: <ResetPassword /> },
+  { path: '/user/unsubscribe/:id', component: <Unsubscribe/> },
   // { path: '/review', component: <Review /> },
 
   //User Public Router
@@ -69,5 +71,6 @@ const UserProtectedRouter = [
   { path: '/user/profile', component: UpdateProfile },
   { path: '/user/logout', component: Logout },
   { path: '/user/newProfie', component: Profile },
+
 ];
 export { authProtectedRoutes, publicRoutes, UserProtectedRouter };

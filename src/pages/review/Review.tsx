@@ -34,7 +34,7 @@ import { Button } from 'antd';
 import boopSfx from '../../assets/sounds/ping.mp3';
 const Review = () => {
   //meta title
-  document.title = 'Rating | Skote - React Admin & Dashboard Template';
+ 
   const [textareabadge, settextareabadge] = useState(0) as any[];
   const [textcount, settextcount] = useState(0);
   const [rating, setRating] = useState<number>(4);
@@ -149,8 +149,13 @@ const Review = () => {
               <Card className="rounded-5 p-3">
                 <img
                   className="d-block m-auto rounded-2"
-                  style={{ height: '80px', width: '150px', objectFit: 'cover' }}
-                  src={`${REVIEW_LOGO_LINK}/api/uploads/${LINK.logo}`}
+                  style={{
+                    height: '80px',
+                    width: '150px',
+                    objectFit: 'contain',
+                  }}
+                  //${LINK.logo}
+                  src={`${REVIEW_LOGO_LINK}/api/uploads/image-1707332000701.doc-apt-icon-sm.jpg`}
                   alt="LOGO"
                 />
                 <CardBody>
@@ -181,8 +186,8 @@ const Review = () => {
                             size={45}
                             initialValue={4}
                             transition
+                            onPointerMove={() => paly()}
                             onClick={e => {
-                              paly();
                               setRating(e);
                             }}
                           />

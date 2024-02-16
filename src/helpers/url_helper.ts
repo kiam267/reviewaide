@@ -18,14 +18,18 @@ export const USER_UPDATE = SERVER_API + 'api/users/update';
 export const CLIENT_VISITOR = SERVER_API + 'api/client/';
 export const CLIENT_VISITOR_GET = SERVER_API + 'api/client/review';
 export const CLIENT_VISITOR_METHODS = SERVER_API + 'api/client/methods';
+export const CLIENT_VISITOR_UNSUBSCRIBE = SERVER_API + 'api/client/unsubscribe';
 export const ADMIN_GET = SERVER_API + 'api';
 export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
 export const CUSSTOMER_SUPPORT_EMAIL = SERVER_API + 'api/customer/email';
 
-// export const LINK = 'http://localhost:3000/review';
+export const LINK = 'https://docapt.com/';
 export const  AVATER_IMAGE_URL = 'https://docapt.com/';
-// export const AVATER_IMAGE_URL = 'http://localhost:3000/uploads';
-export const LINK = 'https://docapt.com/review';
-// export const RESETPASSWORD_LINK = 'http://localhost:3000';
 export const RESETPASSWORD_LINK = 'https://docapt.com';
 export const REVIEW_LOGO_LINK = 'https://docapt.com';
+
+// export const LINK = 'http://localhost:3000/';
+// export const AVATER_IMAGE_URL = 'http://localhost:3000/uploads';
+// export const RESETPASSWORD_LINK = 'http://localhost:3000';
+// export const REVIEW_LOGO_LINK = 'http://localhost:8080';
+
