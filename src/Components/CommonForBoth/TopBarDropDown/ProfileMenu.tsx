@@ -71,7 +71,7 @@ const ProfileMenu = (props: any) => {
           tag="button"
         >
           {/* http://localhost:8080 */}
-          <Avatar size="default" src={`${avater}`}>
+          <Avatar size="default" src={`${AVATER_IMAGE_URL + avater}`}>
             {name}
           </Avatar>
           <span className="d-none d-xl-inline-block ms-2 me-1">
