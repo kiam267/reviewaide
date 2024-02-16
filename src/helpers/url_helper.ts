@@ -23,7 +23,7 @@ export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
 export const CUSSTOMER_SUPPORT_EMAIL = SERVER_API + 'api/customer/email';
 
 // export const LINK = 'http://localhost:3000/review';
-export const  AVATER_IMAGE_URL = 'https://docapt.com/api';
+export const  AVATER_IMAGE_URL = 'https://docapt.com/';
 // export const AVATER_IMAGE_URL = 'http://localhost:3000/uploads';
 export const LINK = 'https://docapt.com/review';
 // export const RESETPASSWORD_LINK = 'http://localhost:3000';
