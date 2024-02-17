@@ -34,7 +34,7 @@ import { Button } from 'antd';
 import boopSfx from '../../assets/sounds/ping.mp3';
 const Review = () => {
   //meta title
- 
+
   const [textareabadge, settextareabadge] = useState(0) as any[];
   const [textcount, settextcount] = useState(0);
   const [rating, setRating] = useState<number>(4);
@@ -52,9 +52,6 @@ const Review = () => {
   const [data, setData] = useState([]);
   const { clientId } = useParams();
 
-  function paly() {
-    new Audio(boopSfx).play();
-  }
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
     axios
@@ -74,6 +71,14 @@ const Review = () => {
         }
       });
   }, [show]);
+
+  const paly = () => {
+    const audio = new Audio(boopSfx);
+    audio.play().catch(error => {
+      // Handle the error, log it, or provide user instructions
+      console.error('Failed to play audio:', error);
+    });
+  };
 
   const handelMethods = item => {
     const now = new Date();

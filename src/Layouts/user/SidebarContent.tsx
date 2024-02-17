@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 //Import Scrollbar
 import SimpleBar from 'simplebar-react';
-
+import { AreaChartOutlined } from '@ant-design/icons';
 // MetisMenu
 import MetisMenu from 'metismenujs';
 
@@ -161,12 +161,13 @@ const SidebarContent = (props: any) => {
               </Link>
             </li>
 
-            {/* <li>
-              <Link to="/user/teamwork">
-                <i className="bx bxs-message-square-dots active-icon"></i>
-                <span>{props.t('Team Work')}</span>
+            <li>
+              <Link to="/user/marketing">
+                {/* <i className="bx bx-world active-icon"></i> */}
+                <AreaChartOutlined className="active-icon fs-3 me-2" />
+                <span>{props.t('Marketing')}</span>
               </Link>
-            </li> */}
+            </li>
             <li>
               <Link to="" className="has-arrow">
                 <i className="bx bxs-star active-icon"></i>

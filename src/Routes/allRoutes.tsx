@@ -20,7 +20,7 @@ import {
   Dashboard as userDashboard,
   Send,
   PatientRecord,
-  TeamWork,
+  Marketing,
   UpdateProfile,
 } from 'pages/user';
 import AdminLogout from 'pages/auth/AdminLogout';
@@ -64,13 +64,12 @@ const UserProtectedRouter = [
   { path: '/user', component: userDashboard },
   { path: '/user/send', component: Send },
   { path: '/user/patient_record', component: PatientRecord },
-  { path: '/user/teamwork', component: TeamWork },
+  { path: '/user/marketing', component: Marketing },
   { path: '/user/private', component: PrivateReview },
   { path: '/user/publice', component: PublicReview },
   { path: '/user/customer_support', component: CustomerSupport },
   { path: '/user/profile', component: UpdateProfile },
   { path: '/user/logout', component: Logout },
   { path: '/user/newProfie', component: Profile },
-
 ];
 export { authProtectedRoutes, publicRoutes, UserProtectedRouter };

@@ -22,9 +22,10 @@ export const CLIENT_VISITOR_UNSUBSCRIBE = SERVER_API + 'api/client/unsubscribe';
 export const ADMIN_GET = SERVER_API + 'api';
 export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
 export const CUSSTOMER_SUPPORT_EMAIL = SERVER_API + 'api/customer/email';
+export const USER_MARKETING_STORE = SERVER_API + 'api/marketing';
 
 export const LINK = 'https://docapt.com/';
-export const  AVATER_IMAGE_URL = 'https://docapt.com/';
+export const AVATER_IMAGE_URL = 'https://docapt.com/';
 export const RESETPASSWORD_LINK = 'https://docapt.com';
 export const REVIEW_LOGO_LINK = 'https://docapt.com';
 
@@ -32,4 +33,3 @@ export const REVIEW_LOGO_LINK = 'https://docapt.com';
 // export const AVATER_IMAGE_URL = 'http://localhost:3000/uploads';
 // export const RESETPASSWORD_LINK = 'http://localhost:3000';
 // export const REVIEW_LOGO_LINK = 'http://localhost:8080';
-

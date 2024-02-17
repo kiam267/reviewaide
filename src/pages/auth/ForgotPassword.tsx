@@ -58,7 +58,8 @@ const ForgetPasswordPage = props => {
       const link = RESETPASSWORD_LINK;
       axios.get(FORGET_PASSWORD_USER, {
         headers: { ...values, link },
-      }).then(res => {
+      }).then(resp => {
+         const res = resp.data;
         if (res.msg.name === 'error') {
           message.error(res.msg.msg)
          }        

@@ -19,7 +19,10 @@ import user1 from '../../../assets/images/users/avatar-1.jpg';
 import { useSelector } from 'react-redux';
 import { log } from 'console';
 import axios from 'axios';
-import { AVATER_IMAGE_URL, REACT_APP_SERVER_API } from '../../../helpers/url_helper';
+import {
+  AVATER_IMAGE_URL,
+  REACT_APP_SERVER_API,
+} from '../../../helpers/url_helper';
 
 const ProfileMenu = (props: any) => {
   // Declare a new state variable, which we'll call "menu"
@@ -71,7 +74,16 @@ const ProfileMenu = (props: any) => {
           tag="button"
         >
           {/* http://localhost:8080 */}
-          <Avatar size="default" src={`${AVATER_IMAGE_URL + avater}`}>
+          <Avatar
+            size="default"
+            src={
+              <img
+                src={`${AVATER_IMAGE_URL + avater}`}
+                alt="avatar"
+                style={{ objectFit: 'cover' }}
+              />
+            }
+          >
             {name}
           </Avatar>
           <span className="d-none d-xl-inline-block ms-2 me-1">

@@ -70,7 +70,8 @@ const Login = (props: any) => {
       password: Yup.string().required('Please Enter Your Password'),
     }),
     onSubmit: (values: any) => {
-      login(values).then((res: any) => {
+      login(values).then((resp: any) => {
+           const res = resp.data;
         if (res?.msg?.name === 'error') {
           return setErrorMessage(res.msg.msg);
         }

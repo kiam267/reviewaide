@@ -37,7 +37,8 @@ function CustomerSupport(props) {
       const token = localStorage.getItem('UserToken');
       axios
         .post(CUSSTOMER_SUPPORT_EMAIL, { ...value }, { headers: { token } })
-        .then(res => {
+        .then(resp => {
+           const res = resp.data;
           if (res?.msg?.name === 'error') {
             message.error(res.msg.msg);
             return;

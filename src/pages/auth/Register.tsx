@@ -54,7 +54,8 @@ const Register = () => {
       password: Yup.string().required('Please Enter Your Password'),
     }),
     onSubmit: values => {
-      register(values).then((res: any) => {
+      register(values).then((resp: any) => {
+         const res = resp.data;
         if (res.msg.name === 'ZodError') {
           return setErrorMessage(res.msg.issues[0].message);
         }
