@@ -29,9 +29,9 @@ import {
 } from '../../helpers/url_helper';
 import UserLogin from 'pages/auth/userLogin';
 import Logout from 'pages/auth/Logout';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 
-import boopSfx from '../../assets/sounds/ping.mp3';
+import boopSfx from '../../assets/sounds/mixkit-correct-answer-tone-2870.wav';
 const Review = () => {
   //meta title
 
@@ -58,7 +58,6 @@ const Review = () => {
       .get(CLIENT_VISITOR_GET, { headers: { token, clientId: clientId } })
       .then(resp => {
         const res = resp.data;
-
         if (res.msg.name === 'success') {
           SETLINK({ ...res.msg[0] });
           return setshow(res.msg[0].isSend);
@@ -126,14 +125,16 @@ const Review = () => {
           dateData,
           clientId,
         })
-        .then(res => {
+        .then(resp => {
+          const res = resp.data;
           if (res.msg.name === 'error') {
-            return setErrorMessage(res.msg.msg);
+            
+            return message.error('You already Send Message');
           }
           if (res.msg.name === 'ZodError') {
             return setErrorMessage(res.msg.issues[0].message);
           }
-          setAdminMessage(res.msg.msg);
+          message.success(res.msg.msg);
           return;
         });
     },
@@ -142,6 +143,12 @@ const Review = () => {
   // if (show) {
   //   return <Navigate to="/werwer" />;
   // }
+    const [clicked, setClicked] = useState(false);
+
+    const handleClick = () => {
+      setClicked(true);
+      // Additional logic or actions you want to perform on button click
+    };
   if (validCookie) {
     return <Logout />;
   }
@@ -151,7 +158,7 @@ const Review = () => {
         <Container fluid={true}>
           <Row className="justify-content-center">
             <Col className="col-md-12 col-lg-7">
-              <Card className="rounded-5 p-3">
+              <Card className="rounded-5 py-2">
                 <img
                   className="d-block m-auto rounded-2"
                   style={{
@@ -160,13 +167,13 @@ const Review = () => {
                     objectFit: 'contain',
                   }}
                   //${LINK.logo}
-                  src={`${REVIEW_LOGO_LINK}/api/uploads/image-1707332000701.doc-apt-icon-sm.jpg`}
+                  src={`${REVIEW_LOGO_LINK}/api/uploads/${LINK.logo}`}
                   alt="LOGO"
                 />
                 <CardBody>
                   <Alert
                     color="danger"
-                    className={`${errorMessage ? 'd-block' : 'd-none'} mt-3`}
+                    className={`${errorMessage ? 'd-block' : 'd-none'} mt-1`}
                   >
                     {errorMessage}
                   </Alert>
@@ -191,9 +198,10 @@ const Review = () => {
                             size={45}
                             initialValue={4}
                             transition
-                            onPointerMove={() => paly()}
+                           
                             onClick={e => {
                               setRating(e);
+                              paly()
                             }}
                           />
                           <div className="d-block position-absolute bottom-0 end-0">
@@ -251,7 +259,7 @@ const Review = () => {
                             </div>
                           ) : (
                             <>
-                              <div className="mt-3">
+                              <div className="mt-1">
                                 <Form
                                   className="form-horizontal"
                                   onSubmit={e => {
@@ -266,12 +274,17 @@ const Review = () => {
                                     ) : null}
                                     <Label className="fs-5">
                                       Thanks for reviewing! Your feedback below
-                                      supports our growth. Write Feedback Here
+                                      supports our growth.
                                     </Label>
                                     <Input
+                                      style={{
+                                        height: '150px',
+                                        borderColor: '#F6653F',
+                                      }}
                                       name="textarea"
                                       type="textarea"
                                       id="textarea"
+                                      className="fs-5"
                                       onChange={e => {
                                         textareachange(e);
                                         validation.handleChange(e);
@@ -303,8 +316,20 @@ const Review = () => {
                                   </div>
                                   <div className="mt-3 d-block w-25 mx-auto">
                                     <button
-                                      className="btn btn-primary btn-block fs-6"
                                       type="submit"
+                                      style={{
+                                        background: '#F6653F',
+                                        boxShadow: clicked
+                                          ? '0 0 10px rgba(0, 0, 0, 0.5)'
+                                          : 'none',
+                                        transition:
+                                          'box-shadow 0.3s ease-in-out',
+                                        animation: clicked
+                                          ? 'moveRight 0.5s ease-in-out'
+                                          : 'none',
+                                      }}
+                                      onClick={handleClick}
+                                      className="btn btn-block fs-5 px-5 py-2 text-white fw-semibold rounded-5 shadow"
                                     >
                                       Submit
                                     </button>

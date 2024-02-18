@@ -22,11 +22,13 @@ import {
   PatientRecord,
   Marketing,
   UpdateProfile,
+  QRcode,
 } from 'pages/user';
 import AdminLogout from 'pages/auth/AdminLogout';
 import Profile from 'Layouts/admin/Profile';
 import ResetPassword from 'pages/user/ResetPassword';
 import Unsubscribe from 'pages/user/Unsubscribe';
+import OpenReview from 'pages/review/OpenReview';
 
 const authProtectedRoutes = [
   { path: '/auth/dashboard', component: <Dashboard /> },
@@ -53,9 +55,9 @@ const publicRoutes = [
   { path: '/user/forgot-password', component: <ForgotPassword /> },
   { path: '/review/:clientId', component: <Review /> },
   { path: '/user/reset-password/:id/:token', component: <ResetPassword /> },
-  { path: '/user/unsubscribe/:id', component: <Unsubscribe/> },
+  { path: '/user/unsubscribe/:id', component: <Unsubscribe /> },
   // { path: '/review', component: <Review /> },
-
+  { path: '/user/open-review/:id', component: <OpenReview /> },
   //User Public Router
   { path: '/login', component: <UserLogin /> },
   { path: '*', component: <Pages404 /> },
@@ -65,6 +67,8 @@ const UserProtectedRouter = [
   { path: '/user/send', component: Send },
   { path: '/user/patient_record', component: PatientRecord },
   { path: '/user/marketing', component: Marketing },
+  { path: '/user/qrcodegen', component: QRcode },
+
   { path: '/user/private', component: PrivateReview },
   { path: '/user/publice', component: PublicReview },
   { path: '/user/customer_support', component: CustomerSupport },

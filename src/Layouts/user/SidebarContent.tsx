@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 //Import Scrollbar
 import SimpleBar from 'simplebar-react';
-import { AreaChartOutlined } from '@ant-design/icons';
+import { AreaChartOutlined, QrcodeOutlined } from '@ant-design/icons';
 // MetisMenu
 import MetisMenu from 'metismenujs';
 
@@ -166,6 +166,13 @@ const SidebarContent = (props: any) => {
                 {/* <i className="bx bx-world active-icon"></i> */}
                 <AreaChartOutlined className="active-icon fs-3 me-2" />
                 <span>{props.t('Marketing')}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/user/qrcodegen">
+                <QrcodeOutlined className="active-icon fs-4 me-2" />
+            
+                <span>{props.t('QR Code')}</span>
               </Link>
             </li>
             <li>
