@@ -2,6 +2,34 @@
   text-align: center;
 }
 
+.animation {
+  transition: 2s;
+  animation: icon_animation 2s infinite;
+}
+
+@keyframes icon_animation {
+  0% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(20px);
+  }
+}
+
+
+
+/* .container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+} */
+
+.gra {
+  background: #ffeeea;
+  /* background: linear-gradient(to bottom, #212121, #ffeeea); */
+}
+
 /* Base styles */
 .ele2 {
   position: absolute;
@@ -44,7 +72,6 @@
     top: -80px;
   }
 }
-
 
 .App-logo {
   height: 40vmin;

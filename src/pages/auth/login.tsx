@@ -21,8 +21,8 @@ import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 
 // import images
-import profile from '../../assets/images/profile-img.png';
-import logo from '../../assets/images/logo.svg';
+import profile from '../../assets/images/doc-apt.png';
+import logo from '../../assets/bg.jpg';
 import lightlogo from '../../assets/images/logo-light.svg';
 
 //import thunk
@@ -36,6 +36,7 @@ import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
 import { login } from 'api/login';
 import { useAuth } from 'contexts/auth';
+import { url } from 'inspector';
 
 const Login = (props: any) => {
   const [show, setShow] = useState(false);
@@ -44,8 +45,6 @@ const Login = (props: any) => {
   const dispatch: any = useDispatch();
   const { storeToken, isLoggedIn } = useAuth();
   const navigation = useNavigate();
-  //meta title
-  document.title = 'Login | Skote - React Admin & Dashboard Template';
 
   const selectProperties = createSelector(
     (state: any) => state.Login,
@@ -71,7 +70,7 @@ const Login = (props: any) => {
     }),
     onSubmit: (values: any) => {
       login(values).then((resp: any) => {
-           const res = resp.data;
+        const res = resp.data;
         if (res?.msg?.name === 'error') {
           return setErrorMessage(res.msg.msg);
         }
@@ -103,26 +102,14 @@ const Login = (props: any) => {
   if (isLoggedIn) {
     return <Navigate to="/auth/dashboard" />;
   }
+
   return (
     <React.Fragment>
-      <div className="account-pages  pt-sm-5 mt-3 mt-lg-0">
+      <div className=" pt-sm-5 mt-3 mt-lg-0">
         <Container>
-          <Card className="overflow-hidden py-lg-5 ">
-            <Row className="justify-content-center  py-lg-5">
-              <Col md={8} lg={6} xl={5}>
-                <div className="bg-primary-subtle">
-                  <Row className="d-block d-lg-none">
-                    <Col className="col-7">
-                      <div className="text-primary p-4">
-                        <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Sign in to continue to Skote.</p>
-                      </div>
-                    </Col>
-                    <Col className="col-5 align-self-end">
-                      <img src={profile} alt="" className="img-fluid" />
-                    </Col>
-                  </Row>
-                </div>
+          <Row className="justify-content-center">
+            <Col md={12} lg={6} xl={5}>
+              <Card className="py-lg-5 rounded-5">
                 <CardBody className="pt-0">
                   <Alert
                     color="danger"
@@ -138,6 +125,16 @@ const Login = (props: any) => {
                   >
                     {adminMessage}
                   </Alert>
+                  <img
+                    className="d-block m-auto"
+                    style={{
+                      height: '50px',
+                      width: '100px',
+                      objectFit: 'contain',
+                    }}
+                    src={profile}
+                    alt="Logo"
+                  />
                   <div className="p-2">
                     <Form
                       className="form-horizontal"
@@ -151,8 +148,9 @@ const Login = (props: any) => {
                         {error ? <Alert color="danger">{error}</Alert> : null}
                         <Label className="form-label">Email</Label>
                         <Input
+                          cl
                           name="email"
-                          className="form-control"
+                          className="form-control rounded-4"
                           placeholder="Enter email"
                           type="text"
                           onChange={validation.handleChange}
@@ -175,6 +173,7 @@ const Login = (props: any) => {
                         <Label className="form-label">Password</Label>
                         <div className="input-group auth-pass-inputgroup">
                           <Input
+                            className="rounded-start-pill"
                             name="password"
                             value={validation.values.password || ''}
                             type={show ? 'text' : 'password'}
@@ -190,7 +189,7 @@ const Login = (props: any) => {
                           />
                           <button
                             onClick={() => setShow(!show)}
-                            className="btn btn-light "
+                            className="btn btn-light rounded-end-pill "
                             type="button"
                             id="password-addon"
                           >
@@ -206,7 +205,8 @@ const Login = (props: any) => {
                       </div>
                       <div className="mt-3 d-grid">
                         <button
-                          className="btn btn-primary btn-block "
+                          style={{ background: '#F6653F' }}
+                          className="btn btn-block rounded-5 w-75 m-auto text-white fw-semibold "
                           type="submit"
                         >
                           Log In
@@ -222,15 +222,19 @@ const Login = (props: any) => {
                   </div>
                   <p className="text-center pt-2 fs-5">
                     Don&apos;t have an account ?{' '}
-                    <Link to="/auth/register" className="fw-bold text-primary">
+                    <Link
+                      to="/auth/register"
+                      className="fw-bold "
+                      style={{ color: '#F6653F' }}
+                    >
                       {' '}
                       Signup now{' '}
                     </Link>{' '}
                   </p>
                 </CardBody>
-              </Col>
-            </Row>
-          </Card>
+              </Card>
+            </Col>
+          </Row>
         </Container>
       </div>
     </React.Fragment>

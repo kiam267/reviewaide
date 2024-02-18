@@ -128,7 +128,6 @@ const Review = () => {
         .then(resp => {
           const res = resp.data;
           if (res.msg.name === 'error') {
-            
             return message.error('You already Send Message');
           }
           if (res.msg.name === 'ZodError') {
@@ -143,12 +142,12 @@ const Review = () => {
   // if (show) {
   //   return <Navigate to="/werwer" />;
   // }
-    const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
-    const handleClick = () => {
-      setClicked(true);
-      // Additional logic or actions you want to perform on button click
-    };
+  const handleClick = () => {
+    setClicked(true);
+    // Additional logic or actions you want to perform on button click
+  };
   if (validCookie) {
     return <Logout />;
   }
@@ -198,25 +197,25 @@ const Review = () => {
                             size={45}
                             initialValue={4}
                             transition
-                           
                             onClick={e => {
                               setRating(e);
-                              paly()
+                              paly();
                             }}
                           />
-                          <div className="d-block position-absolute bottom-0 end-0">
+                          <div className=" d-flex justify-content-center pt-4">
                             <Button
+                              className="rounded-5 d-flex justify-content-center  align-items-center"
                               value="large"
                               type="primary"
                               danger
-                              // style={{ background: '#F77857' }}
-                              // className='text-white'
+                              style={{
+                                minWidth: '100px',
+                                overflow: 'hidden',
+                                minHeight: '40px',
+                              }}
                               onClick={() => setRatingShow(false)}
                             >
-                              <i
-                                className="bx bx-right-arrow-alt fs-2"
-                                style={{ color: '#fff' }}
-                              ></i>
+                              <i className="bx bx-right-arrow-alt fs-2 animation"></i>
                             </Button>
                           </div>
                         </div>
@@ -314,7 +313,7 @@ const Review = () => {
                                       </span>
                                     ) : null}
                                   </div>
-                                  <div className="mt-3 d-block w-25 mx-auto">
+                                  <div className="d-flex justify-content-center pt-2">
                                     <button
                                       type="submit"
                                       style={{

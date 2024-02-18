@@ -202,14 +202,9 @@ function CreateUsers(props) {
               </Card>
             </Col>
           </Row>
-          <div className="mt-5 text-center">
-            <p>
-              © 2024 Docapt. Crafted with{' '}
-              <i className="mdi mdi-heart text-danger" /> by Copmpany
-            </p>
-          </div>
         </Container>
       </div>
+  
     </React.Fragment>
   );
 }

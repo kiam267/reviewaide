@@ -33,8 +33,10 @@ export const LINK = 'https://docapt.com/';
 export const AVATER_IMAGE_URL = 'https://docapt.com/';
 export const RESETPASSWORD_LINK = 'https://docapt.com';
 export const REVIEW_LOGO_LINK = 'https://docapt.com';
+export const SERVER_LINK = 'https://docapt.com/';
 
 // export const LINK = 'http://localhost:3000/';
 // export const AVATER_IMAGE_URL = 'http://localhost:3000/uploads';
 // export const RESETPASSWORD_LINK = 'http://localhost:3000';
 // export const REVIEW_LOGO_LINK = 'http://localhost:8080';
+// export const SERVER_LINK = 'http://localhost:8080/';

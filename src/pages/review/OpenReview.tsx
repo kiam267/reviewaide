@@ -118,8 +118,8 @@ const OpenReview = () => {
       textarea: Yup.string().required('Please Enter Your Textarea'),
     }),
     onSubmit: (values: any, { resetForm }) => {
-       const now = new Date();
-       const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
+      const now = new Date();
+      const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
       return axios
         .post(QR_CODE_PRIVATE_REVIEW, {
           ...values,
@@ -146,6 +146,11 @@ const OpenReview = () => {
   // }
   const [clicked, setClicked] = useState(false);
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleHover = () => {
+    setIsHovered(!isHovered);
+  };
   const handleClick = () => {
     setClicked(true);
     // Additional logic or actions you want to perform on button click
@@ -197,6 +202,7 @@ const OpenReview = () => {
                               us improve.
                             </h5>
                             <Rating
+                              className="d-block pb-2"
                               size={45}
                               initialValue={4}
                               transition
@@ -205,19 +211,20 @@ const OpenReview = () => {
                                 paly();
                               }}
                             />
-                            <div className="d-block position-absolute bottom-0 end-0">
+                            <div className=" d-flex justify-content-center pt-4">
                               <Button
+                                className="rounded-5 d-flex justify-content-center  align-items-center"
                                 value="large"
                                 type="primary"
                                 danger
-                                // style={{ background: '#F77857' }}
-                                // className='text-white'
+                                style={{
+                                  minWidth: '100px',
+                                  overflow: 'hidden',
+                                  minHeight: '40px',
+                                }}
                                 onClick={() => setRatingShow(false)}
                               >
-                                <i
-                                  className="bx bx-right-arrow-alt fs-2"
-                                  style={{ color: '#fff' }}
-                                ></i>
+                                <i className="bx bx-right-arrow-alt fs-2 animation"></i>
                               </Button>
                             </div>
                           </div>
@@ -313,7 +320,7 @@ const OpenReview = () => {
                                         </span>
                                       ) : null}
                                     </div>
-                                    <div className="mt-3 d-block w-25 mx-auto">
+                                    <div className=" d-flex justify-content-center pt-2">
                                       <button
                                         type="submit"
                                         style={{
