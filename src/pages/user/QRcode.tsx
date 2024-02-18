@@ -117,7 +117,7 @@ function QRcode() {
       <Row className="justify-content-center">
         <Col sm={12} lg={6}>
           <Card className="my-4 d-flex justify-content-center rounded-5">
-            <div id="myqrcode d-block">
+            <div id="myqrcode">
               <QRCode
                 status={QRcodeStatus}
                 value={QRcodeValue}

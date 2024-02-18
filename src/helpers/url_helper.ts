@@ -17,6 +17,7 @@ export const USER_LOGIN = SERVER_API + 'api/users/login';
 export const USER_UPDATE = SERVER_API + 'api/users/update';
 export const CLIENT_VISITOR = SERVER_API + 'api/client/';
 export const CLIENT_VISITOR_GET = SERVER_API + 'api/client/review';
+export const CLIENT_QR_CODE_OPEN_REVIEW_GET = SERVER_API + 'api/review/open-review';
 export const QRCODE_GEN_VISITOR = SERVER_API + 'api/client/qr_gen';
 export const QRCODE_GEN_VISITOR_DELETE = SERVER_API + 'api/client/qr_gen';
 export const QRCODE_GEN_VISITOR_CREATE = SERVER_API + 'api/client/qr_gen';
@@ -24,6 +25,7 @@ export const CLIENT_VISITOR_METHODS = SERVER_API + 'api/client/methods';
 export const CLIENT_VISITOR_UNSUBSCRIBE = SERVER_API + 'api/client/unsubscribe';
 export const ADMIN_GET = SERVER_API + 'api';
 export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
+export const QR_CODE_PRIVATE_REVIEW = SERVER_API + 'api/review/opne-qr-code-store';
 export const CUSSTOMER_SUPPORT_EMAIL = SERVER_API + 'api/customer/email';
 export const USER_MARKETING_STORE = SERVER_API + 'api/marketing';
 

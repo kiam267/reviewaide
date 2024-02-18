@@ -160,7 +160,7 @@ const Review = () => {
             <Col className="col-md-12 col-lg-7">
               <Card className="rounded-5 py-2">
                 <img
-                  className="d-block m-auto rounded-2"
+                  className="d-block m-auto rounded-2 mt-2"
                   style={{
                     height: '80px',
                     width: '150px',
