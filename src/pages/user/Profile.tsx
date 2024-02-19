@@ -130,7 +130,7 @@ const UpdateProfile = (props: any) => {
       companyName: '',
       google: '',
       facebook: '',
-      temporary: '',
+      temporary: '1234',
       editEmail: emial_placeholder,
       editSms:
         'Hi ${name} Thanks for visiting ${comName}!. Shere your feedback at ${link}.',

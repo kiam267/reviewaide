@@ -31,8 +31,6 @@ import { createSelector } from 'reselect';
 import { useAuth } from 'contexts/auth';
 import { forEach } from 'lodash';
 const Register = () => {
-  //meta title
-  document.title = 'Register | Admin';
   const [show, setShow] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [adminMessage, setAdminMessage] = useState<string | null>(null);

@@ -48,8 +48,7 @@ const UserLogin = (props: any) => {
 
   const dispatch: any = useDispatch();
 
-  //meta title
-  document.title = 'User | Docapt - React Admin & Dashboard Template';
+
 
   const selectProperties = createSelector(
     (state: any) => state.Login,
@@ -104,17 +103,16 @@ const UserLogin = (props: any) => {
   return (
     <div>
       <Row
-        className="d-flex align-items-center"
+        className="d-flex align-items-center justify-content-center"
         style={{
           overflow: 'hidden',
           height: '100vh',
           width: '100%',
-          background: '#C2C3C8',
         }}
       >
-        <Col sm={12} lg={6}>
-          <Card className="rounded-5 w-50 d-block m-auto ">
-            <CardBody className="py-5 px-3">
+        <Col sm={12} md={7} lg={6}>
+          <Card className="rounded-5 d-block m-auto  card_width ">
+            <CardBody className="py-5 px-4">
               <div>
                 <div className="py-4">
                   <img
@@ -136,7 +134,7 @@ const UserLogin = (props: any) => {
                     <Label className="form-label">Email</Label>
                     <Input
                       name="email"
-                      className="form-control"
+                      className="form-control rounded-4"
                       placeholder="Enter email"
                       type="text"
                       onChange={validation.handleChange}
@@ -155,6 +153,8 @@ const UserLogin = (props: any) => {
                     ) : null}
                   </div>
                   <CustomePass
+                    className="rounded-start-pill"
+                    buttonClassName="rounded-end-pill"
                     name="password"
                     handleBlur={validation.handleBlur}
                     handleChange={validation.handleChange}
@@ -162,7 +162,6 @@ const UserLogin = (props: any) => {
                     touchedError={validation.touched.password}
                     validationError={validation.errors.password}
                     value={validation.values.password}
-
                   />
 
                   <div className="mb-3">
@@ -170,6 +169,7 @@ const UserLogin = (props: any) => {
                     <div className="input-group auth-pass-inputgroup">
                       <Input
                         name="temporary"
+                        className="rounded-start-pill "
                         value={validation.values.temporary || ''}
                         type={show ? 'text' : 'password'}
                         placeholder="Enter Temporary Code"
@@ -184,7 +184,7 @@ const UserLogin = (props: any) => {
                       />
                       <button
                         onClick={() => setShow(!show)}
-                        className="btn btn-light "
+                        className="btn btn-light rounded-end-pill "
                         style={{ background: '#FE9150' }}
                         type="button"
                         id="password-addon"
@@ -207,7 +207,7 @@ const UserLogin = (props: any) => {
                   </Link>
                   <div className="mt-3 d-grid">
                     <button
-                      className="btn btn-block fw-bold text-white fs-5"
+                      className="btn btn-block fw-bold text-white fs-5 rounded-5"
                       type="submit"
                       style={{ background: '#FE9150' }}
                     >

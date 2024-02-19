@@ -32,8 +32,6 @@ import { createSelector } from 'reselect';
 
 const UserProfile = () => {
 
-  //meta title
-  document.title = "Profile | Skote - React Admin & Dashboard Template";
 
   const dispatch = useDispatch<any>();
 

@@ -10,6 +10,8 @@ interface CustomInputProps {
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: FocusEvent<HTMLInputElement>) => void;
   touchedError: boolean | undefined;
+  className?: string;
+  buttonClassName?: string;
 }
 
 function CustomePass({
@@ -21,6 +23,7 @@ function CustomePass({
   handleChange,
   handleBlur,
   touchedError,
+  buttonClassName,
   ...other
 }: CustomInputProps) {
   const [show, setShow] = useState(false);
@@ -44,7 +47,7 @@ function CustomePass({
           <button
             onClick={() => setShow(!show)}
             style={{ background: '#FE9150' }}
-            className="btn btn-light "
+            className={`btn btn-light ${buttonClassName}`}
             type="button"
             id="password-addon"
           >

@@ -32,7 +32,7 @@ function Marketing() {
     initialValues: {
       username: '',
       email: '',
-      phone: '',
+      phone: '+1',
       message: '',
     },
     validationSchema: Yup.object({
