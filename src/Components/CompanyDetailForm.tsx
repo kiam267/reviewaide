@@ -54,6 +54,7 @@ function CompnayDetailForm({ validation, error }) {
           name="editEmail"
           type="textarea"
           id="textarea"
+          role='6'
           onChange={e => validation.handleChange(e)}
           onBlur={validation.handleBlur}
           value={validation.values.editEmail || ''}

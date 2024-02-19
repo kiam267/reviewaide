@@ -115,6 +115,9 @@ const UpdateProfile = (props: any) => {
     }
   };
   // Form validation
+  const emial_placeholder = `I hope this email finds you well. Thank you for choosing to visit ABC recently.<br><br> Your satisfaction is our top priority, and we would greatly appreciate your feedback on the service you received. Your opinion is invaluable in helping us enhance our offerings and provide a better experience for all our customers.
+  <br><br>
+  Would you kindly take a moment to rate your experience with us? Your feedback will guide us in our continuous efforts to improve.Please click here`;
   const validation: any = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -128,8 +131,9 @@ const UpdateProfile = (props: any) => {
       google: '',
       facebook: '',
       temporary: '',
-      editEmail: '',
-      editSms: '',
+      editEmail: emial_placeholder,
+      editSms:
+        'Hi ${name} Thanks for visiting ${comName}!. Shere your feedback at ${link}.',
     },
     validationSchema: Yup.object({
       username: Yup.string().required('Please Enter Your Username'),
@@ -142,7 +146,7 @@ const UpdateProfile = (props: any) => {
       google: Yup.string().required('Please Enter Your google Link'),
       facebook: Yup.string().required('Please Enter Your Facebook Link'),
       temporary: Yup.number().required('Please Enter Your Facebook Link'),
-      editEmail: Yup.string().required('Please Edit Your Email'),
+      editEmail: Yup.string(),
       editSms: Yup.string().required('Please Edit Your SMS'),
     }),
     onSubmit: async (values: any, { setValues }) => {
@@ -154,13 +158,13 @@ const UpdateProfile = (props: any) => {
         },
       };
       axios.put(USER_UPDATE, data, config).then(resp => {
-           const res = resp.data;
+        const res = resp.data;
         if (res.msg.name === 'error') {
           return message.error(res.msg.msg);
         }
         storeToken(res.token);
         isNewUser(1);
-        avater(`/uploads/${res.avater}`, res.username);
+        avater(`api/uploads/${res.avater}`, res.username);
         message.success(res.msg.msg);
         return navigation('/');
       });
