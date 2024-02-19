@@ -167,7 +167,7 @@ function Allusers(props) {
                   <div className="pt-3 d-flex justify-content-center align-items-center">
                     <div className="d-block">
                       <h4 className="fs-5 text-capitalize">{user.username}</h4>
-                      <h4 className="fs-6 text-capitalize">{user.email}</h4>
+                      <h4 className="fs-6">{user.email}</h4>
                       <p className="text-body-tertiary">{user.date}</p>
                     </div>
                   </div>
