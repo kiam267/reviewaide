@@ -31,6 +31,7 @@ function QRcode() {
     })
   );
 
+   console.log(beforeCreateQRcode);
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
     axios.get(QRCODE_GEN_VISITOR, { headers: { token, LINK } }).then(resp => {
@@ -40,6 +41,8 @@ function QRcode() {
         return;
       }
       if (res?.msg?.name === 'success') {
+        console.log(res);
+        
         setQRcodeStatus(res.msg.msg.valid ? 'active' : 'loading');
         setBeforeCreateQRcode(res.msg.msg.valid);
         setQRcodeValue(res.msg.msg.id);

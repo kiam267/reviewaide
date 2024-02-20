@@ -54,7 +54,7 @@ function CompnayDetailForm({ validation, error }) {
           name="editEmail"
           type="textarea"
           id="textarea"
-          height={400}
+          style={{ height: '250px' }}
           onChange={e => validation.handleChange(e)}
           onBlur={validation.handleBlur}
           value={validation.values.editEmail || ''}
@@ -83,6 +83,7 @@ function CompnayDetailForm({ validation, error }) {
         name="editSms"
         type="textarea"
         id="textarea"
+        style={{ height: '150px' }}
         onChange={e => validation.handleChange(e)}
         onBlur={validation.handleBlur}
         value={validation.values.editSms || ''}

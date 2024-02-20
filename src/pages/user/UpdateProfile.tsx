@@ -56,6 +56,7 @@ const UpdateProfile = (props: any) => {
       google_link: '',
       email_message: '',
       sms_message: '',
+      temporaray_lock: '',
     },
   ]);
 
@@ -97,6 +98,7 @@ const UpdateProfile = (props: any) => {
       facebook: alldata[0].facebook_link,
       editEmail: alldata[0].email_message,
       editSms: alldata[0].sms_message,
+      temporary: alldata[0].temporaray_lock,
     },
     validationSchema: Yup.object({
       username: Yup.string().required('Please Enter Your Username'),
@@ -106,6 +108,7 @@ const UpdateProfile = (props: any) => {
       facebook: Yup.string().required('Please Enter Your Facebook Link'),
       editEmail: Yup.string().required('Please Enter Your Email Message'),
       editSms: Yup.string().required('Please Enter Your SMS Message'),
+      temporary: Yup.number(),
     }),
     onSubmit: async (values: any, { setValues }) => {
       const token = localStorage.getItem('UserToken');
@@ -204,6 +207,32 @@ const UpdateProfile = (props: any) => {
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
                 <Label className="form-label text-capitalize">
+                  Temporary Lock
+                </Label>
+                <Input
+                  name="temporary"
+                  className="form-control"
+                  disabled={menu}
+                  placeholder="Enter a Temporary Lock"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.temporary || ''}
+                  invalid={
+                    validation.touched.temporary && validation.errors.temporary
+                      ? true
+                      : false
+                  }
+                />
+                {validation.touched.temporary && validation.errors.temporary ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.temporary}
+                  </FormFeedback>
+                ) : null}
+              </div>
+              <div className="mb-3">
+                {error ? <Alert color="danger">{error}</Alert> : null}
+                <Label className="form-label text-capitalize">
                   companyName
                 </Label>
                 <Input
@@ -284,6 +313,7 @@ const UpdateProfile = (props: any) => {
                   name="editEmail"
                   type="textarea"
                   id="textarea"
+                  style={{ height: '250px' }}
                   disabled={menu}
                   onChange={e => validation.handleChange(e)}
                   onBlur={validation.handleBlur}
@@ -313,6 +343,7 @@ const UpdateProfile = (props: any) => {
                 name="editSms"
                 type="textarea"
                 id="textarea"
+                style={{ height: '150px' }}
                 disabled={menu}
                 onChange={e => validation.handleChange(e)}
                 onBlur={validation.handleBlur}

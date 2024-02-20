@@ -10,3 +10,35 @@
   uniqueId: string;
   username: string;
 }
+
+interface SendTableProps {
+  date: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
+  phone: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
+  email: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
+  username: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
+  id: Key | null | undefined;
+  item: {
+    id?: number;
+    username?: string;
+    email?: string;
+    date?: string;
+    phone?: string;
+  };
+  deleteHandler: (arg: any) => void;
+}
+interface SendTableProps {
+  item: {
+    id?: number;
+    username?: string;
+    email?: string;
+    date?: string;
+    phone?: string;
+  };
+
+}
+  interface UserId {
+
+    id: number;
+    // ... other properties
+  }
+

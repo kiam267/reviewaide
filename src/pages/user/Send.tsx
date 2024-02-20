@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import dateFormat from 'dateformat';
+import InputMask from 'react-input-mask';
 import {
   CardBody,
   Container,
@@ -26,6 +27,7 @@ import {
   Tag,
   Radio,
   message,
+  Checkbox,
 } from 'antd';
 
 // Formik validation
@@ -52,11 +54,10 @@ import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 import { CLIENT_VISITOR, LINK } from '../../helpers/url_helper';
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Logout from 'pages/auth/Logout';
 import csvToJson from 'convert-csv-to-json';
-
-
+import SendTable from 'Components/SendTable';
 
 const UserDashboard = (props: any) => {
   const [date, setDate] = useState<string | null>(null);
@@ -65,20 +66,26 @@ const UserDashboard = (props: any) => {
   const [proccssData, setProcessData] = useState(
     getArrayFromLocalStorage('proccess_send_data')
   );
+  const [sendProcessData, setSendProcessData] = useState<UserId[]>([]);
   const dispatch: any = useDispatch();
+  const [selectedItems, setSelectedItems] = useState<UserId[]>([]);
   const getLocalSendData = getArrayFromLocalStorage('proccess_send_data');
   const [loading, setLoading] = useState(true);
   const [buttonloading, setButtonLoading] = useState(false);
   const [method, setMethod] = useState('email');
   const [successSendData, setSuccessSendData] = useState([]);
   const [validCookie, setValidCookie] = useState(false);
-  const [value, setValue] = useState();
+  const [value, setValue] = useState([]);
+  const [clear, setClear] = useState(false);
+  const navigate = useNavigate();
   const miniMessage = (type, content) => {
     messageApi.open({
       type: type,
       content: content,
     });
   };
+
+  console.log(method);
 
   useEffect(() => {
     const now = new Date();
@@ -91,25 +98,49 @@ const UserDashboard = (props: any) => {
   const handleCancel = () => {
     setOpen(false);
   };
-  const onChange = (e: RadioChangeEvent) => {
-    setMethod(e.target.value);
+  const onChange = () => {
+    console.log('work');
+    setClear(false);
+    console.log(clear);
+  };
+  const checkMarkData = (item, valid, data) => {
+    if (selectedItems.length < 10) {
+      if (!valid) {
+        item.method = data;
+        setSelectedItems(prevSelectedItems => [...prevSelectedItems, item]);
+      } else {
+        setSelectedItems(prevSelectedItems =>
+          prevSelectedItems.filter(e => e.id !== item.id)
+        );
+      }
+    } else {
+      setSelectedItems(prevSelectedItems =>
+        prevSelectedItems.filter(e => e.id !== item.id)
+      );
+      // setLimit(true);
+      message.error('You can  only select 10 items');
+    }
   };
   const deleteHandler = id => {
+    setSelectedItems(prevSelectedItems =>
+      prevSelectedItems.filter(e => e.id !== id)
+    );
     const updatedData = getLocalSendData.filter(item => item?.id !== id);
     saveArrayToLocalStorage('proccess_send_data', updatedData);
     setProcessData(updatedData);
   };
+  const [sebmitDisabled, setDisabled] = useState(true);
+  useEffect(() => {
+    setDisabled(!(selectedItems.length > 0));
+  }, [selectedItems]);
   const submitHandler = id => {
     const updatedData = getLocalSendData.filter(item => item?.id === id);
-    const mainData = updatedData[0];
-
-    // setButtonLoading(true);
     const token = localStorage.getItem('UserToken');
 
     axios
       .post(
         CLIENT_VISITOR,
-        { ...mainData, LINK, token, method },
+        { selectedItems, LINK, token, method },
         { headers: { token } }
       )
       .then(resp => {
@@ -119,9 +150,13 @@ const UserDashboard = (props: any) => {
           return setButtonLoading(false);
         }
         if (res?.msg?.name === 'success') {
-          const updatedData = getLocalSendData.filter(item => item?.id !== id);
+          const selectedIds = selectedItems.map(item => item.id);
+          const updatedData = getLocalSendData.filter(
+            item => !selectedIds.includes(item.id)
+          );
           saveArrayToLocalStorage('proccess_send_data', updatedData);
           setProcessData(updatedData);
+          setSelectedItems([]);
           miniMessage('success', res.msg.msg);
           return setButtonLoading(false);
         }
@@ -150,7 +185,7 @@ const UserDashboard = (props: any) => {
     initialValues: {
       username: '',
       email: '',
-      phone: '',
+      phone: '+1',
       date: date,
     },
     validationSchema: Yup.object({
@@ -164,6 +199,7 @@ const UserDashboard = (props: any) => {
     }),
     onSubmit: (values: any, { resetForm }) => {
       const data = { ...values };
+
       pushDataToArray(getLocalSendData, data);
       saveArrayToLocalStorage('proccess_send_data', getLocalSendData);
       setProcessData(getLocalSendData);
@@ -172,19 +208,19 @@ const UserDashboard = (props: any) => {
     },
   });
 
-  // useEffect(() => {
-  //   if (error) {
-  //     setTimeout(() => {
-  //       dispatch(resetLoginMsgFlag());
-  //     }, 3000);
-  //   }
-  // }, [dispatch, error]);
-
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1000);
   }, []);
+  const [limit, setLimit] = useState(false);
+
+  const [isMarked, setIsMarked] = useState(false);
+
+  const onLoad = () => {
+    console.log('working');
+    window.addEventListener('beforeunload', () => {});
+  };
 
   if (validCookie) {
     return <Logout />;
@@ -326,7 +362,47 @@ const UserDashboard = (props: any) => {
       </Modal>
 
       <Row className="mt-5">
+        <Popover
+          content={
+            <div className="w-75 px-3">
+              <Button
+                disabled={sebmitDisabled}
+                className="d-flex justify-content-center align-items-center my-3"
+                onClick={submitHandler}
+              >
+                <i className="bx bx-mail-send fs-3 px-2"></i>
+                <span>Send All</span>
+              </Button>
+              <Button
+                // disabled
+                className="d-flex justify-content-center align-items-center my-3"
+                onClick={onLoad}
+              >
+                <i className="bx bx-x fs-3 px-2"></i>
+                <span>Clear All</span>
+              </Button>
+            </div>
+          }
+          trigger="click"
+        >
+          <Button
+            htmlType="button"
+            className="ms-2 rounded-5"
+            // onClick={submitHandler}
+          >
+            <i className="bx bx-dots-horizontal-rounded fs-2"></i>
+          </Button>
+        </Popover>
         <Col className="col-12">
+          <div>
+            {/* <Checkbox
+              // disabled={limit}
+              className="me-4"
+              checked={isMarked}
+              onChange={SeletcMarkChange}
+            /> */}
+            {/* <Label>Selected All</Label> */}
+          </div>
           <List
             itemLayout="vertical"
             size="large"
@@ -338,68 +414,19 @@ const UserDashboard = (props: any) => {
               date?: string;
               phone?: string;
             }) => (
-              <List.Item key={item?.id}>
-                <Skeleton loading={loading} active paragraph={{ rows: 1 }}>
-                  <Card
-                    className="red-3  shadow-sm rounded-5"
-                    style={{ background: '#FFF6E9' }}
-                  >
-                    <Row gutter={[15, 32]} className="text-black">
-                      <Col className="fw-bold">{item?.username}</Col>
-                      <Col>{item?.email}</Col>
-                      <Col>{item?.phone}</Col>
-                      <Col>{item?.date}</Col>
-                      <Col>
-                        <Radio.Group
-                          onChange={onChange}
-                          value={method}
-                          className="text-black "
-                        >
-                          <Radio className="text-black" value={'email'}>
-                            Email
-                          </Radio>
-                          <Radio className="text-black" value={'sms'}>
-                            SMS
-                          </Radio>
-                          <Radio className="text-black" value={'both'}>
-                            Both
-                          </Radio>
-                        </Radio.Group>
-                      </Col>
-                      <Col>
-                        <Popover content="Delete Message " trigger="hover">
-                          <Button
-                            type="primary"
-                            shape="round"
-                            danger
-                            onClick={() => deleteHandler(item?.id)}
-                            icon={<i className="bx bxs-trash"></i>}
-                            size={'middle'}
-                          />
-                        </Popover>
-                      </Col>
-                      <Col>
-                        <Popover content="Send Message " trigger="hover">
-                          <Button
-                            disabled={buttonloading}
-                            type="primary"
-                            shape="round"
-                            onClick={() => submitHandler(item?.id)}
-                            icon={
-                              buttonloading ? (
-                                <i className="bx bx-loader"></i>
-                              ) : (
-                                <i className="bx bxs-send"></i>
-                              )
-                            }
-                            size={'middle'}
-                          />
-                        </Popover>
-                      </Col>
-                    </Row>
-                  </Card>
-                </Skeleton>
-              </List.Item>
+              <>
+                <SendTable
+                  item={item}
+                  setIsMarked={setIsMarked}
+                  isMarked={isMarked}
+                  limit={limit}
+                  setPropMethod={setMethod}
+                  deleteHandler={deleteHandler}
+                  sendHandler={submitHandler}
+                  buttonloading={buttonloading}
+                  checkMarkData={checkMarkData}
+                />
+              </>
             )}
           />
         </Col>

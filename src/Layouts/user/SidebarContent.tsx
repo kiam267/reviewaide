@@ -164,14 +164,16 @@ const SidebarContent = (props: any) => {
             <li>
               <Link to="/user/marketing">
                 {/* <i className="bx bx-world active-icon"></i> */}
-                <AreaChartOutlined className="active-icon fs-3 me-2" />
+                <AreaChartOutlined className="active-icon fs-3 me-2 active-icon" />
                 <span>{props.t('Marketing')}</span>
               </Link>
             </li>
             <li>
               <Link to="/user/qrcodegen">
-                <QrcodeOutlined className="active-icon fs-4 me-2" />
-            
+                {/* <i className="bx bxs-star active-icon"></i> */}
+                <i className="fx active-icon ">
+                  <QrcodeOutlined className="active-icon " />
+                </i>
                 <span>{props.t('QR Code')}</span>
               </Link>
             </li>
