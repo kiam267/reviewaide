@@ -173,6 +173,7 @@ function Allusers(props) {
       facebook_link: Sglusers.facebook_link,
       google_link: Sglusers.google_link,
       temporaray_lock: Sglusers.temporaray_lock,
+      userEmail: Sglusers.email,
     },
     // validationSchema: Yup.object({
     //   username: Yup.string(),
@@ -196,6 +197,7 @@ function Allusers(props) {
 
           if (res?.msg?.name === 'success') {
             setOpen(false);
+            setUsers(res.msg[0]);
             return message.success('User update successfully');
           }
           if (res.msg.name === 'auth') {
