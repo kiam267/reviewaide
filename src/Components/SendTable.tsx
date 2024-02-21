@@ -31,7 +31,7 @@ const SendTable = ({
   item,
   deleteHandler,
   buttonloading,
-  sendHandler,
+  sendEditHandler,
   checkMarkData,
   limit,
   setIsMarked,
@@ -57,7 +57,7 @@ const SendTable = ({
     setIsMarked_1(!isMarked_1);
     setIsMarked(!isMarked);
   };
-  const sendEditHandler = item => {};
+
 
   return (
     <List.Item key={item?.id}>
@@ -110,7 +110,7 @@ const SendTable = ({
               </Popover>
             </Col>
             <Col>
-              {/* <Popover content="Edit Message " trigger="hover">
+              <Popover content="Edit Message " trigger="hover">
                 <Button
                   disabled={buttonloading}
                   type="primary"
@@ -119,7 +119,7 @@ const SendTable = ({
                   icon={<i className="bx bxs-edit-alt"></i>}
                   size={'middle'}
                 />
-              </Popover> */}
+              </Popover>
             </Col>
           </Row>
         </Card>

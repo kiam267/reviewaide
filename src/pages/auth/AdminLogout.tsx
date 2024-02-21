@@ -10,7 +10,7 @@ const Logout = () => {
     LogoutUser();
   }, [isLoggedIn]);
 
-  return <Navigate to="/auth/login" />;
+  return <Navigate to="/super-admin/login" />;
 };
 
 export default withRouter(Logout);

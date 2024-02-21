@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 const AuthProtected = (props) => {
 
   if (!localStorage.getItem('adToken')) {
-    return <Navigate to={{ pathname: '/auth/login' }} />;
+    return <Navigate to={{ pathname: '/super-admin/login' }} />;
   }
   return (
     <React.Fragment>

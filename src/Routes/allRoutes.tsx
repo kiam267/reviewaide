@@ -31,26 +31,26 @@ import Unsubscribe from 'pages/user/Unsubscribe';
 import OpenReview from 'pages/review/OpenReview';
 
 const authProtectedRoutes = [
-  { path: '/auth/dashboard', component: <Dashboard /> },
-  { path: '/auth/createUsers', component: <CreateUsers /> },
-  { path: '/auth/allUsers', component: <Allusers /> },
-  { path: '/auth/email', component: <Email /> },
-  { path: '/auth/private-review', component: <PrivateReview /> },
-  { path: '/auth/public-review', component: <PublicReview /> },
-  { path: '/auth/public-review', component: <PublicReview /> },
+  { path: '/super-admin/dashboard', component: <Dashboard /> },
+  { path: '/super-admin/createUsers', component: <CreateUsers /> },
+  { path: '/super-admin/allUsers', component: <Allusers /> },
+  { path: '/super-admin/email', component: <Email /> },
+  { path: '/super-admin/private-review', component: <PrivateReview /> },
+  { path: '/super-admin/public-review', component: <PublicReview /> },
+  { path: '/super-admin/public-review', component: <PublicReview /> },
   {
-    path: '/auth',
+    path: '/super-admin',
     exact: true,
-    component: <Navigate to="/auth/login" />,
+    component: <Navigate to="/super-admin/login" />,
   },
 ];
 
 const publicRoutes = [
   // Admin Public Router
-  { path: '/auth/register', component: <SignUp /> },
-  { path: '/auth/login', component: <Login /> },
+  { path: '/super-admin/register', component: <SignUp /> },
+  { path: '/super-admin/login', component: <Login /> },
   { path: '/logout', component: <Logout /> },
-  { path: '/auth/logout', component: <AdminLogout /> },
+  { path: '/super-admin/logout', component: <AdminLogout /> },
   // { path: '/forgot-password', component: <ForgotPassword /> },
   { path: '/user/forgot-password', component: <ForgotPassword /> },
   { path: '/review/:clientId', component: <Review /> },

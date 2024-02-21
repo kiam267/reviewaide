@@ -85,8 +85,6 @@ const UserDashboard = (props: any) => {
     });
   };
 
-  console.log(method);
-
   useEffect(() => {
     const now = new Date();
     setDate(dateFormat(now, 'ddd, mmm dS, yyyy'));
@@ -121,6 +119,23 @@ const UserDashboard = (props: any) => {
       message.error('You can  only select 10 items');
     }
   };
+  const [editItem, setEditItem] = useState({
+    username: '',
+    email: '',
+    phone: '',
+    date: '',
+  });
+  const sendEditHandler = item => {
+    setOpen(true);
+    setEditItem(item);
+    setSelectedItems(prevSelectedItems =>
+      prevSelectedItems.filter(e => e.id !== item.id)
+    );
+    const updatedData = getLocalSendData.filter(items => items?.id !== item.id);
+    saveArrayToLocalStorage('proccess_send_data', updatedData);
+    setProcessData(updatedData);
+  };
+
   const deleteHandler = id => {
     setSelectedItems(prevSelectedItems =>
       prevSelectedItems.filter(e => e.id !== id)
@@ -183,10 +198,10 @@ const UserDashboard = (props: any) => {
     enableReinitialize: true,
 
     initialValues: {
-      username: '',
-      email: '',
-      phone: '+1',
-      date: date,
+      username: '' || editItem.username,
+      email: '' || editItem.email,
+      phone: editItem.phone || '+1',
+      date: date || editItem.date,
     },
     validationSchema: Yup.object({
       username: Yup.string().required('Please Enter Your Patient Name '),
@@ -237,7 +252,10 @@ const UserDashboard = (props: any) => {
           <button
             className="rounded-4 d-block m-auto "
             style={{ borderColor: '#F6653F', outline: 'none' }}
-            onClick={showModal}
+            onClick={() => {
+              showModal();
+              setEditItem({ username: '', email: '', phone: '', date: '' });
+            }}
           >
             <Popover content="Add Message" trigger="hover">
               <i className="bx bx-plus fs-1 pe-auto"></i>
@@ -422,7 +440,7 @@ const UserDashboard = (props: any) => {
                   limit={limit}
                   setPropMethod={setMethod}
                   deleteHandler={deleteHandler}
-                  sendHandler={submitHandler}
+                  sendEditHandler={sendEditHandler}
                   buttonloading={buttonloading}
                   checkMarkData={checkMarkData}
                 />

@@ -30,6 +30,7 @@ import AdminLogout from 'pages/auth/AdminLogout';
 import axios from 'axios';
 import { CREATE_USERS } from '../../helpers/url_helper';
 import dateFormat from 'dateformat';
+import { message } from 'antd';
 function CreateUsers(props) {
   const [show, setShow] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -75,11 +76,11 @@ function CreateUsers(props) {
         .then((resp: any) => {
           const res = resp.data;
           if (res?.msg?.name === 'error') {
-            return setErrorMessage(res?.msg?.msg);
+            return message.error(res?.msg?.msg);
           }
 
           if (res?.msg?.name === 'success') {
-            setAdminMessage(res?.msg?.msg);
+            message.success('User created successfully')
             return resetForm();
           }
           if (res.msg.name === 'auth') {
@@ -190,7 +191,8 @@ function CreateUsers(props) {
                       </div>
                       <div className="mt-3 d-grid">
                         <button
-                          className="btn btn-primary btn-block "
+                          style={{ background: '#F6653F' }}
+                          className="btn  btn-block text-white fs-semibold rounded-3"
                           type="submit"
                         >
                           Create A Users
@@ -204,7 +206,6 @@ function CreateUsers(props) {
           </Row>
         </Container>
       </div>
-  
     </React.Fragment>
   );
 }

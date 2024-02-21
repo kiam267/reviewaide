@@ -92,7 +92,7 @@ const Register = () => {
   }, []);
 
   if (isLoggedIn) {
-    return <Navigate to="/auth/dashboard" />;
+    return <Navigate to="/super-admin/dashboard" />;
   }
 
   return (
@@ -249,7 +249,10 @@ const Register = () => {
 
                       <p className="text-center pt-2 fs-5">
                         Already have an account ?{' '}
-                        <Link to="/auth/login" className="fw-bold text-primary">
+                        <Link
+                          to="/super-admin/login"
+                          className="fw-bold text-primary"
+                        >
                           {' '}
                           Login{' '}
                         </Link>{' '}
@@ -258,12 +261,7 @@ const Register = () => {
                   </div>
                 </CardBody>
 
-                <div className="mt-5 text-center">
-                  <p>
-                    © {new Date().getFullYear()} Skote. Crafted with{' '}
-                    <i className="mdi mdi-heart text-danger" /> by Themesbrand
-                  </p>
-                </div>
+                <div className="mt-5 text-center"></div>
               </Col>
             </Row>
           </Card>

@@ -80,7 +80,7 @@ const Login = (props: any) => {
           );
         }
         storeToken(res.token, res.isAdmin);
-        navigation('/auth/dashboard');
+        navigation('/super-admin/dashboard');
       });
     },
   });
@@ -100,14 +100,17 @@ const Login = (props: any) => {
   }, []);
 
   if (isLoggedIn) {
-    return <Navigate to="/auth/dashboard" />;
+    return <Navigate to="/super-admin/dashboard" />;
   }
 
   return (
     <React.Fragment>
       <div className=" pt-sm-5 mt-3 mt-lg-0">
-        <Container>
-          <Row className="justify-content-center">
+        <Container >
+          <Row
+            className="justify-content-center align-items-center"
+            style={{ minHeight: '100vh' }}
+          >
             <Col md={12} lg={6} xl={5}>
               <Card className="py-lg-5 rounded-5">
                 <CardBody className="pt-0">
@@ -223,7 +226,7 @@ const Login = (props: any) => {
                   <p className="text-center pt-2 fs-5">
                     Don&apos;t have an account ?{' '}
                     <Link
-                      to="/auth/register"
+                      to="/super-admin/register"
                       className="fw-bold "
                       style={{ color: '#F6653F' }}
                     >
