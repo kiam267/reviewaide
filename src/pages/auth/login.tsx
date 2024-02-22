@@ -215,12 +215,12 @@ const Login = (props: any) => {
                           Log In
                         </button>
                       </div>
-                      <div className="mt-4 text-center">
+                      {/* <div className="mt-4 text-center">
                         <Link to="/forgot-password" className="text-muted">
                           <i className="mdi mdi-lock me-1" /> Forgot your
                           password?
                         </Link>
-                      </div>
+                      </div> */}
                     </Form>
                   </div>
                   <p className="text-center pt-2 fs-5">

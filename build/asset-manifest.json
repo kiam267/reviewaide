@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.0e138a72.css",
-    "main.js": "/static/js/main.3b21c4f0.js",
+    "main.js": "/static/js/main.8e0b57ea.js",
     "static/media/Docapt.png": "/static/media/Docapt.0bd3d7b02eeca493c85c.png",
     "static/media/materialdesignicons-webfont.eot": "/static/media/materialdesignicons-webfont.52adde0de9840940801f.eot",
     "static/media/materialdesignicons-webfont.ttf?v=5.8.55": "/static/media/materialdesignicons-webfont.506bc8215df8660d8f04.ttf",
@@ -37,7 +37,6 @@
     "static/media/bg-auth-overlay.png": "/static/media/bg-auth-overlay.175b126e218595495c96.png",
     "static/media/dripicons-v2.eot": "/static/media/dripicons-v2.7f392f1e4787b46b3e8b.eot",
     "static/media/dripicons-v2.ttf": "/static/media/dripicons-v2.09c9c870ef8f9cffcc8f.ttf",
-    "static/media/profile-img.png": "/static/media/profile-img.43b59e598ba15abe6eab.png",
     "static/media/fa-regular-400.eot": "/static/media/fa-regular-400.0747be4cba2f8600544f.eot",
     "static/media/fa-regular-400.ttf": "/static/media/fa-regular-400.c3146b3524e97475c094.ttf",
     "static/media/dripicons-v2.woff": "/static/media/dripicons-v2.f19dcc0358afed69d277.woff",
@@ -48,10 +47,10 @@
     "static/media/logo-light.svg": "/static/media/logo-light.96c274dae02dae215c95d0a7ef202e3a.svg",
     "static/media/logo.svg": "/static/media/logo.a0143fa8ed5f53bf9ab4425b9a374176.svg",
     "main.0e138a72.css.map": "/static/css/main.0e138a72.css.map",
-    "main.3b21c4f0.js.map": "/static/js/main.3b21c4f0.js.map"
+    "main.8e0b57ea.js.map": "/static/js/main.8e0b57ea.js.map"
   },
   "entrypoints": [
     "static/css/main.0e138a72.css",
-    "static/js/main.3b21c4f0.js"
+    "static/js/main.8e0b57ea.js"
   ]
 }

@@ -15,7 +15,7 @@ import {
 // Formik Validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-
+import profile from '../../assets/images/doc-apt.png';
 // action
 // import { registerUser, apiError } from '../../slices/thunk';
 
@@ -53,7 +53,7 @@ const Register = () => {
     }),
     onSubmit: values => {
       register(values).then((resp: any) => {
-         const res = resp.data;
+        const res = resp.data;
         if (res.msg.name === 'ZodError') {
           return setErrorMessage(res.msg.issues[0].message);
         }
@@ -104,25 +104,12 @@ const Register = () => {
       </div>
       <div className="account-pages my-5 pt-sm-5">
         <Container>
-          <Card className="overflow-hidden py-lg-5">
-            <Row className="justify-content-center">
-              <Col lg={6} xl={5} className="d-none d-lg-block">
-                <img src={profileImg} alt="" className="img-fluid" />
-              </Col>
-              <Col md={8} lg={6} xl={5}>
-                <div className="bg-primary-subtle">
-                  <Row className="d-lg-none">
-                    <Col className="col-7">
-                      <div className="text-primary p-4">
-                        <h5 className="text-primary">Free Register</h5>
-                        <p>Get your free Skote account now.</p>
-                      </div>
-                    </Col>
-                    <Col className="col-5 align-self-end">
-                      <img src={profileImg} alt="" className="img-fluid" />
-                    </Col>
-                  </Row>
-                </div>
+          <Row
+            className="justify-content-center align-items-center"
+            style={{ minHeight: '100vh' }}
+          >
+            <Col md={12} lg={6} xl={5}>
+              <Card className="py-lg-5 rounded-5">
                 <CardBody className="pt-0">
                   <div className="p-2">
                     <Alert
@@ -156,6 +143,16 @@ const Register = () => {
                       {registrationError && registrationError ? (
                         <Alert color="danger">{registrationError}</Alert>
                       ) : null}
+                      <img
+                        className="d-block m-auto"
+                        style={{
+                          height: '50px',
+                          width: '100px',
+                          objectFit: 'contain',
+                        }}
+                        src={profile}
+                        alt="Logo"
+                      />
 
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
@@ -240,7 +237,8 @@ const Register = () => {
 
                       <div className="mt-4 d-grid">
                         <button
-                          className="btn btn-primary btn-block "
+                          style={{ background: '#F6653F' }}
+                          className="btn btn-block rounded-5 w-75 m-auto text-white fw-semibold "
                           type="submit"
                         >
                           Register
@@ -251,7 +249,8 @@ const Register = () => {
                         Already have an account ?{' '}
                         <Link
                           to="/super-admin/login"
-                          className="fw-bold text-primary"
+                          className="fw-bold "
+                          style={{ color: '#F6653F' }}
                         >
                           {' '}
                           Login{' '}
@@ -260,11 +259,9 @@ const Register = () => {
                     </Form>
                   </div>
                 </CardBody>
-
-                <div className="mt-5 text-center"></div>
-              </Col>
-            </Row>
-          </Card>
+              </Card>
+            </Col>
+          </Row>
         </Container>
       </div>
     </React.Fragment>

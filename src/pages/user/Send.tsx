@@ -120,6 +120,7 @@ const UserDashboard = (props: any) => {
     }
   };
   const [editItem, setEditItem] = useState({
+    id: '',
     username: '',
     email: '',
     phone: '',
@@ -131,7 +132,9 @@ const UserDashboard = (props: any) => {
     setSelectedItems(prevSelectedItems =>
       prevSelectedItems.filter(e => e.id !== item.id)
     );
-    const updatedData = getLocalSendData.filter(items => items?.id !== item.id);
+    const updatedData = getLocalSendData.filter(
+      items => items?.id !== item.id
+    );
     saveArrayToLocalStorage('proccess_send_data', updatedData);
     setProcessData(updatedData);
   };
@@ -254,7 +257,13 @@ const UserDashboard = (props: any) => {
             style={{ borderColor: '#F6653F', outline: 'none' }}
             onClick={() => {
               showModal();
-              setEditItem({ username: '', email: '', phone: '', date: '' });
+              setEditItem({
+                id: '',
+                username: '',
+                email: '',
+                phone: '',
+                date: '',
+              });
             }}
           >
             <Popover content="Add Message" trigger="hover">
