@@ -83,7 +83,7 @@ const UserLogin = (props: any) => {
         avater(`api/uploads/${res.avater}`, res.username);
         storeToken(res.token);
         isNewUser(res.isValid);
-        return nevigation('/user');
+        return nevigation('/short-cut');
       });
     },
   });
@@ -97,7 +97,7 @@ const UserLogin = (props: any) => {
   // }, [dispatch, error]);
 
   if (isLoggedIn) {
-    return <Navigate to="/user" />;
+    return <Navigate to="/user/short-cut" />;
   }
 
   return (

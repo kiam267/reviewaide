@@ -23,12 +23,17 @@ import {
   Marketing,
   UpdateProfile,
   QRcode,
+  Shortcut,
+  ClientRecoard,
+  PrivateClient,
+  DeleteLink,
 } from 'pages/user';
 import AdminLogout from 'pages/auth/AdminLogout';
 import Profile from 'Layouts/admin/Profile';
 import ResetPassword from 'pages/user/ResetPassword';
 import Unsubscribe from 'pages/user/Unsubscribe';
 import OpenReview from 'pages/review/OpenReview';
+import ShortcutReview from 'pages/user/ShortcutReview';
 
 const authProtectedRoutes = [
   { path: '/super-admin/dashboard', component: <Dashboard /> },
@@ -58,6 +63,7 @@ const publicRoutes = [
   { path: '/user/unsubscribe/:id', component: <Unsubscribe /> },
   // { path: '/review', component: <Review /> },
   { path: '/user/open-review/:id', component: <OpenReview /> },
+  { path: 'review/shortcut/:id', component: <ShortcutReview /> },
   //User Public Router
   { path: '/login', component: <UserLogin /> },
   { path: '*', component: <Pages404 /> },
@@ -75,5 +81,9 @@ const UserProtectedRouter = [
   { path: '/user/profile', component: UpdateProfile },
   { path: '/user/logout', component: Logout },
   { path: '/user/newProfie', component: Profile },
+  { path: '/user/short-cut', component: Shortcut },
+  { path: '/user/client_record', component: ClientRecoard },
+  { path: '/user/short-cut-private-review', component: PrivateClient },
+  { path: '/user/delete-link', component: DeleteLink },
 ];
 export { authProtectedRoutes, publicRoutes, UserProtectedRouter };

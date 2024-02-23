@@ -142,42 +142,65 @@ const SidebarContent = (props: any) => {
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
             <li className="menu-title">{props.t('Menu')} </li>
-            <li>
+            {/* <li>
               <Link to="/user">
                 <i className="bx bxs-dashboard active-icon"></i>
                 <span>{props.t('Dashboard')}</span>
               </Link>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <Link to="/user/send">
                 <i className="bx bxs-send active-icon"></i>
                 <span>{props.t('Send Message')}</span>
               </Link>
+            </li> */}
+            <li>
+              <Link to="/user/short-cut">
+                <i className="bx bxl-telegram active-icon"></i>
+                <span>{props.t('Shortcut Message')}</span>
+              </Link>
             </li>
             <li>
+              <Link to="/user/delete-link">
+                <i className="bx bxs-trash-alt active-icon"></i>
+                <span>{props.t('Delete Link')}</span>
+              </Link>
+            </li>
+            {/* <li>
               <Link to="/user/patient_record">
                 <i className="bx bxs-receipt active-icon"></i>
                 <span>{props.t('Patient Record')}</span>
               </Link>
+            </li> */}
+            <li>
+              <Link to="/user/client_record">
+                <i className="bx bxs-receipt active-icon"></i>
+                <span>{props.t('Client Record')}</span>
+              </Link>
             </li>
 
-            <li>
+            {/* <li>
               <Link to="/user/marketing">
-                {/* <i className="bx bx-world active-icon"></i> */}
+  
                 <AreaChartOutlined className="active-icon fs-3 me-2 active-icon" />
                 <span>{props.t('Marketing')}</span>
               </Link>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <Link to="/user/qrcodegen">
-                {/* <i className="bx bxs-star active-icon"></i> */}
                 <i className="fx active-icon ">
                   <QrcodeOutlined className="active-icon " />
                 </i>
                 <span>{props.t('QR Code')}</span>
               </Link>
-            </li>
+            </li> */}
             <li>
+              <Link to="/user/short-cut-private-review">
+                <i className="bx bxs-star active-icon"></i>
+                <span>{props.t('Review')}</span>
+              </Link>
+            </li>
+            {/* <li>
               <Link to="" className="has-arrow">
                 <i className="bx bxs-star active-icon"></i>
                 <span>{props.t('Review')}</span>
@@ -190,7 +213,7 @@ const SidebarContent = (props: any) => {
                   <Link to="/user/publice">{props.t('Public')}</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
           </ul>
         </div>
       </SimpleBar>

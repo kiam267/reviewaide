@@ -29,6 +29,8 @@ export const PRIVATE_REVIEW = SERVER_API + 'api/review/private';
 export const QR_CODE_PRIVATE_REVIEW = SERVER_API + 'api/review/opne-qr-code-store';
 export const CUSSTOMER_SUPPORT_EMAIL = SERVER_API + 'api/customer/email';
 export const USER_MARKETING_STORE = SERVER_API + 'api/marketing';
+export const USER_UPDATE_SHORTCUT = SERVER_API + 'api/shortcut';
+
 
 export const LINK = 'https://docapt.com/';
 export const AVATER_IMAGE_URL = 'https://docapt.com/';
