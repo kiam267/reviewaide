@@ -1,7 +1,7 @@
 // Server Start
 
-// export const REACT_APP_SERVER_API = 'https://docapt.com/';
-export const REACT_APP_SERVER_API = 'http://localhost:8080/';
+export const REACT_APP_SERVER_API = 'https://docapt.com/';
+// export const REACT_APP_SERVER_API = 'http://localhost:8080/';
 const SERVER_API = REACT_APP_SERVER_API;
 export const ADMIN_REGISTER = SERVER_API + 'api/auth/register';
 export const ADMIN_LOGIN = SERVER_API + 'api/auth/login';
@@ -35,14 +35,14 @@ export const USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST =
   SERVER_API + 'api/shortcut/post';
 
 
-// export const LINK = 'https://docapt.com/';
-// export const AVATER_IMAGE_URL = 'https://docapt.com/';
-// export const RESETPASSWORD_LINK = 'https://docapt.com';
-// export const REVIEW_LOGO_LINK = 'https://docapt.com';
-// export const SERVER_LINK = 'https://docapt.com/';
+export const LINK = 'https://docapt.com/';
+export const AVATER_IMAGE_URL = 'https://docapt.com/';
+export const RESETPASSWORD_LINK = 'https://docapt.com';
+export const REVIEW_LOGO_LINK = 'https://docapt.com';
+export const SERVER_LINK = 'https://docapt.com/';
 
-export const LINK = 'http://localhost:3000/';
-export const AVATER_IMAGE_URL = 'http://localhost:8080/';
-export const RESETPASSWORD_LINK = 'http://localhost:3000';
-export const REVIEW_LOGO_LINK = 'http://localhost:8080';
-export const SERVER_LINK = 'http://localhost:8080/';
+// export const LINK = 'http://localhost:3000/';
+// export const AVATER_IMAGE_URL = 'http://localhost:8080/';
+// export const RESETPASSWORD_LINK = 'http://localhost:3000';
+// export const REVIEW_LOGO_LINK = 'http://localhost:8080';
+// export const SERVER_LINK = 'http://localhost:8080/';
