@@ -30,6 +30,9 @@ export const QR_CODE_PRIVATE_REVIEW = SERVER_API + 'api/review/opne-qr-code-stor
 export const CUSSTOMER_SUPPORT_EMAIL = SERVER_API + 'api/customer/email';
 export const USER_MARKETING_STORE = SERVER_API + 'api/marketing';
 export const USER_UPDATE_SHORTCUT = SERVER_API + 'api/shortcut';
+export const USER_UPDATE_SHORTCUT_POST_GET = SERVER_API + 'api/shortcut/getorpost';
+export const USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST =
+  SERVER_API + 'api/shortcut/post';
 
 
 export const LINK = 'https://docapt.com/';

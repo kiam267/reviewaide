@@ -53,7 +53,12 @@ import {
 import { use } from 'i18next';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
-import { CLIENT_VISITOR, LINK, USER_UPDATE, USER_UPDATE_SHORTCUT } from '../../helpers/url_helper';
+import {
+  CLIENT_VISITOR,
+  LINK,
+  USER_UPDATE,
+  USER_UPDATE_SHORTCUT,
+} from '../../helpers/url_helper';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Logout from 'pages/auth/Logout';
@@ -178,30 +183,35 @@ const UserDashboard = (props: any) => {
     onSubmit: (values: any, { resetForm }) => {
       const data = { ...values, imageURL };
       console.log(data);
-      
-          const token = localStorage.getItem('UserToken');
-       const config = {
-         headers: {
-           'Content-Type': 'multipart/form-data',
-           token: token,
-         },
-       };
-       axios.post(USER_UPDATE_SHORTCUT, data, config).then(resp => {
-         const res = resp.data;
-         if (res?.msg?.name === 'error') {
-           message.error(res?.msg?.msg);
-         }
-         if (res?.msg?.name === 'success') {
-           message.success(res?.msg?.msg);
-           return;
-         }
 
-         if (res.msg.name === 'auth') {
-           return setValidCookie(true);
-         }
-       });
+      const token = localStorage.getItem('UserToken');
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          token: token,
+        },
+      };
+      axios.post(USER_UPDATE_SHORTCUT, data, config).then(resp => {
+        const res = resp.data;
+        if (res?.msg?.name === 'error') {
+          message.error(res?.msg?.msg);
+        }
+        if (res?.msg?.name === 'success') {
+          message.success(res?.msg?.msg);
+          resetForm();
+          setImageUrl('')
+          setImageURL('')
+           setLoading(false);
+          return;
+        }
+
+        if (res.msg.name === 'auth') {
+          return setValidCookie(true);
+        }
+      });
     },
   });
+
 
   useEffect(() => {
     setTimeout(() => {

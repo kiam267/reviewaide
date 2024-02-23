@@ -1,6 +1,16 @@
 import CustomeContainer from 'Components/Common/CustomeContainer';
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, QRCode, Space, Table, Tag, message } from 'antd';
+import {
+  Avatar,
+  Button,
+  Empty,
+  Popover,
+  QRCode,
+  Space,
+  Table,
+  Tag,
+  message,
+} from 'antd';
 import type { TableProps } from 'antd';
 import axios from 'axios';
 import Logout from 'pages/auth/Logout';
@@ -56,7 +66,24 @@ function DeleteLink() {
       .then(resp => {
         const res = resp.data;
         if (res?.msg?.name === 'error') {
-          message.error(res?.msg?.msg);
+          return res.msg[0].data
+            ? setAllData([
+                {
+                  facebook_link: '',
+                  google_link: '',
+                  helth_link: '',
+                  logo: '',
+                  name: '',
+                  qr_code: '',
+                  review_link: '',
+                  yel_link: '',
+                  unique_id: '',
+                  user_email: '',
+                  id: '',
+                  valid: '',
+                },
+              ])
+            : message.error(res?.msg?.msg);
         }
         if (res?.msg?.name === 'success') {
           setAllData(res.msg[0]);
@@ -91,6 +118,20 @@ function DeleteLink() {
   if (validCookie) {
     return <Logout />;
   }
+  const downloadQRCode = () => {
+    const canvas = document
+      .getElementById('myqrcode')
+      ?.querySelector<HTMLCanvasElement>('canvas');
+    if (canvas) {
+      const url = canvas.toDataURL();
+      const a = document.createElement('a');
+      a.download = 'QRCode.png';
+      a.href = url;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  };
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -142,7 +183,7 @@ function DeleteLink() {
       key: 'review_link',
       render: (_, code) => {
         return (
-          <a href={LINK + 'review/shortcut/' + code.unique_id}>Review Link</a>
+          <a target='_blank' href={LINK + 'review/shortcut/' + code.unique_id}>Review Link</a>
         );
       },
     },
@@ -151,11 +192,21 @@ function DeleteLink() {
       dataIndex: 'qr_code',
       key: 'qr_code',
       render: (_, code) => {
+        const content = (
+          <div id="myqrcode">
+            <QRCode
+              value={LINK + 'review/shortcut/' + code.unique_id}
+              status="active"
+            />
+            <Button className='mt-4 m-auto d-block' type="primary" onClick={downloadQRCode}>
+              Download
+            </Button>
+          </div>
+        );
         return (
-          <QRCode
-            value={LINK + 'review/shortcut/' + code.unique_id}
-            status="active"
-          />
+          <Popover content={content}>
+            <Button danger>Hover me</Button>
+          </Popover>
         );
       },
     },
@@ -172,9 +223,19 @@ function DeleteLink() {
       ),
     },
   ];
+
   return (
     <CustomeContainer>
-      <Table columns={columns} dataSource={backendData} scroll={{ x: 1500 }} />
+      {backendData[0].name === '' ? (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      ) : (
+        <Table
+          key={Date.now()}
+          columns={columns}
+          dataSource={backendData}
+          scroll={{ x: 1500 }}
+        />
+      )}
     </CustomeContainer>
   );
 }

@@ -12,7 +12,6 @@ function PrivateReview(props) {
   const [review, setReview] = useState([]);
   const [validCookie, setValidCookie] = useState(false);
   const [loading, setLoading] = useState(true);
-  console.log(review);
 
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
