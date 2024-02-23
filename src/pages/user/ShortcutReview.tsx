@@ -52,7 +52,7 @@ const ShortcutReview = () => {
     yel_link: '',
     logo: '',
   });
-  console.log(LINK);
+
 
   const [retingShow, setRatingShow] = useState(true);
   const [validCookie, setValidCookie] = useState(false);
@@ -60,6 +60,8 @@ const ShortcutReview = () => {
   const { id } = useParams();
   const [URLValid, setURLValid] = useState<boolean>(false);
 
+  console.log(LINK.helth_link === "");
+  
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
     axios
@@ -246,14 +248,14 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.google_link === ''
+                                        LINK.google_link === ""
                                           ? 'none'
                                           : 'block'
                                       }`,
                                       background: '#F6653F',
                                     }}
                                     to={LINK.google_link}
-                                    className="btn btn-primary d-block m-auto w-75"
+                                    className="btn btn-primary  m-auto w-75"
                                     type="submit"
                                     onClick={() => methodHandeler(id, 'google')}
                                   >
@@ -267,14 +269,14 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.facebook_link === ''
+                                        LINK.facebook_link === ""
                                           ? 'none'
                                           : 'block'
                                       }`,
                                       background: '#F6653F',
                                     }}
                                     to={LINK.facebook_link}
-                                    className="btn btn-primary d-block m-auto w-75"
+                                    className="btn btn-primary  m-auto w-75"
                                     type="submit"
                                     onClick={() =>
                                       methodHandeler(id, 'facebook')
@@ -290,12 +292,12 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.yel_link === '' ? 'none' : 'block'
+                                        LINK.yel_link === "" ? 'none' : 'block'
                                       }`,
                                       background: '#F6653F',
                                     }}
                                     to={LINK.yel_link}
-                                    className="btn btn-primary d-block m-auto w-75"
+                                    className="btn btn-primary  m-auto w-75"
                                     type="submit"
                                     onClick={() => methodHandeler(id, 'Yelp')}
                                   >
@@ -309,14 +311,14 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.helth_link === ''
+                                        LINK.helth_link === ""
                                           ? 'none'
                                           : 'block'
                                       }`,
                                       background: '#F6653F',
                                     }}
                                     to={LINK.helth_link}
-                                    className="btn btn-primary d-block m-auto w-75 "
+                                    className="btn btn-primary  m-auto w-75 "
                                     type="submit"
                                     onClick={() =>
                                       methodHandeler(id, 'Health Grades')
