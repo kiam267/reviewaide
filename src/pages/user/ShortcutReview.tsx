@@ -250,6 +250,7 @@ const ShortcutReview = () => {
                                           ? 'none'
                                           : 'block'
                                       }`,
+                                      background: '#F6653F',
                                     }}
                                     to={LINK.google_link}
                                     className="btn btn-primary d-block m-auto w-75"
@@ -270,6 +271,7 @@ const ShortcutReview = () => {
                                           ? 'none'
                                           : 'block'
                                       }`,
+                                      background: '#F6653F',
                                     }}
                                     to={LINK.facebook_link}
                                     className="btn btn-primary d-block m-auto w-75"
@@ -290,6 +292,7 @@ const ShortcutReview = () => {
                                       display: `${
                                         LINK.yel_link === '' ? 'none' : 'block'
                                       }`,
+                                      background: '#F6653F',
                                     }}
                                     to={LINK.yel_link}
                                     className="btn btn-primary d-block m-auto w-75"
@@ -310,6 +313,7 @@ const ShortcutReview = () => {
                                           ? 'none'
                                           : 'block'
                                       }`,
+                                      background: '#F6653F',
                                     }}
                                     to={LINK.helth_link}
                                     className="btn btn-primary d-block m-auto w-75 "
