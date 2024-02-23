@@ -48,10 +48,12 @@ const ShortcutReview = () => {
   const [LINK, SETLINK] = useState({
     google_link: '',
     facebook_link: '',
-    heathGrade_link: '',
-    yelp_link: '',
+    helth_link: '',
+    yel_link: '',
     logo: '',
   });
+  console.log(LINK);
+
   const [retingShow, setRatingShow] = useState(true);
   const [validCookie, setValidCookie] = useState(false);
   const [data, setData] = useState([]);
@@ -222,7 +224,7 @@ const ShortcutReview = () => {
                                 style={{
                                   minWidth: '100px',
                                   overflow: 'hidden',
-                                  minHeight: '40px',
+                                  minHeight: '50px',
                                 }}
                                 onClick={() => setRatingShow(false)}
                               >
@@ -286,10 +288,10 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.yelp_link === '' ? 'none' : 'block'
+                                        LINK.yel_link === '' ? 'none' : 'block'
                                       }`,
                                     }}
-                                    to={LINK.yelp_link}
+                                    to={LINK.yel_link}
                                     className="btn btn-primary d-block m-auto w-75"
                                     type="submit"
                                     onClick={() => methodHandeler(id, 'Yelp')}
@@ -304,12 +306,12 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.heathGrade_link === ''
+                                        LINK.helth_link === ''
                                           ? 'none'
                                           : 'block'
                                       }`,
                                     }}
-                                    to={LINK.heathGrade_link}
+                                    to={LINK.helth_link}
                                     className="btn btn-primary d-block m-auto w-75 "
                                     type="submit"
                                     onClick={() =>
