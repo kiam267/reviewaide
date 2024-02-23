@@ -83,7 +83,7 @@ const UserLogin = (props: any) => {
         avater(`api/uploads/${res.avater}`, res.username);
         storeToken(res.token);
         isNewUser(res.isValid);
-        return nevigation('/short-cut');
+        return nevigation('/user/short-cut');
       });
     },
   });
