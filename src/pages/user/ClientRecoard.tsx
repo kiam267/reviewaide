@@ -1,76 +1,99 @@
-import CustomeContainer from 'Components/Common/CustomeContainer'
-import React from 'react'
-import { Space, Table, Tag } from 'antd';
+import CustomeContainer from 'Components/Common/CustomeContainer';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
+import {
+  AVATER_IMAGE_URL,
+  USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST,
+} from '../../helpers/url_helper';
+import axios from 'axios';
 
 interface DataType {
-  name: string;
+  company_name: string;
   logo: string;
-  google_link: string;
-  facebook_link: string;
-  review_link: string;
-  qr_code: string;
+  date: string;
+  method: string;
 }
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
     title: 'Logo',
     dataIndex: 'logo',
     key: 'logo',
+    render: (_, code) => {
+      return (
+        <Avatar
+          src={
+            <img
+              alt="logo"
+              src={`${AVATER_IMAGE_URL + 'api/photos/' + code.logo}`}
+            />
+          }
+        />
+      );
+    },
   },
   {
-    title: 'Google Link',
-    dataIndex: 'google_link',
-    key: 'google_link',
+    title: 'Company Name',
+    dataIndex: 'company_name',
+    key: 'company_name',
   },
   {
-    title: 'Facebook Link',
-    dataIndex: 'facebook_link',
-    key: 'facebook_link',
+    title: 'Method',
+    dataIndex: 'method',
+    key: 'method',
   },
   {
-    title: 'Review Link',
-    dataIndex: 'review_link',
-    key: 'review_link',
-  },
-  {
-    title: 'QR code',
-    dataIndex: 'qr_code',
-    key: 'qr_code',
-  },
-
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Delete</a>
-      </Space>
-    ),
+    title: 'date',
+    dataIndex: 'date',
+    key: 'date',
   },
 ];
 function ClientRecoard() {
+  const [mainData, setData] = useState([
+    {
+      company_name: '',
+      logo: '',
+      date: '',
+      method: '',
+    },
+  ]);
+  useEffect(() => {
+    const token = localStorage.getItem('UserToken');
+    axios
+      .get(USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST, {
+        headers: {
+          token,
+        },
+      })
+      .then(resp => {
+        const res = resp.data;
+        console.log(res.msg);
+        if (res.msg.name === 'success') {
+          return setData(res.msg[0].data);
+        }
+        if (res.msg.name === 'error') {
+          // return setURLValid(res.msg[0].valid);
+        }
+        if (res.msg.name === 'auth') {
+          // setValidCookie(true);
+        }
+      });
+  }, []);
+
   const data: DataType[] = [
     {
-      name: 'John Brown',
+      company_name: 'John Brown',
       logo: 'kjjd',
-      google_link: 'New York No. 1 Lake Park',
-      facebook_link: 'http://www.facebook',
-      qr_code: 'fdsflksjdkfsdf',
-      review_link: 'dklfjsdfklsdfklsdjf'
+      method: 'google',
+      date: '34897534895',
     },
-
   ];
   return (
     <CustomeContainer>
-      <Table columns={columns} dataSource={data} />
+      <Table key={Date.now()} columns={columns} dataSource={mainData} />
     </CustomeContainer>
   );
 }
 
-export default ClientRecoard
+export default ClientRecoard;

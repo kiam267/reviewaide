@@ -162,8 +162,8 @@ const SidebarContent = (props: any) => {
             </li>
             <li>
               <Link to="/user/delete-link">
-                <i className="bx bxs-trash-alt active-icon"></i>
-                <span>{props.t('Delete Link')}</span>
+                <i className="bx bxs-user-circle active-icon"></i>
+                <span>{props.t('QR Code')}</span>
               </Link>
             </li>
             {/* <li>
