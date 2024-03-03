@@ -45,6 +45,7 @@ interface DataType {
   user_email: string;
   custom_url: string;
   custom_phato_url: string;
+  user_emial_view: string;
 }
 
 function DeleteLink() {
@@ -65,6 +66,7 @@ function DeleteLink() {
       valid: '',
       custom_url: '',
       custom_phato_url: '',
+      user_emial_view: '',
     },
   ]);
   const [open, setOpen] = useState(false);
@@ -108,6 +110,7 @@ function DeleteLink() {
                   valid: '',
                   custom_url: '',
                   custom_phato_url: '',
+                  user_emial_view: '',
                 },
               ])
             : message.error(res?.msg?.msg);
@@ -130,9 +133,11 @@ function DeleteLink() {
     initialValues: {
       custome_url: '',
       name: name,
+      email: '',
     },
     validationSchema: Yup.object({
       custome_url: Yup.string(),
+      email: Yup.string().trim().email(),
     }),
     onSubmit: (values: any, { resetForm }) => {
       const data = { ...values, imageURL };
@@ -269,8 +274,7 @@ function DeleteLink() {
   const downloadQRCode_2 = imageUrl => {
     downloadImage(imageUrl, 'custom-image.jpg');
   };
-  console.log(backendData);
-  
+
   const columns: TableProps<DataType>['columns'] = [
     {
       title: 'Logo',
@@ -328,19 +332,33 @@ function DeleteLink() {
       },
     },
     {
+      title: 'Client Record',
+      dataIndex: 'review_link',
+      key: 'review_link',
+      render: (_, code) => {
+        if (!code.user_emial_view) return <p>Please Add Email</p>;
+        return (
+          <a
+            target="_blank"
+            href={LINK + 'client-record/' + code.user_emial_view}
+          >
+            Client Record
+          </a>
+        );
+      },
+    },
+    {
       title: 'Custom Link',
       dataIndex: 'custom_url',
       key: 'custom_url',
       render: (_, code) => {
+        if (!code.custom_url || code.custom_phato_url == '')
+          return <p>Add Custom Link</p>;
         return (
           <>
-            {code.custom_url === " " ? (
-              <p>Add Custom Link</p>
-            ) : (
-              <a target="_blank" href={code.custom_url}>
-                Review Link
-              </a>
-            )}
+            <a target="_blank" href={code.custom_url}>
+              Review Link
+            </a>
           </>
         );
       },
@@ -381,7 +399,7 @@ function DeleteLink() {
         const content = (
           <div id="myqrcode">
             <img
-              style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+              style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius:'20px' }}
               src={`${AVATER_IMAGE_URL}api/photos/${code.custom_phato_url}`}
               alt=""
             />
@@ -394,16 +412,12 @@ function DeleteLink() {
             </Button>
           </div>
         );
+        if (!code.custom_phato_url || code.custom_phato_url == '')
+          return <p>Add a custom phato</p>;
         return (
-          <>
-            {code.custom_phato_url === ' ' ? (
-              <p>Add a custom phato</p>
-            ) : (
-              <Popover content={content}>
-                <Button danger>Hover me</Button>
-              </Popover>
-            )}
-          </>
+          <Popover content={content}>
+            <Button danger>Hover me</Button>
+          </Popover>
         );
       },
     },
@@ -417,7 +431,7 @@ function DeleteLink() {
             className="border-info"
             onClick={() => showDrawer(record.name)}
           >
-            Add Custom Link & Img
+            Edit
           </Button>
 
           <Button danger onClick={() => deleteHandeler(record.unique_id)}>
@@ -453,7 +467,7 @@ function DeleteLink() {
                 }}
               >
                 <div className="mb-3">
-                  <Label className="form-label">custom URL</Label>
+                  <Label className="form-label">Custom URL</Label>
                   <Input
                     name="custome_url"
                     className="form-control"
@@ -473,6 +487,28 @@ function DeleteLink() {
                   validation.errors.custome_url ? (
                     <FormFeedback type="invalid">
                       {validation.errors.custome_url}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+                <div className="mb-3">
+                  <Label className="form-label">Enter Your Email</Label>
+                  <Input
+                    name="email"
+                    className="form-control"
+                    placeholder="Enter your email address"
+                    type="text"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.email || ''}
+                    invalid={
+                      validation.touched.email && validation.errors.email
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.email && validation.errors.email ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.email}
                     </FormFeedback>
                   ) : null}
                 </div>

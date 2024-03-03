@@ -31,7 +31,7 @@ import UserLogin from 'pages/auth/userLogin';
 import Logout from 'pages/auth/Logout';
 import { Button, message } from 'antd';
 
-import boopSfx from '../../assets/sounds/mixkit-correct-answer-tone-2870.wav';
+import boopSfx from '../../assets/sounds/mixkit-message-pop-alert-2354.mp3';
 const Review = () => {
   //meta title
 

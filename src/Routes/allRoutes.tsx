@@ -34,6 +34,7 @@ import ResetPassword from 'pages/user/ResetPassword';
 import Unsubscribe from 'pages/user/Unsubscribe';
 import OpenReview from 'pages/review/OpenReview';
 import ShortcutReview from 'pages/user/ShortcutReview';
+import PubliceClientRecoard from 'pages/user/PubliceClientRecoard';
 
 const authProtectedRoutes = [
   { path: '/super-admin/dashboard', component: <Dashboard /> },
@@ -64,6 +65,7 @@ const publicRoutes = [
   // { path: '/review', component: <Review /> },
   { path: '/user/open-review/:id', component: <OpenReview /> },
   { path: 'review/shortcut/:id', component: <ShortcutReview /> },
+  { path: 'client-record/:id', component: <PubliceClientRecoard /> },
   //User Public Router
   { path: '/login', component: <UserLogin /> },
   { path: '*', component: <Pages404 /> },
