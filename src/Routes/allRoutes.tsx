@@ -35,6 +35,7 @@ import Unsubscribe from 'pages/user/Unsubscribe';
 import OpenReview from 'pages/review/OpenReview';
 import ShortcutReview from 'pages/user/ShortcutReview';
 import PubliceClientRecoard from 'pages/user/PubliceClientRecoard';
+import PrivateReviewRecoard from 'pages/user/PrivateReviewRecoard';
 
 const authProtectedRoutes = [
   { path: '/super-admin/dashboard', component: <Dashboard /> },
@@ -65,10 +66,14 @@ const publicRoutes = [
   // { path: '/review', component: <Review /> },
   { path: '/user/open-review/:id', component: <OpenReview /> },
   { path: 'review/shortcut/:id', component: <ShortcutReview /> },
-  { path: 'client-record/:id', component: <PubliceClientRecoard /> },
   //User Public Router
   { path: '/login', component: <UserLogin /> },
   { path: '*', component: <Pages404 /> },
+];
+
+const publiceRecoardwithprivateReview = [
+  { path: 'client-record/:id', component: <PubliceClientRecoard /> },
+  { path: 'private-review-recoard', component: <PrivateReviewRecoard /> },
 ];
 const UserProtectedRouter = [
   { path: '/user', component: userDashboard },
@@ -88,4 +93,9 @@ const UserProtectedRouter = [
   { path: '/user/short-cut-private-review', component: PrivateClient },
   { path: '/user/delete-link', component: DeleteLink },
 ];
-export { authProtectedRoutes, publicRoutes, UserProtectedRouter };
+export {
+  authProtectedRoutes,
+  publicRoutes,
+  UserProtectedRouter,
+  publiceRecoardwithprivateReview,
+};

@@ -112,10 +112,12 @@ const OpenReview = () => {
 
     initialValues: {
       textarea: '',
+
       rating,
     },
     validationSchema: Yup.object({
       textarea: Yup.string().required('Please Enter Your Textarea'),
+
     }),
     onSubmit: (values: any, { resetForm }) => {
       const now = new Date();
@@ -320,6 +322,7 @@ const OpenReview = () => {
                                         </span>
                                       ) : null}
                                     </div>
+                                 
                                     <div className=" d-flex justify-content-center pt-2">
                                       <button
                                         type="submit"

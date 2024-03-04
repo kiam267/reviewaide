@@ -33,6 +33,7 @@ export const USER_UPDATE_SHORTCUT = SERVER_API + 'api/shortcut';
 export const USER_UPDATE_SHORTCUT_POST_GET = SERVER_API + 'api/shortcut/getorpost';
 export const USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST =
   SERVER_API + 'api/shortcut/post';
+  export const PRIVATE_REVIEW_SHORTCUT = SERVER_API + 'api/review/short';
 
 
 export const LINK = 'https://docapt.com/';

@@ -8,6 +8,7 @@ import ForgotPasswordReducer from "./auth/forgetpwd/reducer";
 
 import AccountReducer from "./auth/register/reducer";   
 import AvatarReducer from "./avaterReducer";   
+import EmailReducer from "./dunamicProps";   
 
 const rootReducer = combineReducers({
     Layout: LayoutReducer,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
     Profile: ProfileReducer,
     ForgetPassword: ForgotPasswordReducer,
     Account: AccountReducer,
-    Avater: AvatarReducer
+    Avater: AvatarReducer,
+    Email: EmailReducer
 });
 
 export default rootReducer;

@@ -4,9 +4,11 @@ import {
   UserProtectedRouter,
   authProtectedRoutes,
   publicRoutes,
+  publiceRecoardwithprivateReview,
 } from './Routes/allRoutes';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import VerticalLayout from './Layouts/admin';
+import PubliceLayout from './Layouts/public';
 import './assets/scss/theme.scss';
 import AuthProtected from './Routes/DashboardAuthProtected';
 import UserAuthProtected from 'Routes/UserAuthProtected';
@@ -18,6 +20,14 @@ function App() {
       <Routes>
         {publicRoutes.map((route, idx) => (
           <Route path={route.path} key={idx} element={route.component} />
+        ))}
+
+        {publiceRecoardwithprivateReview.map((route, idx) => (
+          <Route
+            path={route.path}
+            key={idx}
+            element={<PubliceLayout>{route.component}</PubliceLayout>}
+          />
         ))}
 
         {authProtectedRoutes.map((route, idx) => (
@@ -44,7 +54,6 @@ function App() {
         ))}
       </Routes>
     </React.Fragment>
-
   );
 }
 

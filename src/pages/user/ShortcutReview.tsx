@@ -53,15 +53,14 @@ const ShortcutReview = () => {
     logo: '',
   });
 
-
   const [retingShow, setRatingShow] = useState(true);
   const [validCookie, setValidCookie] = useState(false);
   const [data, setData] = useState([]);
   const { id } = useParams();
   const [URLValid, setURLValid] = useState<boolean>(false);
 
-  console.log(LINK.helth_link === "");
-  
+  console.log(LINK.helth_link === '');
+
   useEffect(() => {
     const token = localStorage.getItem('UserToken');
     axios
@@ -126,10 +125,12 @@ const ShortcutReview = () => {
 
     initialValues: {
       textarea: '',
+      username: 'unknown',
       rating,
     },
     validationSchema: Yup.object({
       textarea: Yup.string().required('Please Enter Your Textarea'),
+      username: Yup.string(),
     }),
     onSubmit: (values: any, { resetForm }) => {
       const now = new Date();
@@ -248,7 +249,7 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.google_link === ""
+                                        LINK.google_link === ''
                                           ? 'none'
                                           : 'block'
                                       }`,
@@ -269,7 +270,7 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.facebook_link === ""
+                                        LINK.facebook_link === ''
                                           ? 'none'
                                           : 'block'
                                       }`,
@@ -292,7 +293,7 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.yel_link === "" ? 'none' : 'block'
+                                        LINK.yel_link === '' ? 'none' : 'block'
                                       }`,
                                       background: '#F6653F',
                                     }}
@@ -311,7 +312,7 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.helth_link === ""
+                                        LINK.helth_link === ''
                                           ? 'none'
                                           : 'block'
                                       }`,
@@ -347,6 +348,24 @@ const ShortcutReview = () => {
                                       return false;
                                     }}
                                   >
+                                    <div className="mb-3">
+                                      <Label className="fs-5">
+                                        Many thanks for your review. Would
+                                        appreciate it if you could kindly add
+                                        your name
+                                      </Label>
+                                      <Input
+                                        style={{
+                                          borderColor: '#F6653F',
+                                        }}
+                                        name="username"
+                                        type="text"
+                                        className="fs-5"
+                                        onChange={validation.handleChange}
+                                        value={validation.values.username || ''}
+                                        placeholder="Enter Your Name "
+                                      />
+                                    </div>
                                     <div className="mb-3">
                                       {error ? (
                                         <Alert color="danger">{error}</Alert>
@@ -393,6 +412,7 @@ const ShortcutReview = () => {
                                         </span>
                                       ) : null}
                                     </div>
+
                                     <div className=" d-flex justify-content-center pt-2">
                                       <button
                                         type="submit"

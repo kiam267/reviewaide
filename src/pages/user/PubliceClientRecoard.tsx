@@ -8,6 +8,9 @@ import {
 } from '../../helpers/url_helper';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Breadcrumb from 'Components/Common/Breadcrumb';
+import { useDispatch, useSelector } from 'react-redux';
+import { email } from '../../slices/dunamicProps';
 
 interface DataType {
   company_name: string;
@@ -52,7 +55,10 @@ const columns: TableProps<DataType>['columns'] = [
 ];
 
 function PubliceClientRecoard() {
+  const dispatch = useDispatch();
   const { id } = useParams();
+  dispatch(email(id));
+
   const [mainData, setData] = useState([
     {
       company_name: '',
@@ -100,7 +106,7 @@ function PubliceClientRecoard() {
           margin: 'auto',
         }}
       >
-        <h1 className="fs-4 fw-semibold ">Client Recoards</h1>
+        <Breadcrumb title="Client Record" breadcrumbItem="Client Record" />
         <Table
           className="rounded"
           key={Date.now()}
