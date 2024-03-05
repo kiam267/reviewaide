@@ -86,10 +86,12 @@ const ShortcutReview = () => {
   const methodHandeler = (id, method) => {
     const now = new Date();
     const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
+    const link = `${REVIEW_LOGO_LINK}/api/photos/${LINK.logo}`;
     axios.post(USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST, {
       id,
       method,
       dateData,
+      link,
     });
   };
   const paly = () => {
@@ -135,11 +137,13 @@ const ShortcutReview = () => {
     onSubmit: (values: any, { resetForm }) => {
       const now = new Date();
       const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
+      const link = `${REVIEW_LOGO_LINK}/api/photos/${LINK.logo}`;
       axios
         .post(USER_UPDATE_SHORTCUT_POST_GET, {
           ...values,
           id,
           dateData,
+          link,
         })
         .then(resp => {
           const res = resp.data;

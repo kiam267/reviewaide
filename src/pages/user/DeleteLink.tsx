@@ -50,6 +50,23 @@ interface DataType {
 
 function DeleteLink() {
   const [validCookie, setValidCookie] = useState(false);
+  const [singleData, setSingleEditdata] = useState({
+    facebook_link: '',
+    google_link: '',
+    helth_link: '',
+    logo: '',
+    name: '',
+    qr_code: '',
+    review_link: '',
+    yel_link: '',
+    unique_id: '',
+    user_email: '',
+    id: '',
+    valid: '',
+    custom_url: '',
+    custom_phato_url: '',
+    user_emial_view: '',
+  });
   const [backendData, setAllData] = useState<DataType[]>([
     {
       facebook_link: '',
@@ -75,12 +92,14 @@ function DeleteLink() {
   const [customeURLValue, setCustomeURLValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState(false);
+
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({
       error: login.error,
     })
   );
+
   const { error } = useSelector(selectProperties);
   const deleteHandeler = id => {
     const token = localStorage.getItem('UserToken');
@@ -131,16 +150,20 @@ function DeleteLink() {
     enableReinitialize: true,
 
     initialValues: {
-      custome_url: '',
-      name: name,
-      email: '',
+      custome_url: singleData.custom_url,
+      name: singleData.name,
+      email: singleData.user_emial_view,
     },
     validationSchema: Yup.object({
       custome_url: Yup.string(),
       email: Yup.string().trim().email(),
     }),
     onSubmit: (values: any, { resetForm }) => {
+
       const data = { ...values, imageURL };
+ 
+
+
 
       const token = localStorage.getItem('UserToken');
       const config = {
@@ -245,7 +268,11 @@ function DeleteLink() {
     }
   };
 
-  const showDrawer = name => {
+  const showDrawer = (name, recoard) => {
+    setSingleEditdata(recoard);
+    const url: string = `${AVATER_IMAGE_URL}api/photos/${recoard.custom_phato_url}`;
+    setImageUrl(url);
+    setImageURL(recoard.custom_phato_url);
     setName(name);
     setOpen(true);
   };
@@ -368,9 +395,11 @@ function DeleteLink() {
       dataIndex: 'qr_code',
       key: 'qr_code',
       render: (_, code) => {
+        const url: string = `${AVATER_IMAGE_URL}api/photos/${code.custom_phato_url}`;
         const content = (
           <div id="myqrcode">
             <QRCode
+              icon={url}
               value={LINK + 'review/shortcut/' + code.unique_id}
               status="active"
             />
@@ -399,7 +428,12 @@ function DeleteLink() {
         const content = (
           <div id="myqrcode">
             <img
-              style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius:'20px' }}
+              style={{
+                width: '100px',
+                height: '100px',
+                objectFit: 'cover',
+                borderRadius: '20px',
+              }}
               src={`${AVATER_IMAGE_URL}api/photos/${code.custom_phato_url}`}
               alt=""
             />
@@ -429,7 +463,7 @@ function DeleteLink() {
         <Space size="middle">
           <Button
             className="border-info"
-            onClick={() => showDrawer(record.name)}
+            onClick={() => showDrawer(record.name, record)}
           >
             Edit
           </Button>
@@ -526,7 +560,12 @@ function DeleteLink() {
                     <img
                       src={imageUrl}
                       alt="avatar"
-                      style={{ width: '100%' }}
+                      className="rounded-3"
+                      style={{
+                        width: '100%',
+                        height: '100px',
+                        objectFit: 'cover',
+                      }}
                     />
                   ) : (
                     uploadButton
