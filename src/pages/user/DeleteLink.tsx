@@ -159,11 +159,7 @@ function DeleteLink() {
       email: Yup.string().trim().email(),
     }),
     onSubmit: (values: any, { resetForm }) => {
-
       const data = { ...values, imageURL };
- 
-
-
 
       const token = localStorage.getItem('UserToken');
       const config = {
@@ -395,7 +391,7 @@ function DeleteLink() {
       dataIndex: 'qr_code',
       key: 'qr_code',
       render: (_, code) => {
-        const url: string = `${AVATER_IMAGE_URL}api/photos/${code.custom_phato_url}`;
+        const url: string = `${AVATER_IMAGE_URL + 'api/photos/' + code.logo}`;
         const content = (
           <div id="myqrcode">
             <QRCode
