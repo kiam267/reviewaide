@@ -127,7 +127,7 @@ const ShortcutReview = () => {
 
     initialValues: {
       textarea: '',
-      username: 'unknown',
+      username: 'name',
       rating,
     },
     validationSchema: Yup.object({
@@ -354,9 +354,8 @@ const ShortcutReview = () => {
                                   >
                                     <div className="mb-3">
                                       <Label className="fs-5">
-                                        Many thanks for your review. Would
-                                        appreciate it if you could kindly add
-                                        your name
+                                        Share your recent visit experience with
+                                        us! Leave your name and feedback below.
                                       </Label>
                                       <Input
                                         style={{
@@ -375,8 +374,8 @@ const ShortcutReview = () => {
                                         <Alert color="danger">{error}</Alert>
                                       ) : null}
                                       <Label className="fs-5">
-                                        Thanks for reviewing! Your feedback
-                                        below supports our growth.
+                                        We value your feedback as it helps us
+                                        enhance our services.
                                       </Label>
                                       <Input
                                         style={{
