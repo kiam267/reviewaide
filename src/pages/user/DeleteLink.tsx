@@ -485,7 +485,7 @@ function DeleteLink() {
             key={Date.now()}
             columns={columns}
             dataSource={backendData}
-          
+            scroll={{ x: 1000 }}
           />
           <Drawer title="Basic Drawer" onClose={onClose} open={open}>
             <Card>

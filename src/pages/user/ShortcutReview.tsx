@@ -448,6 +448,33 @@ const ShortcutReview = () => {
                 </Card>
               </Col>
             </Row>
+            <div className="d-flex justify-content-center text-black-50">
+              <a
+                href="https://www.logoinhours.com/"
+                style={{
+                  color: '#e1f3fc',
+                }}
+              >
+                +
+              </a>
+              <span
+                className="px-2 "
+                style={{
+                  color: '#e1f3fc',
+                }}
+              >
+                |
+              </span>
+              <a
+                href="https://www.fixwebsiteissues.com/website-maintenance-services/"
+                className="="
+                style={{
+                  color: '#e1f3fc',
+                }}
+              >
+                +
+              </a>
+            </div>
           </Container>
         </div>
       ) : (
