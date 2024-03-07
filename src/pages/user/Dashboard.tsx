@@ -12,7 +12,7 @@ import axios from 'axios';
 import { GET_USERS_DASHBOARD } from '../../helpers/url_helper';
 import Logout from 'pages/auth/Logout';
 import { precision } from 'chartist';
-import { log } from 'console';
+import { log } from 'console'
 function Dashboard() {
   const { LogoutUser } = useUserAuth();
   const [validCookie, setValidCookie] = useState(false);

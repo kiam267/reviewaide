@@ -25,6 +25,8 @@ import {
   AVATER_IMAGE_URL,
 } from '../../helpers/url_helper';
 
+//ddsds
+
 import { Form, FormFeedback, Input, Label, Alert as REAlert } from 'reactstrap';
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
@@ -395,7 +397,6 @@ function DeleteLink() {
         const content = (
           <div id="myqrcode">
             <QRCode
-              icon={url}
               value={LINK + 'review/shortcut/' + code.unique_id}
               status="active"
             />
@@ -484,7 +485,7 @@ function DeleteLink() {
             key={Date.now()}
             columns={columns}
             dataSource={backendData}
-            scroll={{ x: 1500 }}
+          
           />
           <Drawer title="Basic Drawer" onClose={onClose} open={open}>
             <Card>
