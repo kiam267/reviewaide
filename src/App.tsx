@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import './App.css';
+
 import {
   UserProtectedRouter,
   authProtectedRoutes,
@@ -14,10 +15,21 @@ import AuthProtected from './Routes/DashboardAuthProtected';
 import UserAuthProtected from 'Routes/UserAuthProtected';
 import CsvToJsonConverter from 'Layouts/user/Test';
 
+const UserLogin = lazy(() => import('pages/user-auth/user-login'));
+const UserAuth = lazy(() => import('pages/user-auth/user-auth'));
+
+
+
 function App() {
   return (
-    <React.Fragment>
-      <Routes>
+    <div>
+      <Suspense fallback={<p>lodding...</p>}>
+        <UserAuth>
+          <UserLogin />
+        </UserAuth>
+      </Suspense>
+
+      {/* <Routes>
         {publicRoutes.map((route, idx) => (
           <Route path={route.path} key={idx} element={route.component} />
         ))}
@@ -52,8 +64,8 @@ function App() {
             <Route path="/" element={<Navigate to="/login" />} />
           </React.Fragment>
         ))}
-      </Routes>
-    </React.Fragment>
+      </Routes> */}
+    </div>
   );
 }
 

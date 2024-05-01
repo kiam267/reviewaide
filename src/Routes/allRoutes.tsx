@@ -10,7 +10,7 @@ import Email from 'pages/admin/Email';
 import PrivateReview from 'pages/review/PrivateReview';
 import PublicReview from 'pages/review/PublicReview';
 import CreateUsers from 'pages/admin/CreateUsers';
-import UserLogin from 'pages/auth/userLogin';
+import UserLogin from 'pages/user-auth/user-login';
 import Pages404 from '../pages/pages-404';
 import Allusers from 'pages/admin/Allusers';
 import CustomerSupport from 'pages/user/CustomerSupport';

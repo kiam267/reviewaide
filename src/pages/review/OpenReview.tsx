@@ -29,7 +29,7 @@ import {
   QR_CODE_PRIVATE_REVIEW,
   REVIEW_LOGO_LINK,
 } from '../../helpers/url_helper';
-import UserLogin from 'pages/auth/userLogin';
+import UserLogin from 'pages/user-auth/user-login';
 import Logout from 'pages/auth/Logout';
 import { Button, message } from 'antd';
 
@@ -117,7 +117,6 @@ const OpenReview = () => {
     },
     validationSchema: Yup.object({
       textarea: Yup.string().required('Please Enter Your Textarea'),
-
     }),
     onSubmit: (values: any, { resetForm }) => {
       const now = new Date();
@@ -322,7 +321,7 @@ const OpenReview = () => {
                                         </span>
                                       ) : null}
                                     </div>
-                                 
+
                                     <div className=" d-flex justify-content-center pt-2">
                                       <button
                                         type="submit"

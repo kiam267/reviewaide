@@ -27,7 +27,7 @@ import {
   PRIVATE_REVIEW,
   REVIEW_LOGO_LINK,
 } from '../../helpers/url_helper';
-import UserLogin from 'pages/auth/userLogin';
+import UserLogin from 'pages/user-auth/user-login';
 import Logout from 'pages/auth/Logout';
 import { Button, message } from 'antd';
 

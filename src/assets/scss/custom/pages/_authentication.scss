@@ -2,6 +2,28 @@
 // authentication.scss
 //
 
+.inner-bg{
+    background:url('../../../auth/Inner-bg.jpeg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+.inner-child{
+    height: 600px !important;
+    // background: #f4f4f4;
+    box-sizing: border-box;
+    // border: 1px solid red;
+    // border-radius: 30px;
+}
+.inner-image{
+    height: 680px;
+    width: 80%;
+    object-fit: contain;
+
+}
 
 // authentication home icon
 .home-btn {

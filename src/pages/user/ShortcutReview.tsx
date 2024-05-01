@@ -29,7 +29,7 @@ import {
   USER_UPDATE_SHORTCUT_POST_GET,
   USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST,
 } from '../../helpers/url_helper';
-import UserLogin from 'pages/auth/userLogin';
+import UserLogin from 'pages/user-auth/user-login';
 import Logout from 'pages/auth/Logout';
 import { Button, message } from 'antd';
 
