@@ -93,9 +93,14 @@ const UpdateProfile = (props: any) => {
   // }, []);
 
   type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+
   const getBase64 = (img: FileType, callback: (url: string) => void) => {
     const reader = new FileReader();
+
     reader.addEventListener('load', () => callback(reader.result as string));
+
+    
     reader.readAsDataURL(img);
   };
 

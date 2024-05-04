@@ -6,8 +6,11 @@ import {
   AVATER_IMAGE_URL,
   USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST,
 } from '../../helpers/url_helper';
-import axios from 'axios';
-
+import UsersLayout from 'Layouts/user';
+import { useGetUser } from 'api/userApi';
+import UserAuth from 'pages/user-auth/user-auth';
+import { Navigate } from 'react-router-dom';
+import UserForm from 'Components/UserForm';
 interface DataType {
   company_name: string;
   logo: string;
@@ -49,7 +52,12 @@ const columns: TableProps<DataType>['columns'] = [
     key: 'date',
   },
 ];
+
 function ClientRecoard() {
+  const sesstion = localStorage.getItem('user-token');
+  const { getUerInfo } = useGetUser(sesstion as string);
+  const [isVerify, setIsVerify] = useState<boolean | undefined>();
+  const [token, setToken] = useState<boolean | undefined>();
   const [mainData, setData] = useState([
     {
       company_name: '',
@@ -58,27 +66,17 @@ function ClientRecoard() {
       method: '',
     },
   ]);
+
+
   useEffect(() => {
-    const token = localStorage.getItem('UserToken');
-    axios
-      .get(USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST, {
-        headers: {
-          token,
-        },
-      })
-      .then(resp => {
-        const res = resp.data;
-        console.log(res.msg);
-        if (res.msg.name === 'success') {
-          return setData(res.msg[0].data);
-        }
-        if (res.msg.name === 'error') {
-          // return setURLValid(res.msg[0].valid);
-        }
-        if (res.msg.name === 'auth') {
-          // setValidCookie(true);
-        }
-      });
+    const data = getUerInfo;
+    if (data?.verify) {
+      setIsVerify(data?.verify );
+    }
+    if (data?.tokenInvalid) {
+      setToken(data?.tokenInvalid);
+    }
+    
   }, []);
 
   const data: DataType[] = [
@@ -89,10 +87,26 @@ function ClientRecoard() {
       date: '34897534895',
     },
   ];
+
+  if (token) {
+    return <Navigate to="/logout" />;
+  }
   return (
-    <CustomeContainer>
-      <Table key={Date.now()} columns={columns} dataSource={mainData} />
-    </CustomeContainer>
+    <>
+      {!isVerify ? (
+        <>
+          <UserAuth>
+            <UserForm/>
+          </UserAuth>
+        </>
+      ) : (
+        <UsersLayout>
+          <CustomeContainer>
+            <Table key={Date.now()} columns={columns} dataSource={mainData} />
+          </CustomeContainer>
+        </UsersLayout>
+      )}
+    </>
   );
 }
 

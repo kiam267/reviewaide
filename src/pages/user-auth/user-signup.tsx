@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -24,14 +24,14 @@ import { useUserAuth } from 'contexts/UserAuth';
 
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
+import { userLogin } from 'api/usersLogin';
+import { message } from 'antd';
 import CustomePass from 'Components/CustomePass';
-import { useMatchMyUser } from 'api/userApi';
-
-const UserLogin = (props: any) => {
-  const { userLogin, isPending } = useMatchMyUser();
-  const { storeToken, isLoggedIn, avater, isNewUser } = useUserAuth();
+import { useCreateUser, useMatchMyUser } from 'api/userApi';
+import { ToastContainer } from 'react-toastify';
+function UserSignUp() {
+  const { userSignUp, isPending, isSuccess } = useCreateUser();
   const nevigation = useNavigate();
-
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({
@@ -47,21 +47,21 @@ const UserLogin = (props: any) => {
     initialValues: {
       email: '',
       password: '',
+      fullName: '',
+      phone: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().trim().required('Please Enter Your email'),
-      password: Yup.string().trim().required('Please Enter Your Password'),
+      email: Yup.string().required('Please Enter Your email').trim(),
+      password: Yup.string().required('Please Enter Your Password'),
+      fullName: Yup.string().required('Please Enter Your Password'),
+      phone: Yup.string().required('Please Enter Your Password'),
     }),
-    onSubmit: (values: UserLogin) => {
-      userLogin(values);
-      console.log(isPending);
+    onSubmit: async (values: UserSignUp) => {
+      userSignUp(values);
+     
     },
   });
 
-  // if (isLoggedIn) {
-  //   nevigation('/user');
-  //   return null;
-  // }
   return (
     <Form
       className="form-horizontal login-form"
@@ -71,9 +71,52 @@ const UserLogin = (props: any) => {
         return false;
       }}
     >
+      
       <h1 className="text-center fs-1 fw-semibold my-5">
         Wellcome to our <span className="text-gradients">ReviewAide</span>
       </h1>
+      <div className="mb-3">
+        {error ? <Alert color="danger">{error}</Alert> : null}
+        <Label className="form-label fs-5">Full Name</Label>
+        <Input
+          name="fullName"
+          className="form-control rounded-4 fs-5"
+          placeholder="Enter your full name"
+          type="text"
+          onChange={validation.handleChange}
+          onBlur={validation.handleBlur}
+          value={validation.values.fullName || ''}
+          invalid={
+            validation.touched.fullName && validation.errors.fullName
+              ? true
+              : false
+          }
+        />
+        {validation.touched.fullName && validation.errors.fullName ? (
+          <FormFeedback type="invalid">
+            {validation.errors.fullName}
+          </FormFeedback>
+        ) : null}
+      </div>
+      <div className="mb-3">
+        {error ? <Alert color="danger">{error}</Alert> : null}
+        <Label className="form-label fs-5">Phone Number</Label>
+        <Input
+          name="phone"
+          className="form-control rounded-4 fs-5"
+          placeholder="Enter your phone number"
+          type="text"
+          onChange={validation.handleChange}
+          onBlur={validation.handleBlur}
+          value={validation.values.phone || ''}
+          invalid={
+            validation.touched.phone && validation.errors.phone ? true : false
+          }
+        />
+        {validation.touched.phone && validation.errors.phone ? (
+          <FormFeedback type="invalid">{validation.errors.phone}</FormFeedback>
+        ) : null}
+      </div>
       <div className="mb-3">
         {error ? <Alert color="danger">{error}</Alert> : null}
         <Label className="form-label fs-5">Email</Label>
@@ -104,14 +147,6 @@ const UserLogin = (props: any) => {
         validationError={validation.errors.password}
         value={validation.values.password}
       />
-      <div className="my-3">
-        <Link
-          className="fs-6 text-decoration-none text-gradients fw-semibold py-5"
-          to="/user/forgot-password"
-        >
-          Forget Password
-        </Link>
-      </div>
 
       <div className="my-3 d-grid ">
         <button
@@ -129,21 +164,21 @@ const UserLogin = (props: any) => {
               indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
             />
           ) : (
-            <>Log In</>
+            <> Sign up</>
           )}
         </button>
         <div className="my-3">
-          <span>Don't have an account?</span>
+          <span>Already have an account?</span>
           <Link
             className="fs-6 text-decoration-none text-gradients fw-semibold ps-2"
-            to="/sign-up"
+            to="/"
           >
-            Sign up
+            Log In
           </Link>
         </div>
       </div>
     </Form>
   );
-};
+}
 
-export default withRouter(UserLogin);
+export default UserSignUp;

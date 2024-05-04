@@ -38,9 +38,11 @@ import {
   RESETPASSWORD_LINK,
 } from '../../helpers/url_helper';
 import { message } from 'antd';
+import { useForgetPassword } from 'api/userApi';
 
 const ForgetPasswordPage = props => {
   const [isSendMessage, setIsSendMessage] = useState(false);
+  const { userForgetPassword } = useForgetPassword();
 
   const dispatch = useDispatch<any>();
 
@@ -50,21 +52,13 @@ const ForgetPasswordPage = props => {
 
     initialValues: {
       email: '',
+      link: RESETPASSWORD_LINK,
     },
     validationSchema: Yup.object({
       email: Yup.string().required('Please Enter Your Email'),
     }),
     onSubmit: values => {
-      const link = RESETPASSWORD_LINK;
-      axios.get(FORGET_PASSWORD_USER, {
-        headers: { ...values, link },
-      }).then(resp => {
-         const res = resp.data;
-        if (res.msg.name === 'error') {
-          message.error(res.msg.msg)
-         }        
-        setIsSendMessage(true);
-      });
+      userForgetPassword(values);
     },
   });
 
@@ -80,7 +74,7 @@ const ForgetPasswordPage = props => {
 
   return (
     <React.Fragment>
-      {(!isSendMessage) ? (
+      {!isSendMessage ? (
         <div className="account-pages my-5 pt-sm-5">
           <Container>
             <Row className="justify-content-center">
@@ -101,11 +95,12 @@ const ForgetPasswordPage = props => {
                   </div>
                   <CardBody className="pt-0">
                     <div>
-                      <img
+                      {/* <img
                         src={profile}
                         alt=""
                         className="img-fluid w-50 d-block m-auto"
-                      />
+                      /> */}
+                      <h1 className="text-gradients text-center font-bold">Review Aide</h1>
                     </div>
                     <div className="p-2">
                       {forgetError && forgetError ? (
@@ -170,7 +165,7 @@ const ForgetPasswordPage = props => {
                   <p>
                     Go back to{' '}
                     <Link
-                      to="/login"
+                      to="/"
                       className="font-weight-medium text-primary"
                     >
                       Login

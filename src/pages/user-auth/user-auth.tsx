@@ -7,8 +7,10 @@ import Logo from '../../assets/images/logo.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import { TypeAnimation } from 'react-type-animation';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 // Import Swiper styles
 import 'swiper/css';
+import { Link } from 'react-router-dom';
 
 function UserAuth({ children }: { children: React.ReactNode }) {
   const array = [autoRightImageOne, autoRightImageTwo, autoRightImageThree];
@@ -17,13 +19,23 @@ function UserAuth({ children }: { children: React.ReactNode }) {
       <div className="user-auth">
         {/* Part 01 */}
         <div
-          className="p-5 m-0"
+          className="p-md-1 p-lg-5 m-0"
           style={{
             background: '#fff',
             width: '100%',
           }}
         >
-          <img className="py-3  user-auto-logo" src={Logo as any} alt="LOGO" />
+          <Link to="/">
+            {/* <img
+              className="py-3  user-auto-logo"
+              src={Logo as any}
+              alt="LOGO"
+            /> */}
+            <h1 className="fw-bold text-black">
+              REVIEW <span className="text-gradients">AIDE</span>
+            </h1>
+          </Link>
+
           <div
             className="d-flex flex-column justify-content-center align-items-center "
             style={{ minHeight: '80vh' }}
@@ -79,9 +91,10 @@ function UserAuth({ children }: { children: React.ReactNode }) {
                   {array.map((image: any, index: number) => (
                     <SwiperSlide key={index}>
                       <div className="user-auth-swiper-child">
-                        <img
-                          src={image}
-                          alt="Image"
+                        <LazyLoadImage
+                          className="py-3  "
+                          alt="right-side-image"
+                          src={image} // use normal <img> attributes as props
                           style={{
                             width: '300px',
                             objectFit: 'cover',

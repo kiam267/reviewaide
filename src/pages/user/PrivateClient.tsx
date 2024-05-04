@@ -14,29 +14,29 @@ function PrivateReview(props) {
   const [loading, setLoading] = useState(true);
   console.log(review);
 
-  useEffect(() => {
-    const token = localStorage.getItem('UserToken');
-    axios
-      .get(PRIVATE_REVIEW, {
-        headers: {
-          token,
-        },
-      })
-      .then(resp => {
-        const res = resp.data;
-        if (res?.msg?.name === 'error') {
-          message.error(res?.msg?.msg);
-        }
-        if (res?.msg?.name === 'success') {
-          // setAllData(res.msg[0].data);
-          setReview(res.msg[0].data);
-        }
+  // useEffect(() => {
+  //   const token = localStorage.getItem('UserToken');
+  //   axios
+  //     .get(PRIVATE_REVIEW, {
+  //       headers: {
+  //         token,
+  //       },
+  //     })
+  //     .then(resp => {
+  //       const res = resp.data;
+  //       if (res?.msg?.name === 'error') {
+  //         message.error(res?.msg?.msg);
+  //       }
+  //       if (res?.msg?.name === 'success') {
+  //         // setAllData(res.msg[0].data);
+  //         setReview(res.msg[0].data);
+  //       }
 
-        if (res.msg.name === 'auth') {
-          return setValidCookie(true);
-        }
-      });
-  }, []);
+  //       if (res.msg.name === 'auth') {
+  //         return setValidCookie(true);
+  //       }
+  //     });
+  // }, []);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);

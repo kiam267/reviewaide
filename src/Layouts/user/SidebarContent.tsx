@@ -154,18 +154,18 @@ const SidebarContent = (props: any) => {
                 <span>{props.t('Send Message')}</span>
               </Link>
             </li> */}
-            <li>
+            {/* <li>
               <Link to="/user/short-cut">
                 <i className="bx bxl-telegram active-icon"></i>
                 <span>{props.t('Shortcut Message')}</span>
               </Link>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <Link to="/user/delete-link">
                 <i className="bx bxs-user-circle active-icon"></i>
                 <span>{props.t('QR Code')}</span>
               </Link>
-            </li>
+            </li> */}
             {/* <li>
               <Link to="/user/patient_record">
                 <i className="bx bxs-receipt active-icon"></i>
@@ -173,7 +173,7 @@ const SidebarContent = (props: any) => {
               </Link>
             </li> */}
             <li>
-              <Link to="/user/client_record">
+              <Link to="/user">
                 <i className="bx bxs-receipt active-icon"></i>
                 <span>{props.t('Client Record')}</span>
               </Link>

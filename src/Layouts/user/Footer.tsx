@@ -7,10 +7,10 @@ const Footer = () => {
       <footer className="footer">
         <Container fluid={true}>
           <Row>
-            <Col md={6}>2024 © Docapt.</Col>
+            <Col md={6}>2024 © ReviewAide.</Col>
             <Col md={6}>
               <div className="text-sm-end d-none d-sm-block">
-                Design & Develop by Docapt
+                Design & Develop by ReviewAide
               </div>
             </Col>
           </Row>

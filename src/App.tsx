@@ -14,25 +14,33 @@ import './assets/scss/theme.scss';
 import AuthProtected from './Routes/DashboardAuthProtected';
 import UserAuthProtected from 'Routes/UserAuthProtected';
 import CsvToJsonConverter from 'Layouts/user/Test';
-
-const UserLogin = lazy(() => import('pages/user-auth/user-login'));
-const UserAuth = lazy(() => import('pages/user-auth/user-auth'));
-
-
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
     <div>
       <Suspense fallback={<p>lodding...</p>}>
-        <UserAuth>
-          <UserLogin />
-        </UserAuth>
+        <ToastContainer />
+        <Routes>
+          {publicRoutes.map((route, idx) => (
+            <Route path={route.path} key={idx} element={route.component} />
+          ))}
+
+          {UserProtectedRouter.map((route, idx) => (
+            <React.Fragment key={idx}>
+              <Route
+                path={route.path}
+                element={
+                  <UserAuthProtected>{<route.component />}</UserAuthProtected>
+                }
+              />
+            </React.Fragment>
+          ))}
+        </Routes>
       </Suspense>
 
       {/* <Routes>
-        {publicRoutes.map((route, idx) => (
-          <Route path={route.path} key={idx} element={route.component} />
-        ))}
+        
 
         {publiceRecoardwithprivateReview.map((route, idx) => (
           <Route
@@ -53,17 +61,7 @@ function App() {
             }
           />
         ))}
-        {UserProtectedRouter.map((route, idx) => (
-          <React.Fragment key={idx}>
-            <Route
-              path={route.path}
-              element={
-                <UserAuthProtected>{<route.component />}</UserAuthProtected>
-              }
-            />
-            <Route path="/" element={<Navigate to="/login" />} />
-          </React.Fragment>
-        ))}
+      
       </Routes> */}
     </div>
   );

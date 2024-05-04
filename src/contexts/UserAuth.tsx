@@ -13,7 +13,7 @@ interface Auth {
 
 export const UserAuthProvider = ({ children }) => {
   const [token, setToken] = useState<string | null>(
-    localStorage.getItem('UserToken')
+    localStorage.getItem('user-token')
   );
   const [isValidUser, setIsValidUser] = useState<boolean | null>(
     localStorage.getItem('isValid') === 'false'   ? false : true,
@@ -29,7 +29,7 @@ export const UserAuthProvider = ({ children }) => {
   };
   const storeToken = (serverToken: string) => {
     setToken(serverToken);
-    return localStorage.setItem('UserToken', serverToken);
+    return localStorage.setItem('user-token', serverToken);
   };
 
   const LogoutUser = () => {
@@ -37,7 +37,7 @@ export const UserAuthProvider = ({ children }) => {
     localStorage.removeItem('avater');
     localStorage.removeItem('name');
     localStorage.removeItem('isValid');
-    return localStorage.removeItem('UserToken');
+    return localStorage.removeItem('user-token');
   };
 
   const isNewUser = isValid => {

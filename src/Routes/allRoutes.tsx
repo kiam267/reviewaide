@@ -4,13 +4,13 @@ import Dashboard from '../pages/admin';
 // Auth
 import Login from 'pages/auth/login';
 import Logout from 'pages/auth/Logout';
-import ForgotPassword from 'pages/auth/ForgotPassword';
+import ForgotPassword from 'pages/user-auth/forgot-password';
 import SignUp from 'pages/auth/Register';
 import Email from 'pages/admin/Email';
 import PrivateReview from 'pages/review/PrivateReview';
 import PublicReview from 'pages/review/PublicReview';
 import CreateUsers from 'pages/admin/CreateUsers';
-import UserLogin from 'pages/user-auth/user-login';
+
 import Pages404 from '../pages/pages-404';
 import Allusers from 'pages/admin/Allusers';
 import CustomerSupport from 'pages/user/CustomerSupport';
@@ -30,13 +30,19 @@ import {
 } from 'pages/user';
 import AdminLogout from 'pages/auth/AdminLogout';
 import Profile from 'Layouts/admin/Profile';
-import ResetPassword from 'pages/user/ResetPassword';
+import ResetPassword from 'pages/user-auth/reset-password';
 import Unsubscribe from 'pages/user/Unsubscribe';
 import OpenReview from 'pages/review/OpenReview';
 import ShortcutReview from 'pages/user/ShortcutReview';
 import PubliceClientRecoard from 'pages/user/PubliceClientRecoard';
 import PrivateReviewRecoard from 'pages/user/PrivateReviewRecoard';
+import UserAuth from 'pages/user-auth/user-auth';
 
+import { lazy } from 'react';
+
+// User Details
+const UserLogin = lazy(() => import('pages/user-auth/user-login'));
+const UserSignUp = lazy(() => import('pages/user-auth/user-signup'));
 const authProtectedRoutes = [
   { path: '/super-admin/dashboard', component: <Dashboard /> },
   { path: '/super-admin/createUsers', component: <CreateUsers /> },
@@ -66,8 +72,25 @@ const publicRoutes = [
   // { path: '/review', component: <Review /> },
   { path: '/user/open-review/:id', component: <OpenReview /> },
   { path: 'review/shortcut/:id', component: <ShortcutReview /> },
+  { path: 'check', component: <DeleteLink /> },
+
   //User Public Router
-  { path: '/login', component: <UserLogin /> },
+  {
+    path: '/',
+    component: (
+      <UserAuth>
+        <UserLogin />
+      </UserAuth>
+    ),
+  },
+  {
+    path: '/sign-up',
+    component: (
+      <UserAuth>
+        <UserSignUp />
+      </UserAuth>
+    ),
+  },
   { path: '*', component: <Pages404 /> },
 ];
 
@@ -75,23 +98,26 @@ const publiceRecoardwithprivateReview = [
   { path: 'client-record/:id', component: <PubliceClientRecoard /> },
   { path: 'private-review-recoard', component: <PrivateReviewRecoard /> },
 ];
-const UserProtectedRouter = [
-  { path: '/user', component: userDashboard },
-  { path: '/user/send', component: Send },
-  { path: '/user/patient_record', component: PatientRecord },
-  { path: '/user/marketing', component: Marketing },
-  { path: '/user/qrcodegen', component: QRcode },
 
-  { path: '/user/private', component: PrivateReview },
-  { path: '/user/publice', component: PublicReview },
-  { path: '/user/customer_support', component: CustomerSupport },
-  { path: '/user/profile', component: UpdateProfile },
-  { path: '/user/logout', component: Logout },
-  { path: '/user/newProfie', component: Profile },
-  { path: '/user/short-cut', component: Shortcut },
-  { path: '/user/client_record', component: ClientRecoard },
+const UserProtectedRouter = [
+  // user/short-cut-private-review
+  // user
+  { path: '/user', component: ClientRecoard },
+  // { path: '/user/dashboard', component: userDashboard },
+  // { path: '/user/send', component: Send },
+  // { path: '/user/patient_record', component: PatientRecord },
+  // { path: '/user/marketing', component: Marketing },
+  // { path: '/user/qrcodegen', component: QRcode },
+
+  // { path: '/user/private', component: PrivateReview },
+  // { path: '/user/publice', component: PublicReview },
+  // { path: '/user/customer_support', component: CustomerSupport },
+  // { path: '/user/profile', component: UpdateProfile },
+  // { path: '/user/logout', component: Logout },
+  // { path: '/user/newProfie', component: Profile },
+  // { path: '/user/short-cut', component: Shortcut },
   { path: '/user/short-cut-private-review', component: PrivateClient },
-  { path: '/user/delete-link', component: DeleteLink },
+  // { path: '/user/delete-link', component: DeleteLink },
 ];
 export {
   authProtectedRoutes,
