@@ -19,33 +19,21 @@ import {
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
-
-// import images
-import profile from '../../assets/images/doc-apt.png';
-import logo from '../../assets/bg.jpg';
-import lightlogo from '../../assets/images/logo-light.svg';
-
-//import thunk
-// import {
-//   loginuser,
-//   resetLoginMsgFlag,
-//   socialLogin,
-// } from 'slices/auth/login/thunk';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import withRouter from 'Components/Common/withRouter';
 import { createSelector } from 'reselect';
-import { login } from 'api/login';
+
+import { useAdminLogin } from 'api/adminApi';
+import { Spin } from 'antd';
 import { useAuth } from 'contexts/auth';
-import { url } from 'inspector';
 
 const Login = (props: any) => {
   const [show, setShow] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [adminMessage, setAdminMessage] = useState<string | null>(null);
-  const dispatch: any = useDispatch();
-  const { storeToken, isLoggedIn } = useAuth();
-  const navigation = useNavigate();
+  const { isLoggedIn } = useAuth();
 
+  const { adminLogin, isPending } = useAdminLogin();
+  const navigation = useNavigate();
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({
@@ -68,45 +56,18 @@ const Login = (props: any) => {
       email: Yup.string().required('Please Enter Your email'),
       password: Yup.string().required('Please Enter Your Password'),
     }),
-    onSubmit: (values: any) => {
-      login(values).then((resp: any) => {
-        const res = resp.data;
-        if (res?.msg?.name === 'error') {
-          return setErrorMessage(res.msg.msg);
-        }
-        if (!res?.isAdmin) {
-          return setAdminMessage(
-            'Please wait for admin approval and got to login'
-          );
-        }
-        storeToken(res.token, res.isAdmin);
-        navigation('/super-admin/dashboard');
-      });
+    onSubmit: async (values: any) => {
+      await adminLogin(values);
     },
   });
 
-  // useEffect(() => {
-  //   if (error) {
-  //     setTimeout(() => {
-  //       dispatch(resetLoginMsgFlag());
-  //     }, 3000);
-  //   }
-  // }, [dispatch, error]);
-
-  useEffect(() => {
-    setInterval(() => {
-      setErrorMessage('');
-    }, 3000);
-  }, []);
-
   if (isLoggedIn) {
-    return <Navigate to="/super-admin/dashboard" />;
+    return <Navigate to="/super-admin/allUsers" />;
   }
-
   return (
     <React.Fragment>
       <div className=" pt-sm-5 mt-3 mt-lg-0">
-        <Container >
+        <Container>
           <Row
             className="justify-content-center align-items-center"
             style={{ minHeight: '100vh' }}
@@ -114,30 +75,9 @@ const Login = (props: any) => {
             <Col md={12} lg={6} xl={5}>
               <Card className="py-lg-5 rounded-5">
                 <CardBody className="pt-0">
-                  <Alert
-                    color="danger"
-                    className={`${errorMessage ? 'd-block' : 'd-none'} mt-3`}
-                  >
-                    {errorMessage}
-                  </Alert>
-                  <Alert
-                    color="success"
-                    className={`${
-                      adminMessage ? 'd-block' : 'd-none'
-                    } fw-bold mt-3`}
-                  >
-                    {adminMessage}
-                  </Alert>
-                  <img
-                    className="d-block m-auto"
-                    style={{
-                      height: '50px',
-                      width: '100px',
-                      objectFit: 'contain',
-                    }}
-                    src={profile}
-                    alt="Logo"
-                  />
+                  <h1 className="fw-bold text-black  text-center p-3">
+                    REVIEW <span className="text-gradients">AIDE</span>
+                  </h1>
                   <div className="p-2">
                     <Form
                       className="form-horizontal"
@@ -212,7 +152,21 @@ const Login = (props: any) => {
                           className="btn btn-block rounded-5 w-75 m-auto text-white fw-semibold "
                           type="submit"
                         >
-                          Log In
+                          {isPending ? (
+                            <Spin
+                              style={{
+                                color: '#FFFFFF',
+                              }}
+                              indicator={
+                                <LoadingOutlined
+                                  style={{ fontSize: 24 }}
+                                  spin
+                                />
+                              }
+                            />
+                          ) : (
+                            <>Log In</>
+                          )}
                         </button>
                       </div>
                       {/* <div className="mt-4 text-center">

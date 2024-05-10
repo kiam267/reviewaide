@@ -3,9 +3,10 @@ import { Navigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { date } from 'yup';
 
 export const useMatchMyUser = () => {
-  const matchUserLogin = async (user: UserLogin) => {
+  const matchUserLogin = async (user: Login) => {
     const response = await fetch(`${REACT_APP_SERVER_API}/api/my/user`, {
       method: 'POST',
       headers: {
@@ -61,7 +62,7 @@ export const useMatchMyUser = () => {
   return { userLogin, isPending, error };
 };
 export const useCreateUser = () => {
-  const createCurrentUser = async (user: UserSignUp) => {
+  const createCurrentUser = async (user: SignUp) => {
     const response = await fetch(
       `${REACT_APP_SERVER_API}/api/my/user/sign-up`,
       {
@@ -249,7 +250,6 @@ export const useGetUser = (token: string) => {
     });
 
     const data = await response.json();
-
     return data;
   };
 
@@ -267,25 +267,37 @@ export const useGetUser = (token: string) => {
 };
 
 type UserInfo = {
-  token: string | null;
-  formData: object | null;
+  token: string | null | undefined;
+  formData?: object | null | any;
   values: UserMoreDetailInfo;
 };
 
 export const usePutUserInfo = () => {
-  const userInfo = async ({ token, formData, values }: UserInfo) => {
+  const userInfo = async ({ token, values }: UserInfo) => {
+    console.log(token, values);
+    
+    const formData = new FormData();
+    formData.append('companyName', values.companyName);
+    formData.append('googleLink', values?.googleLink);
+    formData.append('facebookLink', values?.facebookLink);
+    formData.append('companyLogo', values?.companyLogo);
+    if (values.fullName && values.phone) {
+      formData.append('fullName', values.fullName);
+      formData.append('phone', values.phone);
+    }
+    console.log(formData);
+
     const response = await fetch(
       `${REACT_APP_SERVER_API}/api/my/user/user-moredata`,
       {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           token: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...values, formData }),
+        body: formData, // Use formData directly
       }
     );
-console.log(formData);
+
     const data = await response.json();
     if (!data.success) {
       toast.error(data.message, {
@@ -311,7 +323,9 @@ console.log(formData);
         theme: 'dark',
         transition: Bounce,
       });
-      // useNavigate
+    }
+    if (data.tokenInvalid) {
+      window.location.href = '/logout';
     }
   };
 
@@ -326,4 +340,90 @@ console.log(formData);
   });
 
   return { userMoreInfo, isPending, error, isSuccess };
+};
+
+// Header Content
+interface Header {
+  success: boolean;
+  message: string;
+  tokenInvalid?: boolean | null;
+  data: {
+    companyName?: string;
+    companyLogo?: string;
+  } | null;
+}
+
+export const useGetHeader = (token: string | null) => {
+  const getHeader = async (): Promise<Header> => {
+    const response = await fetch(`${REACT_APP_SERVER_API}/api/my/user/header`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        token: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  };
+
+  const {
+    data: getHeaderInfo,
+    isSuccess,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ['header'],
+    queryFn: () => getHeader(),
+  });
+
+  return { getHeaderInfo, isPending, error, isSuccess };
+};
+
+interface Profile {
+  success: boolean;
+  message: string;
+  tokenInvalid?: boolean | null;
+  data: {
+    id: number;
+    fullName: string;
+    password: string;
+    email: string;
+    phone: string;
+    companyLogo: string;
+    companyName: string;
+    googleLink: string;
+    facebookLink: string;
+    userEmailText?: string;
+    userSmsText?: string;
+  } | null;
+}
+export const useGetProfile = (token: string | null) => {
+  const getProfile = async (): Promise<Profile> => {
+    const response = await fetch(
+      `${REACT_APP_SERVER_API}/api/my/user/profile`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          token: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  };
+
+  const {
+    data: getProfileInfo,
+    isSuccess,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ['profile'],
+    queryFn: () => getProfile(),
+  });
+
+  return { getProfileInfo, isPending, error, isSuccess };
 };

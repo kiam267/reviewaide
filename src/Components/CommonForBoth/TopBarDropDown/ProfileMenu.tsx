@@ -19,24 +19,12 @@ import user1 from '../../../assets/images/users/avatar-1.jpg';
 import { useSelector } from 'react-redux';
 import { log } from 'console';
 import axios from 'axios';
-import {
-  AVATER_IMAGE_URL,
-  REACT_APP_SERVER_API,
-} from '../../../helpers/url_helper';
+import { REACT_APP_SERVER_API } from '../../../helpers/url_helper';
 
 const ProfileMenu = (props: any) => {
-  // Declare a new state variable, which we'll call "menu"
-  // const { avater } = useUserAuth();
 
-  const avater: string | undefined =
-    localStorage.getItem('avater') ?? undefined;
-  const serverUsername: string | undefined =
-    localStorage.getItem('name') ?? undefined;
 
   const [menu, setMenu] = useState(false);
-
-  const [username, setUsername] = useState('Admin');
-
   const selectProfileProperties = createSelector(
     (state: any) => state.Avater,
     profile => ({
@@ -44,22 +32,7 @@ const ProfileMenu = (props: any) => {
     })
   );
 
-  // const { user } = useSelector(selectProfileProperties);
   const { name } = useSelector(selectProfileProperties);
-
-  // useEffect(() => {
-  //   if (localStorage.getItem("authUser")) {
-  //     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-  //       const obj = JSON.parse(localStorage.getItem("authUser") || "");
-  //       setUsername(obj.displayName);
-  //     } else if (
-  //       process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-  //       process.env.REACT_APP_DEFAULTAUTH === "jwt"
-  //     ) {
-  //       setUsername(user?.username);
-  //     }
-  //   }
-  // }, [user]);
 
   return (
     <React.Fragment>
@@ -73,21 +46,20 @@ const ProfileMenu = (props: any) => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          {/* http://localhost:8080 */}
           <Avatar
             size="default"
             src={
               <img
-                src={`${AVATER_IMAGE_URL + avater}`}
+                src={`${REACT_APP_SERVER_API}/api/uploads/${props.companyLogo}`}
                 alt="avatar"
                 style={{ objectFit: 'cover' }}
               />
             }
           >
-            {name}
+            {props?.companyName}
           </Avatar>
           <span className="d-none d-xl-inline-block ms-2 me-1">
-            {serverUsername || 'admin'}
+            {props?.companyName}
           </span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>
@@ -97,19 +69,19 @@ const ProfileMenu = (props: any) => {
             {props.t('Profile')}
           </DropdownItem>
 
-          <DropdownItem tag="a" href={'/user/customer_support'}>
+          {/* <DropdownItem tag="a" href={'/user/customer_support'}>
             <i className="bx bx-support font-size-16 align-middle me-1" />
             {props.t('Support')}{' '}
             <Badge style={{ background: '#d9d9d9' }} count="BETA" />
-          </DropdownItem>
-          <DropdownItem tag="a" href={'/user/profile'}>
+          </DropdownItem> */}
+          {/* <DropdownItem tag="a" href={'/user/profile'}>
             <i className="bx bx-lock-open font-size-16 align-middle me-1" />
             {props.t('Lock screen')}
             <Badge style={{ background: '#d9d9d9' }} count="BETA" />
-          </DropdownItem>
+          </DropdownItem> */}
 
           <div className="dropdown-divider" />
-          <Link to="/user/logout" className="dropdown-item">
+          <Link to="/logout" className="dropdown-item">
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger" />
             <span>{props.t('Logout')}</span>
           </Link>

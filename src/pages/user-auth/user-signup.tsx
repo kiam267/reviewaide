@@ -1,12 +1,7 @@
 import React from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
-  Row,
-  Col,
-  CardBody,
-  Card,
-  // Containervalues: UserLogin,
   Form,
   Input,
   Label,
@@ -19,19 +14,14 @@ import { LoadingOutlined } from '@ant-design/icons';
 // Formik validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useSelector, useDispatch } from 'react-redux';
-import { useUserAuth } from 'contexts/UserAuth';
-
-import withRouter from 'Components/Common/withRouter';
+import { useSelector} from 'react-redux';
 import { createSelector } from 'reselect';
-import { userLogin } from 'api/usersLogin';
-import { message } from 'antd';
+
+
 import CustomePass from 'Components/CustomePass';
-import { useCreateUser, useMatchMyUser } from 'api/userApi';
-import { ToastContainer } from 'react-toastify';
+import { useCreateUser } from 'api/userApi';
 function UserSignUp() {
-  const { userSignUp, isPending, isSuccess } = useCreateUser();
-  const nevigation = useNavigate();
+  const { userSignUp, isPending } = useCreateUser();
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({
@@ -56,9 +46,8 @@ function UserSignUp() {
       fullName: Yup.string().required('Please Enter Your Password'),
       phone: Yup.string().required('Please Enter Your Password'),
     }),
-    onSubmit: async (values: UserSignUp) => {
+    onSubmit: async (values: SignUp) => {
       userSignUp(values);
-     
     },
   });
 

@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Row,
-  Col,
-  CardBody,
-  Card,
-  // Containervalues: UserLogin,
   Form,
   Input,
   Label,
@@ -19,7 +14,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 // Formik validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useUserAuth } from 'contexts/UserAuth';
 
 import withRouter from 'Components/Common/withRouter';
@@ -29,7 +24,7 @@ import { useMatchMyUser } from 'api/userApi';
 
 const UserLogin = (props: any) => {
   const { userLogin, isPending } = useMatchMyUser();
-  const { storeToken, isLoggedIn, avater, isNewUser } = useUserAuth();
+  const { isLoggedIn } = useUserAuth();
   const nevigation = useNavigate();
 
   const selectProperties = createSelector(
@@ -52,16 +47,16 @@ const UserLogin = (props: any) => {
       email: Yup.string().trim().required('Please Enter Your email'),
       password: Yup.string().trim().required('Please Enter Your Password'),
     }),
-    onSubmit: (values: UserLogin) => {
+    onSubmit: (values: Login) => {
       userLogin(values);
       console.log(isPending);
     },
   });
 
-  // if (isLoggedIn) {
-  //   nevigation('/user');
-  //   return null;
-  // }
+  if (isLoggedIn) {
+    nevigation('/user');
+    return null;
+  }
   return (
     <Form
       className="form-horizontal login-form"

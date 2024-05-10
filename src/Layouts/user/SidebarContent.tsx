@@ -195,7 +195,13 @@ const SidebarContent = (props: any) => {
               </Link>
             </li> */}
             <li>
-              <Link to="/user/short-cut-private-review">
+              <Link to="/user/qrcodegen">
+                <i className="bx bx-link active-icon"></i>
+                <span>{props.t('QR Generator')}</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/user/private">
                 <i className="bx bxs-star active-icon"></i>
                 <span>{props.t('Review')}</span>
               </Link>

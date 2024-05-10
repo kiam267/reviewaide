@@ -3,18 +3,14 @@ import './App.css';
 
 import {
   UserProtectedRouter,
-  authProtectedRoutes,
+  AdminAuthProtectedRouter,
   publicRoutes,
-  publiceRecoardwithprivateReview,
 } from './Routes/allRoutes';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import VerticalLayout from './Layouts/admin';
-import PubliceLayout from './Layouts/public';
+import { Route, Routes } from 'react-router-dom';
 import './assets/scss/theme.scss';
-import AuthProtected from './Routes/DashboardAuthProtected';
 import UserAuthProtected from 'Routes/UserAuthProtected';
-import CsvToJsonConverter from 'Layouts/user/Test';
 import { ToastContainer } from 'react-toastify';
+import AdminAuthProtected from 'Routes/AdminAuthProtected';
 
 function App() {
   return (
@@ -26,6 +22,16 @@ function App() {
             <Route path={route.path} key={idx} element={route.component} />
           ))}
 
+          {AdminAuthProtectedRouter.map((route, idx) => (
+            <React.Fragment key={idx}>
+              <Route
+                path={route.path}
+                element={
+                  <AdminAuthProtected>{route.component}</AdminAuthProtected>
+                }
+              />
+            </React.Fragment>
+          ))}
           {UserProtectedRouter.map((route, idx) => (
             <React.Fragment key={idx}>
               <Route
@@ -38,31 +44,6 @@ function App() {
           ))}
         </Routes>
       </Suspense>
-
-      {/* <Routes>
-        
-
-        {publiceRecoardwithprivateReview.map((route, idx) => (
-          <Route
-            path={route.path}
-            key={idx}
-            element={<PubliceLayout>{route.component}</PubliceLayout>}
-          />
-        ))}
-
-        {authProtectedRoutes.map((route, idx) => (
-          <Route
-            path={route.path}
-            key={idx}
-            element={
-              <AuthProtected>
-                <VerticalLayout>{route.component}</VerticalLayout>
-              </AuthProtected>
-            }
-          />
-        ))}
-      
-      </Routes> */}
     </div>
   );
 }

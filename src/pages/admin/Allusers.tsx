@@ -1,30 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
-import type { TableProps } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import React, {  useEffect, useRef, useState } from 'react';
+
+import { SearchOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
+import dateFormat from 'dateformat';
 import Highlighter from 'react-highlight-words';
 import {
-  Row,
-  Col,
-  Card,
-  Skeleton,
   Avatar,
-  message,
   Drawer,
   Button,
   Space,
   Table,
   Tag,
-  Pagination,
   Input as ANTInput,
+  Empty,
+  Select,
+  Modal,
+  Spin,
 } from 'antd';
-import axios from 'axios';
-import AdminLogout from 'pages/auth/AdminLogout';
 import {
-  GET_USERS,
-  SERVER_LINK,
-  ADMIN_USER_EDIT,
+
+  REACT_APP_SERVER_API,
 } from '../../helpers/url_helper';
 import CustomeContainer from 'Components/Common/CustomeContainer';
 import user from 'Layouts/user';
@@ -33,184 +29,95 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
-const { Meta } = Card;
+import {
+  UserViaAdminSeachState,
+  useDeletUserViaAdmin,
+  useGetUserViaAdmin,
+  useUpdateUserViaAdmin,
+} from 'api/adminApi';
+import { Navigate } from 'react-router-dom';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
+type UserStatus = 'active' | 'pending' | 'deactivated';
+interface DataType {
+  id: number;
+  fullName: string;
+  password: string;
+  email: string;
+  phone: number;
+  companyLogo: string;
+  companyName: string;
+  googleLink: string;
+  facebookLink: string;
+  userStatus: UserStatus;
+  createdAt: string;
+}
 function Allusers(props) {
-  const [loading, setLoading] = useState(true);
+
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
-  const [users, setUsers] = useState<UserData[]>([
-    {
-      company_name: '',
-      date: '',
-      email: '',
-      facebook_link: '',
-      google_link: '',
-      phato_path: '',
-      phone: '',
-      temporaray_lock: '',
-      uniqueId: '',
-      username: '',
-    },
-  ]);
-  const [Sglusers, setSglUsers] = useState<UserData>({
-    company_name: '',
-    date: '',
-    email: '',
-    facebook_link: '',
-    google_link: '',
-    phato_path: '',
-    phone: '',
-    temporaray_lock: '',
-    uniqueId: '',
-    username: '',
+  const { confirm } = Modal;
+  const [userSearch, setUserSearch] = useState<UserViaAdminSeachState>({
+    page: 1,
+    searchCompanyName: '',
+    searchPhoneNumber: '',
+    searchUserEmail: '',
+    searchUserName: '',
+    searchUserStatus: '',
   });
-  const [validCookie, setValidCookie] = useState(true);
+  const token = localStorage.getItem('admin-token');
+  //@ts-ignore
+  const { getUserInfo, refetch } = useGetUserViaAdmin(token, userSearch);
+  const {
+    deleteUserViaAdmin,
+    isSuccess: isDelteSuccess,
+  } = useDeletUserViaAdmin();
+
+  useEffect(() => {
+    refetch();
+  }, [userSearch, isDelteSuccess]);
+
+  const handePageChange = (page: number) => {
+    setUserSearch(pre => ({
+      ...pre,
+      page,
+    }));
+  };
 
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
     setOpen(true);
   };
-  type InputRef = GetRef<typeof ANTInput>;
 
-  interface DataType {
-    company_name: string;
-    date: string;
-    email: string;
-    facebook_link: string;
-    google_link: string;
-    phato_path: string;
-    phone: string;
-    temporaray_lock: string;
-    uniqueId: string;
-    username: string;
-  }
+  type InputRef = GetRef<typeof ANTInput>;
 
   type DataIndex = keyof DataType;
 
   const onClose = () => {
     setOpen(false);
   };
-  useEffect(() => {
-    const token = localStorage.getItem('adToken');
-    axios.get(GET_USERS, { headers: { token } }).then(resp => {
-      const res = resp.data;
-      if (res?.msg?.name === 'error') {
-        return message.error(res?.msg?.msg);
-      }
 
-      if (res?.msg?.name === 'success') {
-        setUsers(res.msg[0]);
+  // DELETE Model Fun
 
-        return;
-      }
-      if (res.msg.name === 'auth') {
-        setValidCookie(false);
-      }
+  const showDeleteConfirm = (email: string) => {
+    confirm({
+      title: 'Are you sure delete this task?',
+      icon: <ExclamationCircleFilled />,
+      content: 'Some descriptions',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        //@ts-ignore
+        await deleteUserViaAdmin({ email, token });
+        return new Promise((resolve, reject) => {
+          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+        }).catch(() => console.log('Oops errors!'));
+      },
     });
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const onHadelEdit = id => {
-    const singleUser = users.filter(user => (user.uniqueId === id ? user : ''));
-    setSglUsers(singleUser[0]);
-
-    return;
   };
-  const onHadelDelete = id => {
-    const singleUser = users.filter(user => (user.uniqueId === id ? user : ''));
-    const token = localStorage.getItem('adToken');
-    axios
-      .delete(ADMIN_USER_EDIT, {
-        data: singleUser[0],
-        headers: { token },
-      })
-      .then(resp => {
-        const res = resp.data;
-        if (res?.msg?.name === 'error') {
-          return message.error(res?.msg?.msg);
-        }
-
-        if (res?.msg?.name === 'success') {
-          setUsers(res.msg[0]);
-          return message.success('User deleted successfully');
-        }
-        if (res.msg.name === 'auth') {
-          setValidCookie(false);
-        }
-      });
-    return;
-  };
-
-  const selectProperties = createSelector(
-    (state: any) => state.Login,
-    login => ({
-      error: login.error,
-    })
-  );
-
-  const { error } = useSelector(selectProperties);
-
-  // Form validation
-
-  const validation: any = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
-
-    initialValues: {
-      username: Sglusers.username,
-      email: Sglusers.email,
-      phone: Sglusers.phone,
-      date: Sglusers.date,
-      company_name: Sglusers.company_name,
-      facebook_link: Sglusers.facebook_link,
-      google_link: Sglusers.google_link,
-      temporaray_lock: Sglusers.temporaray_lock,
-      userEmail: Sglusers.email,
-    },
-    // validationSchema: Yup.object({
-    //   username: Yup.string(),
-    //   email: Yup.string().email().trim(),
-    //   phone: Yup.number(),
-    //   date: Yup.string(),
-    //   company_name: Yup.string(),
-    //   facebook_link: Yup.string(),
-    //   google_link: Yup.string(),
-    //   temporaray_lock: Yup.string(),
-    // }),
-    onSubmit: (values: any, { resetForm }) => {
-      const token = localStorage.getItem('adToken');
-      axios
-        .put(ADMIN_USER_EDIT, { ...values }, { headers: { token } })
-        .then(resp => {
-          const res = resp.data;
-          if (res?.msg?.name === 'error') {
-            return message.error(res?.msg?.msg);
-          }
-
-          if (res?.msg?.name === 'success') {
-            setOpen(false);
-            setUsers(res.msg[0]);
-            return message.success('User update successfully');
-          }
-          if (res.msg.name === 'auth') {
-            setValidCookie(false);
-          }
-        });
-    },
-  });
-  if (!validCookie) {
-    return <AdminLogout />;
-  }
-  //  const [currentPage, setCurrentPage] = useState(1);
-
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
@@ -225,7 +132,11 @@ function Allusers(props) {
     clearFilters();
     setSearchText('');
   };
-
+  const handelUpdateUser = ({ isChange }: { isChange: boolean }) => {
+    if (isChange) {
+      refetch();
+    }
+  };
   const getColumnSearchProps = (
     dataIndex: DataIndex
   ): TableColumnType<DataType> => ({
@@ -234,7 +145,6 @@ function Allusers(props) {
       selectedKeys,
       confirm,
       clearFilters,
-      close,
     }) => (
       <div style={{ padding: 8 }} onKeyDown={e => e.stopPropagation()}>
         <ANTInput
@@ -252,9 +162,33 @@ function Allusers(props) {
         <Space>
           <Button
             type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
+            onClick={() => {
+              setUserSearch(pre => ({
+                ...pre,
+                searchUserName:
+                  searchedColumn === 'fullName'
+                    ? (selectedKeys[0] as string)
+                    : pre.searchUserName,
+                searchUserEmail:
+                  searchedColumn === 'email'
+                    ? (selectedKeys[0] as string)
+                    : pre.searchUserEmail,
+                searchPhoneNumber:
+                  searchedColumn === 'phone'
+                    ? (selectedKeys[0] as string)
+                    : pre.searchPhoneNumber,
+                searchCompanyName:
+                  searchedColumn === 'companyName'
+                    ? (selectedKeys[0] as string)
+                    : pre.searchCompanyName,
+                searchUserStatus:
+                  searchedColumn === 'userStatus'
+                    ? (selectedKeys[0] as string)
+                    : pre.searchUserStatus,
+              }));
+
+              handleSearch(selectedKeys as string[], confirm, dataIndex);
+            }}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
@@ -262,31 +196,24 @@ function Allusers(props) {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+              setUserSearch({
+                page: 1,
+                searchCompanyName: '',
+                searchPhoneNumber: '',
+                searchUserEmail: '',
+                searchUserName: '',
+                searchUserStatus: '',
+              });
+            }}
             size="small"
             style={{ width: 90 }}
           >
             Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
           </Button>
         </Space>
       </div>
@@ -320,40 +247,89 @@ function Allusers(props) {
   const columns: TableColumnsType<DataType> = [
     {
       title: 'User Image',
-      dataIndex: 'phato_path',
-      key: 'phato_path',
-      render: (_, record, inx) => {
+      dataIndex: 'companyLogo',
+      key: 'companyLogo',
+      render: (_, item) => {
         return (
           <Avatar
-            src={
-              record.phato_path
-                ? ` ${SERVER_LINK}api/uploads/${record.phato_path}`
-                : `https://api.dicebear.com/7.x/miniavs/svg?seed=${inx}`
-            }
+            src={`${REACT_APP_SERVER_API}/api/uploads/${item.companyLogo}`}
           ></Avatar>
         );
       },
     },
     {
       title: 'User Name',
-      dataIndex: 'username',
-      key: 'username',
+      dataIndex: 'fullName',
+      key: 'fullName',
       width: '30%',
-      // ...getColumnSearchProps('username'),
+      ...getColumnSearchProps('fullName'),
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
-      width: '20%',
+      width: '30%',
       ...getColumnSearchProps('email'),
     },
     {
+      title: 'Phone Number',
+      dataIndex: 'phone',
+      key: 'phone',
+      ...getColumnSearchProps('phone'),
+    },
+    {
+      title: 'Company Name',
+      dataIndex: 'companyName',
+      key: 'companyName',
+      ...getColumnSearchProps('companyName'),
+    },
+    {
+      title: 'Google Link',
+      dataIndex: 'googleLink',
+      key: 'googleLink',
+    },
+    {
+      title: 'Facebook Link',
+      dataIndex: 'facebookLink',
+      key: 'facebookLink',
+    },
+    {
+      title: 'Mode',
+      dataIndex: 'userStatus',
+      key: 'userStatus',
+      ...getColumnSearchProps('userStatus'),
+      render: (_, data) => {
+        if (data.userStatus === 'active') {
+          return (
+            <Tag color="green" className="fs-6 fw-bold">
+              {data.userStatus}
+            </Tag>
+          );
+        }
+
+        if (data.userStatus === 'deactivated') {
+          return (
+            <Tag color="yellow" className="fs-6 fw-bold">
+              {data.userStatus}
+            </Tag>
+          );
+        }
+        return (
+          <Tag color="geekblue" className="fs-6 fw-bold">
+            {data.userStatus}
+          </Tag>
+        );
+      },
+    },
+    {
       title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
-      width: '20%',
-      ...getColumnSearchProps('date'),
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      width: '30%',
+      render: (_, data) => {
+        const dateData = dateFormat(data.createdAt, 'ddd, mmm dS, yyyy');
+        return <p>{dateData}</p>;
+      },
     },
 
     {
@@ -366,16 +342,20 @@ function Allusers(props) {
             style={{ border: ' 1px solid #F6653F' }}
             onClick={showDrawer}
           >
-            <i
-              className="bx bxs-edit-alt text-black fs-4"
-              onClick={() => onHadelEdit(record.uniqueId)}
-            ></i>
+            <i className="bx bxs-edit-alt text-black fs-4"></i>
           </Button>
+          <UserEdit
+            onClose={onClose}
+            open={open}
+            user={record}
+            handelUpdateUser={isChange => handelUpdateUser({ isChange })}
+          />
           <Button
             danger
             className="rounded-5"
             style={{ border: ' 1px solid #F6653F' }}
-            onClick={() => onHadelDelete(record.uniqueId)}
+            onClick={() => showDeleteConfirm(record.email)}
+            type="dashed"
           >
             <i className="bx bxs-trash-alt"></i>
           </Button>
@@ -384,215 +364,267 @@ function Allusers(props) {
     },
   ];
 
+  if (getUserInfo?.tokenInvalid) {
+    return <Navigate to="/super-admin/logout" />;
+  }
   return (
     <CustomeContainer>
-      <Drawer className="py-5" onClose={onClose} open={open}>
-        <Form
-          className="form-horizontal"
-          onSubmit={e => {
-            e.preventDefault();
-            validation.handleSubmit();
-            return false;
+      {getUserInfo?.pagination?.total ? (
+        <Table
+          columns={columns}
+          //@ts-ignore
+          dataSource={getUserInfo?.data as (User | undefined)[]}
+          pagination={{
+            pageSize: 10,
+            current: getUserInfo?.pagination?.page || 1,
+            total: getUserInfo?.pagination?.total,
+            onChange: handePageChange,
           }}
-        >
-          <div className="mb-3">
-            {error ? <Alert color="danger">{error}</Alert> : null}
-            <Label className="form-label">Name</Label>
-            <Input
-              name="username"
-              className="form-control"
-              placeholder="jon"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.username || ''}
-              invalid={
-                validation.touched.username && validation.errors.username
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.username && validation.errors.username ? (
-              <FormFeedback type="invalid">
-                {validation.errors.username}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            {error ? <Alert color="danger">{error}</Alert> : null}
-            <Label className="form-label">Email</Label>
-            <Input
-              name="email"
-              className="form-control"
-              placeholder="jon@gmail.com"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.email || ''}
-              invalid={
-                validation.touched.email && validation.errors.email
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.email && validation.errors.email ? (
-              <FormFeedback type="invalid">
-                {validation.errors.email}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            {error ? <Alert color="danger">{error}</Alert> : null}
-            <Label className="form-label">Phone</Label>
-            <Input
-              name="phone"
-              className="form-control"
-              placeholder="+1 4843734025"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.phone || ''}
-              invalid={
-                validation.touched.phone && validation.errors.phone
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.phone && validation.errors.phone ? (
-              <FormFeedback type="invalid">
-                {validation.errors.phone}
-              </FormFeedback>
-            ) : null}
-          </div>
-
-          <div className="mb-3">
-            {error ? <Alert color="danger">{error}</Alert> : null}
-            <Label className="form-label">Date</Label>
-            <Input
-              name="date"
-              className="form-control"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.date || ''}
-              invalid={
-                validation.touched.date && validation.errors.date ? true : false
-              }
-            />
-            {validation.touched.date && validation.errors.date ? (
-              <FormFeedback type="invalid">
-                {validation.errors.date}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            {error ? <Alert color="danger">{error}</Alert> : null}
-            <Label className="form-label">Company Name</Label>
-            <Input
-              name="company_name"
-              className="form-control"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.company_name || ''}
-              invalid={
-                validation.touched.company_name &&
-                validation.errors.company_name
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.company_name &&
-            validation.errors.company_name ? (
-              <FormFeedback type="invalid">
-                {validation.errors.company_name}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            {error ? <Alert color="danger">{error}</Alert> : null}
-            <Label className="form-label">Facebook Link</Label>
-            <Input
-              name="facebook_link"
-              className="form-control"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.facebook_link || ''}
-              invalid={
-                validation.touched.facebook_link &&
-                validation.errors.facebook_link
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.facebook_link &&
-            validation.errors.facebook_link ? (
-              <FormFeedback type="invalid">
-                {validation.errors.facebook_link}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            {error ? <Alert color="danger">{error}</Alert> : null}
-            <Label className="form-label">google Link</Label>
-            <Input
-              name="google_link"
-              className="form-control"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.google_link || ''}
-              invalid={
-                validation.touched.google_link && validation.errors.google_link
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.google_link && validation.errors.google_link ? (
-              <FormFeedback type="invalid">
-                {validation.errors.google_link}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            {error ? <Alert color="danger">{error}</Alert> : null}
-            <Label className="form-label">Temporaray Lock</Label>
-            <Input
-              name="temporaray_lock"
-              className="form-control"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.temporaray_lock || ''}
-              invalid={
-                validation.touched.temporaray_lock &&
-                validation.errors.temporaray_lock
-                  ? true
-                  : false
-              }
-            />
-            {validation.touched.temporaray_lock &&
-            validation.errors.temporaray_lock ? (
-              <FormFeedback type="invalid">
-                {validation.errors.temporaray_lock}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mt-3 d-grid">
-            <button
-              className="btn btn-block fw-bold text-white "
-              type="submit"
-              style={{ background: '#F6653F' }}
-            >
-              Update
-            </button>
-          </div>
-        </Form>
-      </Drawer>
-      <Table columns={columns} dataSource={users} />
+          scroll={{ x: 700 }}
+        />
+      ) : (
+        <Empty />
+      )}
     </CustomeContainer>
   );
 }
 
+function UserEdit({
+  onClose,
+  open,
+  user,
+  handelUpdateUser,
+}: {
+  onClose: () => void;
+  open: boolean;
+  user: DataType;
+  handelUpdateUser: (isChange: boolean) => void;
+}) {
+  const selectProperties = createSelector(
+    (state: any) => state.Login,
+    login => ({
+      error: login.error,
+    })
+  );
+
+  const { error } = useSelector(selectProperties);
+  const { updateUserViaAdmin, isPending, isSuccess } = useUpdateUserViaAdmin();
+  const token = localStorage.getItem('admin-token');
+  const dateData = dateFormat(user.createdAt, 'ddd, mmm dS, yyyy');
+  const validation: any = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+
+    initialValues: {
+      fullName: user.fullName,
+      email: user.email,
+      phone: user.phone,
+      createdAt: dateData,
+      companyName: user.companyName,
+      facebookLink: user.facebookLink,
+      googleLink: user.googleLink,
+      userStatus: user.userStatus,
+    },
+    validationSchema: Yup.object({
+      fullName: Yup.string().required('Enter your name'),
+      email: Yup.string().email().trim().required('Enter your email'),
+      phone: Yup.number().required('Enter your phone number'),
+      companyName: Yup.string(),
+      facebookLink: Yup.string(),
+      googleLink: Yup.string(),
+      userStatus: Yup.string(),
+    }),
+    onSubmit: (values: any) => {
+      //@ts-ignore
+      updateUserViaAdmin({ token, user: values });
+    },
+  });
+
+  useEffect(() => {
+    if (isSuccess) handelUpdateUser(isSuccess);
+  }, [isSuccess]);
+
+  return (
+    <Drawer className="py-5" onClose={onClose} open={open}>
+      <Form
+        className="form-horizontal"
+        onSubmit={e => {
+          e.preventDefault();
+          validation.handleSubmit();
+          return false;
+        }}
+      >
+        <div className="mb-3">
+          {error ? <Alert color="danger">{error}</Alert> : null}
+          <Label className="form-label">Name</Label>
+          <Input
+            name="fullName"
+            className="form-control"
+            placeholder="jon"
+            type="text"
+            onChange={validation.handleChange}
+            onBlur={validation.handleBlur}
+            value={validation.values.fullName || ''}
+            invalid={
+              validation.touched.fullName && validation.errors.fullName
+                ? true
+                : false
+            }
+          />
+          {validation.touched.fullName && validation.errors.fullName ? (
+            <FormFeedback type="invalid">
+              {validation.errors.fullName}
+            </FormFeedback>
+          ) : null}
+        </div>
+        <div className="mb-3">
+          {error ? <Alert color="danger">{error}</Alert> : null}
+          <Label className="form-label">Email</Label>
+          <Input
+            name="email"
+            className="form-control"
+            placeholder="jon@gmail.com"
+            type="text"
+            onChange={validation.handleChange}
+            onBlur={validation.handleBlur}
+            value={validation.values.email || ''}
+            invalid={
+              validation.touched.email && validation.errors.email ? true : false
+            }
+          />
+          {validation.touched.email && validation.errors.email ? (
+            <FormFeedback type="invalid">
+              {validation.errors.email}
+            </FormFeedback>
+          ) : null}
+        </div>
+        <div className="mb-3">
+          {error ? <Alert color="danger">{error}</Alert> : null}
+          <Label className="form-label">Phone</Label>
+          <Input
+            name="phone"
+            className="form-control"
+            placeholder="+1 4843734025"
+            type="text"
+            onChange={validation.handleChange}
+            onBlur={validation.handleBlur}
+            value={validation.values.phone || ''}
+            invalid={
+              validation.touched.phone && validation.errors.phone ? true : false
+            }
+          />
+          {validation.touched.phone && validation.errors.phone ? (
+            <FormFeedback type="invalid">
+              {validation.errors.phone}
+            </FormFeedback>
+          ) : null}
+        </div>
+        <div className="mb-3">
+          {error ? <Alert color="danger">{error}</Alert> : null}
+          <Label className="form-label">Company Name</Label>
+          <Input
+            name="companyName"
+            className="form-control"
+            type="text"
+            onChange={validation.handleChange}
+            onBlur={validation.handleBlur}
+            value={validation.values.companyName || ''}
+            invalid={
+              validation.touched.companyName && validation.errors.companyName
+                ? true
+                : false
+            }
+          />
+          {validation.touched.companyName && validation.errors.companyName ? (
+            <FormFeedback type="invalid">
+              {validation.errors.companyName}
+            </FormFeedback>
+          ) : null}
+        </div>
+        <div className="mb-3">
+          {error ? <Alert color="danger">{error}</Alert> : null}
+          <Label className="form-label">Facebook Link</Label>
+          <Input
+            name="facebookLink"
+            className="form-control"
+            type="text"
+            onChange={validation.handleChange}
+            onBlur={validation.handleBlur}
+            value={validation.values.facebookLink || ''}
+            invalid={
+              validation.touched.facebookLink && validation.errors.facebookLink
+                ? true
+                : false
+            }
+          />
+          {validation.touched.facebookLink && validation.errors.facebookLink ? (
+            <FormFeedback type="invalid">
+              {validation.errors.facebookLink}
+            </FormFeedback>
+          ) : null}
+        </div>
+        <div className="mb-3">
+          {error ? <Alert color="danger">{error}</Alert> : null}
+          <Label className="form-label">google Link</Label>
+          <Input
+            name="googleLink"
+            className="form-control"
+            type="text"
+            onChange={validation.handleChange}
+            onBlur={validation.handleBlur}
+            value={validation.values.googleLink || ''}
+            invalid={
+              validation.touched.googleLink && validation.errors.googleLink
+                ? true
+                : false
+            }
+          />
+          {validation.touched.googleLink && validation.errors.googleLink ? (
+            <FormFeedback type="invalid">
+              {validation.errors.googleLink}
+            </FormFeedback>
+          ) : null}
+        </div>
+        <div className="mb-3 ">
+          {' '}
+          <Label className="form-label">Select Status</Label>
+          <Space>
+            <Select
+              // className='p-5'
+
+              defaultValue={validation.values.userStatus}
+              style={{ width: 320 }}
+              onChange={selectedOption => {
+                validation.setFieldValue('userStatus', selectedOption);
+              }}
+              options={[
+                { value: 'pending', label: 'Pending' },
+                { value: 'active', label: 'Active' },
+                { value: 'deactived', label: 'Deactived' },
+              ]}
+            />
+          </Space>
+        </div>
+        <div className="mt-3 d-grid">
+          <button
+            className="btn btn-block fw-bold text-white "
+            type="submit"
+            style={{ background: '#F6653F' }}
+          >
+            {isPending ? (
+              <Spin
+                style={{
+                  color: '#FFFFFF',
+                }}
+                indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+              />
+            ) : (
+              <>Update</>
+            )}
+          </button>
+        </div>
+      </Form>
+    </Drawer>
+  );
+}
 export default Allusers;

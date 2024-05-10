@@ -4,96 +4,43 @@ import {
   Col,
   CardBody,
   Card,
-  Alert,
   Container,
   Input,
   Label,
   Form,
   FormFeedback,
 } from 'reactstrap';
-
+import { LoadingOutlined } from '@ant-design/icons';
 // Formik Validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import profile from '../../assets/images/doc-apt.png';
-// action
-// import { registerUser, apiError } from '../../slices/thunk';
-
 //redux
 import { useSelector, useDispatch } from 'react-redux';
-
-import { Link, useNavigate, Navigate } from 'react-router-dom';
-import { register } from '../../api/register';
-
-// import images
-import profileImg from '../../assets/images/profile-img.png';
+import { Link, Navigate } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { useAuth } from 'contexts/auth';
-import { forEach } from 'lodash';
+import { useCreateAdmin } from 'api/adminApi';
+import { Spin } from 'antd';
 const Register = () => {
   const [show, setShow] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [adminMessage, setAdminMessage] = useState<string | null>(null);
-  const dispatch = useDispatch<any>();
-  const { storeToken, token, isLoggedIn, isAdmin } = useAuth();
+  const { userSignUp, isPending } = useCreateAdmin();
 
   const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
       email: '',
-      username: '',
+      fullName: '',
       password: '',
     },
     validationSchema: Yup.object({
       email: Yup.string().required('Please Enter Your Email'),
-      username: Yup.string().required('Please Enter Your Username'),
+      fullName: Yup.string().required('Please Enter Your fullName'),
       password: Yup.string().required('Please Enter Your Password'),
     }),
-    onSubmit: values => {
-      register(values).then((resp: any) => {
-        const res = resp.data;
-        if (res.msg.name === 'ZodError') {
-          return setErrorMessage(res.msg.issues[0].message);
-        }
-        if (res.msg.name === 'error') {
-          return setErrorMessage(res.msg.msg);
-        }
-
-        if (!res.isAdmin) {
-          return setAdminMessage(
-            'Please wait for admin approval and got to login'
-          );
-        }
-      });
+    onSubmit: async values => {
+      await userSignUp(values);
     },
   });
-
-  const selectProperties = createSelector(
-    (state: any) => state.Account,
-    account => ({
-      user: account.user,
-      registrationError: account.registrationError,
-      loading: account.loading,
-    })
-  );
-
-  const { user, registrationError } = useSelector(selectProperties);
-
-  // useEffect(() => {
-  //   dispatch(apiError());
-  // }, [dispatch]);
-
-  useEffect(() => {
-    setInterval(() => {
-      setErrorMessage('');
-    }, 3000);
-  }, []);
-
-  if (isLoggedIn) {
-    return <Navigate to="/super-admin/dashboard" />;
-  }
 
   return (
     <React.Fragment>
@@ -112,20 +59,6 @@ const Register = () => {
               <Card className="py-lg-5 rounded-5">
                 <CardBody className="pt-0">
                   <div className="p-2">
-                    <Alert
-                      color="danger"
-                      className={`${errorMessage ? 'd-block' : 'd-none'}`}
-                    >
-                      {errorMessage}
-                    </Alert>
-                    <Alert
-                      color="success"
-                      className={`${
-                        adminMessage ? 'd-block' : 'd-none'
-                      } fw-bold`}
-                    >
-                      {adminMessage}
-                    </Alert>
                     <Form
                       className="form-horizontal"
                       onSubmit={e => {
@@ -134,25 +67,9 @@ const Register = () => {
                         return false;
                       }}
                     >
-                      {user && user ? (
-                        <Alert color="success">
-                          Register User Successfully
-                        </Alert>
-                      ) : null}
-
-                      {registrationError && registrationError ? (
-                        <Alert color="danger">{registrationError}</Alert>
-                      ) : null}
-                      <img
-                        className="d-block m-auto"
-                        style={{
-                          height: '50px',
-                          width: '100px',
-                          objectFit: 'contain',
-                        }}
-                        src={profile}
-                        alt="Logo"
-                      />
+                      <h1 className="fw-bold text-black">
+                        REVIEW <span className="text-gradients">AIDE</span>
+                      </h1>
 
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
@@ -179,25 +96,25 @@ const Register = () => {
                       </div>
 
                       <div className="mb-3">
-                        <Label className="form-label">Username</Label>
+                        <Label className="form-label">fullName</Label>
                         <Input
-                          name="username"
+                          name="fullName"
                           type="text"
-                          placeholder="Enter username"
+                          placeholder="Enter fullName"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.username || ''}
+                          value={validation.values.fullName || ''}
                           invalid={
-                            validation.touched.username &&
-                            validation.errors.username
+                            validation.touched.fullName &&
+                            validation.errors.fullName
                               ? true
                               : false
                           }
                         />
-                        {validation.touched.username &&
-                        validation.errors.username ? (
+                        {validation.touched.fullName &&
+                        validation.errors.fullName ? (
                           <FormFeedback type="invalid">
-                            {validation.errors.username}
+                            {validation.errors.fullName}
                           </FormFeedback>
                         ) : null}
                       </div>
@@ -241,7 +158,22 @@ const Register = () => {
                           className="btn btn-block rounded-5 w-75 m-auto text-white fw-semibold "
                           type="submit"
                         >
-                          Register
+                          
+                          {isPending ? (
+                            <Spin
+                              style={{
+                                color: '#FFFFFF',
+                              }}
+                              indicator={
+                                <LoadingOutlined
+                                  style={{ fontSize: 24 }}
+                                  spin
+                                />
+                              }
+                            />
+                          ) : (
+                            <>Sign up</>
+                          )}
                         </button>
                       </div>
 

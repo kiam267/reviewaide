@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import dateFormat from 'dateformat';
+import { LoadingOutlined } from '@ant-design/icons';
+
 // import * from ''
 import {
   Row,
@@ -18,88 +19,42 @@ import {
 import { Rating } from 'react-simple-star-rating';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { getReview, privateReview } from 'api/clientVisitor';
-import { useParams, Navigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import {
-  CLIENT_VISITOR_GET,
-  CLIENT_VISITOR_METHODS,
-  PRIVATE_REVIEW,
-  REVIEW_LOGO_LINK,
-  USER_UPDATE_SHORTCUT_POST_GET,
-  USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST,
-} from '../../helpers/url_helper';
-import UserLogin from 'pages/user-auth/user-login';
-import Logout from 'pages/auth/Logout';
-import { Button, message } from 'antd';
-
+import { useParams, Link } from 'react-router-dom';
+import { Button, Spin } from 'antd';
 import boopSfx from '../../assets/sounds/mixkit-message-pop-alert-2354.mp3';
-import { Text } from 'recharts';
+
+import {
+  REACT_APP_SERVER_API,
+} from '../../helpers/url_helper';
+import { useCreateClient, useReviewLogo } from 'api/clientApi';
 const ShortcutReview = () => {
   //meta title
-
+  const { id } = useParams();
+  const { createClient, isPending } = useCreateClient();
+  const { getReviewLogoInfo } = useReviewLogo({ uniqueId: String(id) });
   const [textareabadge, settextareabadge] = useState(0) as any[];
   const [textcount, settextcount] = useState(0);
   const [rating, setRating] = useState<number>(4);
-  const [show, setshow] = useState<boolean>();
-
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [adminMessage, setAdminMessage] = useState<string | null>(null);
-  const [LINK, SETLINK] = useState({
-    google_link: '',
-    facebook_link: '',
-    helth_link: '',
-    yel_link: '',
-    logo: '',
-  });
+  const [method, setMethod] = useState<'facebook' | 'google'>();
 
   const [retingShow, setRatingShow] = useState(true);
-  const [validCookie, setValidCookie] = useState(false);
-  const [data, setData] = useState([]);
-  const { id } = useParams();
+
   const [URLValid, setURLValid] = useState<boolean>(false);
 
-  console.log(LINK.helth_link === '');
-
   useEffect(() => {
-    const token = localStorage.getItem('UserToken');
-    axios
-      .get(USER_UPDATE_SHORTCUT_POST_GET, {
-        headers: { id },
-      })
-      .then(resp => {
-        const res = resp.data;
-        console.log(res.msg[0].data);
-        if (res.msg.name === 'success') {
-          SETLINK({ ...res.msg[0].data });
-          return setURLValid(res.msg[0].valid);
-        }
-        if (res.msg.name === 'error') {
-          return setURLValid(res.msg[0].valid);
-        }
-        if (res.msg.name === 'auth') {
-          setValidCookie(true);
-        }
-      });
-  }, []);
+    if (getReviewLogoInfo?.data?.companyLogo) {
+      setURLValid(true);
+    }
+  }, [getReviewLogoInfo?.data?.companyLogo]);
 
-  const methodHandeler = (id, method) => {
-    const now = new Date();
-    const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
-    const link = `${REVIEW_LOGO_LINK}/api/photos/${LINK.logo}`;
-    axios.post(USER_UPDATE_SHORTCUT_PUBLICE_REVIEW_POST, {
-      id,
-      method,
-      dateData,
-      link,
-    });
+  type Method = 'facebook' | 'google';
+
+  const methodHandeler = async (id, method: Method) => {
+    await createClient({ id: id.toString(), method, rating });
   };
   const paly = () => {
     const audio = new Audio(boopSfx);
-    audio.play().catch(error => {
-      // Handle the error, log it, or provide user instructions
-      console.error('Failed to play audio:', error);
-    });
+    audio.play();
   };
 
   const selectProperties = createSelector(
@@ -110,7 +65,12 @@ const ShortcutReview = () => {
   );
 
   const { error } = useSelector(selectProperties);
-
+  interface CreateClient {
+    id: string | undefined;
+    clientName?: string;
+    clientMessage?: string;
+    rating: number;
+  }
   function textareachange(event: any) {
     const count = event.target.value.length;
     if (count > 0) {
@@ -126,49 +86,27 @@ const ShortcutReview = () => {
     enableReinitialize: true,
 
     initialValues: {
-      textarea: '',
-      username: 'name',
+      //@ts-ignore
+      id: id.toString(),
+      clientMessage: '',
+      clientName: 'name',
       rating,
     },
     validationSchema: Yup.object({
-      textarea: Yup.string().required('Please Enter Your Textarea'),
-      username: Yup.string(),
+      clientMessage: Yup.string().required('Please Enter Your Textarea'),
+      clientName: Yup.string(),
     }),
-    onSubmit: (values: any, { resetForm }) => {
-      const now = new Date();
-      const dateData = dateFormat(now, 'ddd, mmm dS, yyyy');
-      const link = `${REVIEW_LOGO_LINK}/api/photos/${LINK.logo}`;
-      axios
-        .post(USER_UPDATE_SHORTCUT_POST_GET, {
-          ...values,
-          id,
-          dateData,
-          link,
-        })
-        .then(resp => {
-          const res = resp.data;
-          if (res.msg.name === 'error') {
-            return message.error('You already Send Message');
-          }
-          if (res.msg.name === 'ZodError') {
-            return setErrorMessage(res.msg.issues[0].message);
-          }
-          message.success(res.msg.msg);
-          resetForm();
-          return;
-        });
+    onSubmit: async (values: CreateClient) => {
+      
+      await createClient({
+        id: values.id,
+        clientName: values.clientName,
+        clientMessage: values.clientMessage,
+        rating: values.rating,
+      });
     },
   });
 
-  const [clicked, setClicked] = useState(false);
-
-  const handleClick = () => {
-    setClicked(true);
-    // Additional logic or actions you want to perform on button click
-  };
-  if (validCookie) {
-    return <Logout />;
-  }
   return (
     <React.Fragment>
       {URLValid ? (
@@ -184,25 +122,10 @@ const ShortcutReview = () => {
                       width: '150px',
                       objectFit: 'contain',
                     }}
-                    //${LINK.logo}
-                    src={`${REVIEW_LOGO_LINK}/api/photos/${LINK.logo}`}
+                    src={`${REACT_APP_SERVER_API}/api/uploads/${getReviewLogoInfo?.data?.companyLogo}`}
                     alt="LOGO"
                   />
                   <CardBody>
-                    <Alert
-                      color="danger"
-                      className={`${errorMessage ? 'd-block' : 'd-none'} mt-1`}
-                    >
-                      {errorMessage}
-                    </Alert>
-                    <Alert
-                      color="success"
-                      className={`${
-                        adminMessage ? 'd-block' : 'd-none'
-                      } fw-bold mt-3`}
-                    >
-                      {adminMessage}
-                    </Alert>
                     <Row className="justify-content-center">
                       <Col>
                         {retingShow ? (
@@ -212,6 +135,7 @@ const ShortcutReview = () => {
                               below. Your feedback is greatly valued and helps
                               us improve.
                             </h5>
+
                             <Rating
                               className="d-block pb-2"
                               size={45}
@@ -222,6 +146,7 @@ const ShortcutReview = () => {
                                 paly();
                               }}
                             />
+
                             <div className=" d-flex justify-content-center pt-4">
                               <Button
                                 className="rounded-5 d-flex justify-content-center  align-items-center"
@@ -249,95 +174,87 @@ const ShortcutReview = () => {
                                   social media, it would greatly benefit our
                                   community and help us grow.
                                 </h4>
-                                <div>
+                                <div className="d-flex jsutify-content-center">
                                   <Link
                                     style={{
                                       display: `${
-                                        LINK.google_link === ''
+                                        getReviewLogoInfo?.data?.googleLink ===
+                                        ''
                                           ? 'none'
                                           : 'block'
                                       }`,
                                       background: '#F6653F',
                                     }}
-                                    to={LINK.google_link}
-                                    className="btn btn-primary  m-auto w-75"
-                                    type="submit"
-                                    onClick={() => methodHandeler(id, 'google')}
-                                  >
-                                    <i
-                                      className="bx bxl-google"
-                                      style={{ fontSize: '40px' }}
-                                    ></i>
-                                  </Link>
-                                </div>
-                                <div className="mt-3">
-                                  <Link
-                                    style={{
-                                      display: `${
-                                        LINK.facebook_link === ''
-                                          ? 'none'
-                                          : 'block'
-                                      }`,
-                                      background: '#F6653F',
-                                    }}
-                                    to={LINK.facebook_link}
-                                    className="btn btn-primary  m-auto w-75"
-                                    type="submit"
-                                    onClick={() =>
-                                      methodHandeler(id, 'facebook')
+                                    to={
+                                      getReviewLogoInfo?.data
+                                        ?.googleLink as string
                                     }
-                                  >
-                                    <i
-                                      className="bx bxl-facebook-circle"
-                                      style={{ fontSize: '40px' }}
-                                    ></i>
-                                  </Link>
-                                </div>
-                                <div className="mt-3">
-                                  <Link
-                                    style={{
-                                      display: `${
-                                        LINK.yel_link === '' ? 'none' : 'block'
-                                      }`,
-                                      background: '#F6653F',
+                                    className="btn btn-primary  m-auto w-75  border-0"
+                                    onClick={() => {
+                                      methodHandeler(id, 'google');
+                                      setMethod('google');
                                     }}
-                                    to={LINK.yel_link}
-                                    className="btn btn-primary  m-auto w-75"
-                                    type="submit"
-                                    onClick={() => methodHandeler(id, 'Yelp')}
                                   >
-                                    <i
-                                      className="bx bxl-yelp"
-                                      style={{ fontSize: '40px' }}
-                                    ></i>
-                                  </Link>
-                                </div>
-                                <div className="mt-3">
-                                  <Link
-                                    style={{
-                                      display: `${
-                                        LINK.helth_link === ''
-                                          ? 'none'
-                                          : 'block'
-                                      }`,
-                                      background: '#F6653F',
-                                    }}
-                                    to={LINK.helth_link}
-                                    className="btn btn-primary  m-auto w-75 "
-                                    type="submit"
-                                    onClick={() =>
-                                      methodHandeler(id, 'Health Grades')
-                                    }
-                                  >
-                                    <div className="d-flex justify-content-center  align-items-center">
+                                    {isPending && method === 'google' ? (
+                                      <Spin
+                                        style={{
+                                          color: '#FFFFFF',
+                                        }}
+                                        indicator={
+                                          <LoadingOutlined
+                                            style={{ fontSize: 24 }}
+                                            spin
+                                          />
+                                        }
+                                      />
+                                    ) : (
                                       <i
-                                        className="bx bx-heart"
+                                        className="bx bxl-google"
                                         style={{ fontSize: '40px' }}
                                       ></i>
-                                      <span className="ms-2 fs-4">
-                                        Health Grades
-                                      </span>
-                                    </div>
+                                    )}
+                                  </Link>
+                                </div>
+                                <div className="mt-3 d-flex jsutify-content-center">
+                                  <Link
+                                    style={{
+                                      display: `${
+                                        getReviewLogoInfo?.data
+                                          ?.facebookLink === ''
+                                          ? 'none'
+                                          : 'block'
+                                      }`,
+                                      background: '#F6653F',
+                                    }}
+                                    to={
+                                      getReviewLogoInfo?.data
+                                        ?.facebookLink as string
+                                    }
+                                    className="btn btn-primary  m-auto w-75 border-0"
+                                    type="submit"
+                                    onClick={() => {
+                                      methodHandeler(id, 'facebook');
+                                      setMethod('facebook');
+                                    }}
+                                  >
+                                    {isPending && method === 'facebook' ? (
+                                      <Spin
+                                        style={{
+                                          color: '#FFFFFF',
+                                        }}
+                                        indicator={
+                                          <LoadingOutlined
+                                            style={{ fontSize: 24 }}
+                                            spin
+                                          />
+                                        }
+                                      />
+                                    ) : (
+                                      <i
+                                        className="bx bxl-facebook-circle"
+                                        style={{ fontSize: '40px' }}
+                                      ></i>
+                                    )}
                                   </Link>
                                 </div>
                               </div>
@@ -361,11 +278,13 @@ const ShortcutReview = () => {
                                         style={{
                                           borderColor: '#F6653F',
                                         }}
-                                        name="username"
+                                        name="clientName"
                                         type="text"
                                         className="fs-5"
                                         onChange={validation.handleChange}
-                                        value={validation.values.username || ''}
+                                        value={
+                                          validation.values.clientName || ''
+                                        }
                                         placeholder="Enter Your Name "
                                       />
                                     </div>
@@ -382,19 +301,21 @@ const ShortcutReview = () => {
                                           height: '150px',
                                           borderColor: '#F6653F',
                                         }}
-                                        name="textarea"
+                                        name="clientMessage"
                                         type="textarea"
-                                        id="textarea"
+                                        id="clientMessage"
                                         className="fs-5"
                                         onChange={e => {
                                           textareachange(e);
                                           validation.handleChange(e);
                                         }}
                                         onBlur={validation.handleBlur}
-                                        value={validation.values.textarea || ''}
+                                        value={
+                                          validation.values.clientMessage || ''
+                                        }
                                         invalid={
-                                          validation.touched.textarea &&
-                                          validation.errors.textarea
+                                          validation.touched.clientMessage &&
+                                          validation.errors.clientMessage
                                             ? true
                                             : false
                                         }
@@ -402,10 +323,10 @@ const ShortcutReview = () => {
                                         rows="3"
                                         placeholder="Write your Feedback...."
                                       />
-                                      {validation.touched.textarea &&
-                                      validation.errors.textarea ? (
+                                      {validation.touched.clientMessage &&
+                                      validation.errors.clientMessage ? (
                                         <FormFeedback type="invalid">
-                                          {validation.errors.textarea}
+                                          {validation.errors.clientMessage}
                                         </FormFeedback>
                                       ) : null}
                                       {textareabadge ? (
@@ -421,19 +342,25 @@ const ShortcutReview = () => {
                                         type="submit"
                                         style={{
                                           background: '#F6653F',
-                                          boxShadow: clicked
-                                            ? '0 0 10px rgba(0, 0, 0, 0.5)'
-                                            : 'none',
-                                          transition:
-                                            'box-shadow 0.3s ease-in-out',
-                                          animation: clicked
-                                            ? 'moveRight 0.5s ease-in-out'
-                                            : 'none',
                                         }}
-                                        onClick={handleClick}
+                                        // onClick={handleClick}
                                         className="btn btn-block fs-5 px-5 py-2 text-white fw-semibold rounded-5 shadow"
                                       >
-                                        Submit
+                                        {isPending ? (
+                                          <Spin
+                                            style={{
+                                              color: '#FFFFFF',
+                                            }}
+                                            indicator={
+                                              <LoadingOutlined
+                                                style={{ fontSize: 24 }}
+                                                spin
+                                              />
+                                            }
+                                          />
+                                        ) : (
+                                          <>Submit</>
+                                        )}
                                       </button>
                                     </div>
                                   </Form>

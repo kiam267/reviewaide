@@ -1,78 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { QrcodeOutlined } from '@ant-design/icons';
 import CustomeContainer from 'Components/Common/CustomeContainer';
-import { createSelector } from 'reselect';
-import { useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import { Card, QRCode, message, Button } from 'antd';
-import Logout from 'pages/auth/Logout';
-import { Alert, Col, Form, FormFeedback, Input, Label, Row } from 'reactstrap';
-import {
-  QRCODE_GEN_VISITOR,
-  QRCODE_GEN_VISITOR_CREATE,
-  USER_MARKETING_STORE,
-  LINK,
-  QRCODE_GEN_VISITOR_DELETE,
-} from '../../helpers/url_helper';
 
+import { Card, QRCode, Button } from 'antd';
+import Logout from 'pages/auth/Logout';
+import { Row, Col } from 'reactstrap';
+import {
+  useDeleteClientLink,
+  useGetClientLink,
+  useReviewLink,
+} from 'api/clientApi';
+
+import { REVIEW_LINK } from '../../helpers/url_helper';
 function QRcode() {
-  const [validCookie, setValidCookie] = useState(false);
-  const [QRcodeValue, setQRcodeValue] = useState('fgdgdfg');
+  const token: string | null = localStorage.getItem('user-token');
+  const { createQRCode, isSuccess } = useReviewLink();
+  //@ts-ignore
+  const { getClientLinkInfo, refetch } = useGetClientLink(token);
+  const { createClient, isSuccess: isDeleteSuccess } = useDeleteClientLink();
+
+  useEffect(() => {
+    refetch();
+  }, [isSuccess, isDeleteSuccess]);
+
+  const [QRcodeLink, setQRcodeLink] = useState('');
   const [QRcodeStatus, setQRcodeStatus] = useState<'active' | 'loading'>(
     'loading'
   );
   const [beforeCreateQRcode, setBeforeCreateQRcode] = useState<boolean>(false);
-  const selectProperties = createSelector(
-    (state: any) => state.Login,
-    login => ({
-      error: login.error,
-    })
-  );
 
-   console.log(beforeCreateQRcode);
-  useEffect(() => {
-    const token = localStorage.getItem('UserToken');
-    axios.get(QRCODE_GEN_VISITOR, { headers: { token, LINK } }).then(resp => {
-      const res = resp.data;
-      if (res?.msg?.name === 'error') {
-        message.error(res.msg.msg);
-        return;
-      }
-      if (res?.msg?.name === 'success') {
-        console.log(res);
-        
-        setQRcodeStatus(res.msg.msg.valid ? 'active' : 'loading');
-        setBeforeCreateQRcode(res.msg.msg.valid);
-        setQRcodeValue(res.msg.msg.id);
-        return;
-      }
-      if (res.msg.name === 'auth') {
-        return setValidCookie(true);
-      }
-    });
-  }, []);
-  const genQRcode = () => {
-    const token = localStorage.getItem('UserToken');
-    axios
-      .post(QRCODE_GEN_VISITOR_CREATE, { token, LINK }, { headers: { token } })
-      .then(resp => {
-        const res = resp.data;
-        if (res?.msg?.name === 'error') {
-          message.error(res.msg.msg);
-          return;
-        }
-        if (res?.msg?.name === 'success') {
-          setQRcodeStatus('active');
-          setBeforeCreateQRcode(res.msg.msg.valid);
-          setQRcodeValue(res.msg.msg.id);
-          return;
-        }
-        if (res.msg.name === 'auth') {
-          return setValidCookie(true);
-        }
-      });
+  const genQRcode = async () => {
+    const randomNumber: string = (
+      Math.floor(Math.random() * 90000) + 10000
+    ).toString();
+
+    console.log(randomNumber);
+
+    //@ts-ignore
+    await createQRCode({ token, uniqueId: randomNumber });
   };
 
   const downloadQRCode = () => {
@@ -89,30 +53,20 @@ function QRcode() {
       document.body.removeChild(a);
     }
   };
-  const QRCodeDeleteButton = () => {
-    const token = localStorage.getItem('UserToken');
-    axios
-      .delete(QRCODE_GEN_VISITOR_DELETE, {
-        headers: {
-          token: token,
-        },
-        data: { LINK: LINK }, // Use 'data' to send data in a DELETE request
-      })
-      .then(resp => {
-        const res = resp.data;
-        if (res?.msg?.name === 'error') {
-          message.error(res.msg.msg);
-        } else if (res?.msg?.name === 'success') {
-           setQRcodeStatus('loading');
-           setBeforeCreateQRcode(res.msg.msg.valid);
-           setQRcodeValue(res.msg.msg.id);
-        } else if (res?.msg?.name === 'auth') {
-          setValidCookie(true);
-        }
-      });
+  const QRCodeDeleteButton = async () => {
+    //@ts-ignore
+    await createClient({ token, uniqueId: getClientLinkInfo?.data?.uniqueId });
   };
 
-  if (validCookie) {
+  useEffect(() => {
+    setQRcodeLink(
+      `${REVIEW_LINK}/review/shortcut/${getClientLinkInfo?.data?.uniqueId}`
+    );
+    setBeforeCreateQRcode(!!getClientLinkInfo?.data?.uniqueId);
+    setQRcodeStatus(getClientLinkInfo?.data?.uniqueId ? 'active' : 'loading');
+  }, [getClientLinkInfo?.data]);
+
+  if (getClientLinkInfo?.tokenInvalid) {
     return <Logout />;
   }
   return (
@@ -123,7 +77,7 @@ function QRcode() {
             <div id="myqrcode">
               <QRCode
                 status={QRcodeStatus}
-                value={QRcodeValue}
+                value={QRcodeLink}
                 bgColor="#fff"
                 style={{ marginBottom: 16 }}
               />

@@ -1,13 +1,9 @@
-import { getUser } from 'api/createUsers';
 import React from 'react';
 import {
   Navigate,
-  useNavigate,
-  useRoutes,
   useLocation,
 } from 'react-router-dom';
 import UsersLayout from 'Layouts/user';
-import Profile from 'pages/user/Profile';
 const UserAuthProtected = props => {
   const router = useLocation();
 
@@ -15,7 +11,9 @@ const UserAuthProtected = props => {
     return <Navigate to={{ pathname: '/' }} />;
   }
 
-  if (router.pathname.includes('user')) {
+  console.log(router.pathname);
+
+  if (router.pathname === '/user') {
     return <>{props.children}</>;
   }
   return <UsersLayout>{props.children}</UsersLayout>;

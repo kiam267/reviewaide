@@ -1,9 +1,8 @@
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import React, { useState } from 'react';
 import {
   Row,
   Col,
-  Alert,
   Card,
   CardBody,
   Container,
@@ -12,24 +11,16 @@ import {
   Label,
   Form,
 } from 'reactstrap';
-
-//redux
-import { useSelector } from 'react-redux';
-
 import { Link } from 'react-router-dom';
-
 // Formik Validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-
-import profile from '../../assets/images/logo.png';
-import { createSelector } from 'reselect';
+import { LoadingOutlined } from '@ant-design/icons';
 import { useResetPassword } from 'api/userApi';
+import { Spin } from 'antd';
 function ResetPassword() {
   const { id, token } = useParams();
-  const { userResetPassword, isSuccess } = useResetPassword();
-  const [isSendMessage, setIsSendMessage] = useState(false);
-
+  const { userResetPassword, isPending } = useResetPassword();
   const [show, setShow] = useState(false);
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -45,16 +36,6 @@ function ResetPassword() {
       userResetPassword({ ...values, id, token });
     },
   });
-
-  const selectProperties = createSelector(
-    (state: any) => state.ForgetPassword,
-    forgetPassword => ({
-      forgetError: forgetPassword.forgetError,
-      forgetSuccessMsg: forgetPassword.forgetSuccessMsg,
-    })
-  );
-
-  const { forgetError, forgetSuccessMsg } = useSelector(selectProperties);
 
   return (
     <div className="account-pages my-5 pt-sm-5">
@@ -82,17 +63,6 @@ function ResetPassword() {
                   <h1 className="text-gradients">Review Aide</h1>
                 </div>
                 <div className="p-2">
-                  {forgetError && forgetError ? (
-                    <Alert color="danger" style={{ marginTop: '13px' }}>
-                      {forgetError}
-                    </Alert>
-                  ) : null}
-                  {forgetSuccessMsg ? (
-                    <Alert color="success" style={{ marginTop: '13px' }}>
-                      {forgetSuccessMsg}
-                    </Alert>
-                  ) : null}
-
                   <Form
                     className="form-horizontal"
                     onSubmit={e => {
@@ -143,7 +113,21 @@ function ResetPassword() {
                           className="btn w-md fw-semibold text-white "
                           type="submit"
                         >
-                          Conform Password
+                          {isPending ? (
+                            <Spin
+                              style={{
+                                color: '#FFFFFF',
+                              }}
+                              indicator={
+                                <LoadingOutlined
+                                  style={{ fontSize: 24 }}
+                                  spin
+                                />
+                              }
+                            />
+                          ) : (
+                            <>Conform Password</>
+                          )}
                         </button>
                       </Col>
                     </Row>

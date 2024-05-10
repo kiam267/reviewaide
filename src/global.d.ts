@@ -66,20 +66,42 @@ interface UserId {
   // ... other properties
 }
 
-interface UserLogin {
+interface Login {
   email: string;
   password: string;
 }
 
-interface UserSignUp {
+interface SignUp {
   email: string;
   password: string;
   fullName: string;
-  phone: string;
+  phone?: string;
 }
 
 interface UserMoreDetailInfo {
-  companyName: string;
-  googleLink: string;
-  facebookLink: string;
+  companyLogo?: any;
+  fileDetails?: string;
+  companyName: string ;
+  googleLink: string ;
+  facebookLink: string ;
+  id?: number;
+  fullName?: string | undefined;
+  password?: string;
+  email?: string;
+  phone?: string | undefined;
+  userEmailText?: string;
+  userSmsText?: string;
 }
+
+interface HeadeInfo {
+  companyName?: string |null;
+  companyLogo?: string | null;
+}
+
+interface ClientSearchState {
+  page: number;
+  clientName: string;
+  method : string;
+
+}
+

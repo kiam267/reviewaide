@@ -1,137 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Form,
-  FormFeedback,
-  Input,
-  Label,
-  Alert,
-  Row,
-  Col,
-} from 'reactstrap';
-import {
-  Avatar,
-  Badge,
-  Button,
-  Card,
-  Space,
-  message,
-  Alert as ANTDAlert,
-} from 'antd';
-//i18n
-import { withTranslation } from 'react-i18next';
+import React, { useEffect, useState } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Form, FormFeedback, Input, Label, Alert, Row, Col } from 'reactstrap';
+import { Card, Spin } from 'antd';
 // Redux
-import { Link } from 'react-router-dom';
 import withRouter from '../../Components/Common/withRouter';
 import { createSelector } from 'reselect';
-
-// users
-import user1 from '../../../assets/images/users/avatar-1.jpg';
-
 import { useSelector } from 'react-redux';
-import { log } from 'console';
-import axios from 'axios';
 import CustomeContainer from 'Components/Common/CustomeContainer';
-import {
-  GET_USERS_DASHBOARD,
-  GET_USERS_MINI_UPDATE,
-} from '../../helpers/url_helper';
-import Logout from 'pages/auth/Logout';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { useGetProfile, usePutUserInfo } from 'api/userApi';
 const UpdateProfile = (props: any) => {
-  // Declare a new state variable, which we'll call "menu"
-  // const { avater } = useUserAuth();
-
-  const [menu, setMenu] = useState(true);
-  const [alldata, setAllData] = useState([
-    {
-      username: '',
-      phone: '',
-      company_name: '',
-      facebook_link: '',
-      google_link: '',
-      email_message: '',
-      sms_message: '',
-      temporaray_lock: '',
-    },
-  ]);
-
-  const [validCookie, setValidCookie] = useState(false);
-  const selectProfileProperties = createSelector(
-    (state: any) => state.Avater,
-    profile => ({
-      name: profile.name,
-    })
-  );
+  const [isEdit, setIsEdit] = useState(true);
+  const token = localStorage.getItem('user-token');
+  const { getProfileInfo } = useGetProfile(token);
+  const { userMoreInfo, isPending, isSuccess } = usePutUserInfo();
 
   useEffect(() => {
-    const token = localStorage.getItem('UserToken');
-    axios.get(GET_USERS_MINI_UPDATE, { headers: { token } }).then(resp => {
-      const res = resp.data;
-
-      if (res?.msg?.name === 'error') {
-        message.error('error', res.msg.msg);
-      }
-      if (res?.msg?.name === 'success') {
-        setAllData(res.msg[0].data);
-        return;
-      }
-      if (res.msg.name === 'auth') {
-        return setValidCookie(true);
-      }
-    });
-  }, []);
+    setIsEdit(true);
+  }, [isSuccess]);
 
   const validation: any = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      username: alldata[0].username,
-      phone: alldata[0].phone,
-      companyName: alldata[0].company_name,
-      google: alldata[0].google_link,
-      facebook: alldata[0].facebook_link,
-      editEmail: alldata[0].email_message,
-      editSms: alldata[0].sms_message,
-      temporary: alldata[0].temporaray_lock,
+      fullName: getProfileInfo?.data?.fullName,
+      phone: getProfileInfo?.data?.phone,
+      companyName: getProfileInfo?.data?.companyName,
+      googleLink: getProfileInfo?.data?.googleLink,
+      facebookLink: getProfileInfo?.data?.facebookLink,
     },
     validationSchema: Yup.object({
-      username: Yup.string().required('Please Enter Your Username'),
-      phone: Yup.number().required('Please Enter Your email'),
+      fullName: Yup.string().required('Please Enter Your fullName'),
+      phone: Yup.number().required('Please Enter Your phone number'),
       companyName: Yup.string().required('Please Enter Your Company Name'),
-      google: Yup.string().required('Please Enter Your google Link'),
-      facebook: Yup.string().required('Please Enter Your Facebook Link'),
-      editEmail: Yup.string().required('Please Enter Your Email Message'),
-      editSms: Yup.string().required('Please Enter Your SMS Message'),
-      temporary: Yup.number(),
+      googleLink: Yup.string().required('Please Enter Your googleLink Link'),
+      facebookLink: Yup.string().required(
+        'Please Enter Your facebookLink Link'
+      ),
     }),
     onSubmit: async (values: any, { setValues }) => {
-      const token = localStorage.getItem('UserToken');
-      axios
-        .put(GET_USERS_DASHBOARD, { ...values }, { headers: { token } })
-        .then(resp => {
-          const res = resp.data;
-
-          if (res?.msg?.name === 'error') {
-            message.error('error', res.msg.msg);
-            return;
-          }
-          if (res?.msg?.name === 'success') {
-            message.success('success', res.msg.msg);
-            return;
-          }
-          if (res.msg.name === 'auth') {
-            return setValidCookie(true);
-          }
-        });
+      //@ts-ignore
+      await userMoreInfo({ token, values });
     },
   });
-  const { name } = useSelector(selectProfileProperties);
 
   const selectProperties = createSelector(
     (state: any) => state.Login,
@@ -140,9 +52,6 @@ const UpdateProfile = (props: any) => {
     })
   );
   const { error } = useSelector(selectProperties);
-  if (validCookie) {
-    return <Logout />;
-  }
   return (
     <CustomeContainer>
       <Row className="justify-content-center">
@@ -158,25 +67,25 @@ const UpdateProfile = (props: any) => {
             >
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label text-capitalize ">username</Label>
+                <Label className="form-label text-capitalize ">fullName</Label>
                 <Input
-                  name="username"
+                  name="fullName"
                   className="form-control"
-                  placeholder="Enter username"
+                  placeholder="Enter fullName"
                   type="text"
-                  disabled={menu}
+                  disabled={isEdit}
                   onChange={validation.handleChange}
                   onBlur={validation.handleBlur}
-                  value={validation.values.username || ''}
+                  value={validation.values.fullName || ''}
                   invalid={
-                    validation.touched.username && validation.errors.username
+                    validation.touched.fullName && validation.errors.fullName
                       ? true
                       : false
                   }
                 />
-                {validation.touched.username && validation.errors.username ? (
+                {validation.touched.fullName && validation.errors.fullName ? (
                   <FormFeedback type="invalid">
-                    {validation.errors.username}
+                    {validation.errors.fullName}
                   </FormFeedback>
                 ) : null}
               </div>
@@ -187,7 +96,7 @@ const UpdateProfile = (props: any) => {
                   name="phone"
                   className="form-control"
                   placeholder="Enter a phone"
-                  disabled={menu}
+                  disabled={isEdit}
                   type="text"
                   onChange={validation.handleChange}
                   onBlur={validation.handleBlur}
@@ -207,38 +116,12 @@ const UpdateProfile = (props: any) => {
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
                 <Label className="form-label text-capitalize">
-                  Temporary Lock
-                </Label>
-                <Input
-                  name="temporary"
-                  className="form-control"
-                  disabled={menu}
-                  placeholder="Enter a Temporary Lock"
-                  type="text"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  value={validation.values.temporary || ''}
-                  invalid={
-                    validation.touched.temporary && validation.errors.temporary
-                      ? true
-                      : false
-                  }
-                />
-                {validation.touched.temporary && validation.errors.temporary ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.temporary}
-                  </FormFeedback>
-                ) : null}
-              </div>
-              <div className="mb-3">
-                {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label text-capitalize">
                   companyName
                 </Label>
                 <Input
                   name="companyName"
                   className="form-control"
-                  disabled={menu}
+                  disabled={isEdit}
                   placeholder="Enter a companyName"
                   type="text"
                   onChange={validation.handleChange}
@@ -260,112 +143,64 @@ const UpdateProfile = (props: any) => {
               </div>
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label text-capitalize">google</Label>
+                <Label className="form-label text-capitalize">googleLink</Label>
                 <Input
-                  name="google"
-                  disabled={menu}
+                  name="googleLink"
+                  disabled={isEdit}
                   className="form-control"
-                  placeholder="Enter  a google"
+                  placeholder="Enter  a googleLink"
                   type="text"
                   onChange={validation.handleChange}
                   onBlur={validation.handleBlur}
-                  value={validation.values.google || ''}
+                  value={validation.values.googleLink || ''}
                   invalid={
-                    validation.touched.google && validation.errors.google
+                    validation.touched.googleLink &&
+                    validation.errors.googleLink
                       ? true
                       : false
                   }
                 />
-                {validation.touched.google && validation.errors.google ? (
+                {validation.touched.googleLink &&
+                validation.errors.googleLink ? (
                   <FormFeedback type="invalid">
-                    {validation.errors.google}
+                    {validation.errors.googleLink}
                   </FormFeedback>
                 ) : null}
               </div>
               <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label text-capitalize">facebook</Label>
+                <Label className="form-label text-capitalize">
+                  facebookLink
+                </Label>
                 <Input
-                  name="facebook"
-                  disabled={menu}
+                  name="facebookLink"
+                  disabled={isEdit}
                   className="form-control"
-                  placeholder="Enter facebook"
+                  placeholder="Enter facebookLink"
                   type="text"
                   onChange={validation.handleChange}
                   onBlur={validation.handleBlur}
-                  value={validation.values.facebook || ''}
+                  value={validation.values.facebookLink || ''}
                   invalid={
-                    validation.touched.facebook && validation.errors.facebook
+                    validation.touched.facebookLink &&
+                    validation.errors.facebookLink
                       ? true
                       : false
                   }
                 />
-                {validation.touched.facebook && validation.errors.facebook ? (
+                {validation.touched.facebookLink &&
+                validation.errors.facebookLink ? (
                   <FormFeedback type="invalid">
-                    {validation.errors.facebook}
+                    {validation.errors.facebookLink}
                   </FormFeedback>
                 ) : null}
               </div>
-
-              <div className="my-3">
-                <Label className="text-capitalize">edit email</Label>
-                <Input
-                  name="editEmail"
-                  type="textarea"
-                  id="textarea"
-                  style={{ height: '250px' }}
-                  disabled={menu}
-                  onChange={e => validation.handleChange(e)}
-                  onBlur={validation.handleBlur}
-                  value={validation.values.editEmail || ''}
-                  invalid={
-                    validation.touched.editEmail && validation.errors.editEmail
-                      ? true
-                      : false
-                  }
-                  placeholder="We hope you found value in your visit today..."
-                />
-                {validation.touched.editEmail && validation.errors.editEmail ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.editEmail}
-                  </FormFeedback>
-                ) : null}
-              </div>
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <ANTDAlert
-                  message="you must use ${name}, ${comName}, ${link}  "
-                  type="info"
-                />
-              </Space>
-
-              <Label className="text-capitalize">edit sms</Label>
-              <Input
-                name="editSms"
-                type="textarea"
-                id="textarea"
-                style={{ height: '150px' }}
-                disabled={menu}
-                onChange={e => validation.handleChange(e)}
-                onBlur={validation.handleBlur}
-                value={validation.values.editSms || ''}
-                invalid={
-                  validation.touched.editSms && validation.errors.editSms
-                    ? true
-                    : false
-                }
-              />
-              {validation.touched.editSms && validation.errors.editSms ? (
-                <FormFeedback type="invalid">
-                  {validation.errors.editSms}
-                </FormFeedback>
-              ) : null}
-
               <div className="mt-3 d-grid">
-                {menu ? (
+                {isEdit ? (
                   <div
                     className="btn btn-block fw-bold text-white fs-5"
                     style={{ background: '#FE9150' }}
-                    onClick={() => setMenu(false)}
+                    onClick={() => setIsEdit(false)}
                   >
                     Edit
                   </div>
@@ -375,7 +210,18 @@ const UpdateProfile = (props: any) => {
                     type="submit"
                     style={{ background: '#FE9150' }}
                   >
-                    Update
+                    {isPending ? (
+                      <Spin
+                        style={{
+                          color: '#FFFFFF',
+                        }}
+                        indicator={
+                          <LoadingOutlined style={{ fontSize: 24 }} spin />
+                        }
+                      />
+                    ) : (
+                      <>Update</>
+                    )}
                   </button>
                 )}
               </div>
@@ -387,4 +233,4 @@ const UpdateProfile = (props: any) => {
   );
 };
 
-export default withRouter(withTranslation()(UpdateProfile));
+export default withRouter(UpdateProfile);

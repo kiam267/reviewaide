@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import Footer from "./Footer";
-import RightSidebar from "Components/CommonForBoth/RightSidebar";
-import withRouter from "../../Components/Common/withRouter";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import Header from './Header';
+import Sidebar from './Sidebar';
+import Footer from './Footer';
+import RightSidebar from 'Components/CommonForBoth/RightSidebar';
+import withRouter from '../../Components/Common/withRouter';
+import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { changeLayout, changeLayoutMode, changeTopbarTheme, changeLeftSidebarType, changeLeftSidebarTheme, changeSidebarImageType } from "slices/layouts/thunk";
+import {
+  changeLayout,
+  changeLayoutMode,
+  changeTopbarTheme,
+  changeLeftSidebarType,
+  changeLeftSidebarTheme,
+  changeSidebarImageType,
+} from 'slices/layouts/thunk';
 
 const VerticalLayout = (props: any) => {
   const dispatch: any = useDispatch();
@@ -23,26 +30,30 @@ const VerticalLayout = (props: any) => {
       leftSidebarImageTypes: layout.leftSidebarImageTypes,
     })
   );
-  const { layoutTypes,
+  const {
+    layoutTypes,
     layoutModeTypes,
     topbarThemeTypes,
     leftSidebarTypes,
     leftSideBarThemeTypes,
-    leftSidebarImageTypes } = useSelector(selectProperties);
+    leftSidebarImageTypes,
+  } = useSelector(selectProperties);
 
   useEffect(() => {
-    if (layoutTypes ||
+    if (
+      layoutTypes ||
       layoutModeTypes ||
       topbarThemeTypes ||
       leftSidebarTypes ||
       leftSideBarThemeTypes ||
-      leftSidebarImageTypes) {
+      leftSidebarImageTypes
+    ) {
       dispatch(changeLayout(layoutTypes));
       dispatch(changeLayoutMode(layoutModeTypes));
       dispatch(changeTopbarTheme(topbarThemeTypes));
       dispatch(changeLeftSidebarType(leftSidebarTypes));
       dispatch(changeLeftSidebarTheme(leftSideBarThemeTypes));
-      dispatch(changeSidebarImageType(leftSidebarImageTypes))
+      dispatch(changeSidebarImageType(leftSidebarImageTypes));
     }
   }, [
     dispatch,
@@ -51,17 +62,18 @@ const VerticalLayout = (props: any) => {
     topbarThemeTypes,
     leftSidebarTypes,
     leftSideBarThemeTypes,
-    leftSidebarImageTypes]);
+    leftSidebarImageTypes,
+  ]);
 
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
     if (open) {
-      document.body.classList.add("right-bar-enabled")
-      document.body.style.paddingRight = ''
+      document.body.classList.add('right-bar-enabled');
+      document.body.style.paddingRight = '';
     } else {
-      document.body.classList.remove("right-bar-enabled")
+      document.body.classList.remove('right-bar-enabled');
     }
-  }, [open])
+  }, [open]);
 
   return (
     <React.Fragment>

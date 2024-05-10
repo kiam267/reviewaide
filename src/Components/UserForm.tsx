@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Form, Input, Label, FormFeedback, Alert } from 'reactstrap';
 import { GetProp, Spin, Upload, UploadProps, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
@@ -8,20 +8,21 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 // Formik validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useSelector, useDispatch } from 'react-redux';
-import { useUserAuth } from 'contexts/UserAuth';
-
-import withRouter from 'Components/Common/withRouter';
+import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import CustomePass from 'Components/CustomePass';
-import { useMatchMyUser, usePutUserInfo } from 'api/userApi';
+import { usePutUserInfo } from 'api/userApi';
+import { log } from 'console';
 function UserForm() {
   const [fileDetails, setFileDetail] = useState(null);
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [base64URL, setBase64URL] = useState('');
   const nevigation = useNavigate();
-  const { userMoreInfo, isPending } = usePutUserInfo();
+  const { userMoreInfo, isPending, isSuccess } = usePutUserInfo();
+  const [userReponse, setUserResponse] = useState({
+    tokenInvalid: null,
+  });
+
   type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
   const token = localStorage.getItem('user-token');
@@ -34,11 +35,11 @@ function UserForm() {
   );
 
   const { error } = useSelector(selectProperties);
-
   // Form validation
   const validation: any = useFormik({
     enableReinitialize: true,
     initialValues: {
+      companyLogo: fileDetails,
       companyName: '',
       googleLink: '',
       facebookLink: '',
@@ -49,29 +50,8 @@ function UserForm() {
       facebookLink: Yup.string().required('Please enter facebook link'),
     }),
     onSubmit: async (values: UserMoreDetailInfo) => {
-      const formData = new FormData();
-
-      // Add form values to FormData
-      Object.entries(values).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-      console.log(formData);
-
-      // Add file if exists
-      if (fileDetails) {
-        formData.append('companyLogo', fileDetails);
-      }
-
-      try {
-        // Make API call with FormData
-        console.log(formData);
-
-        await userMoreInfo({ token, formData, values });
-
-        // Handle success
-      } catch (error) {
-        // Handle error
-      }
+      const userData = { ...values };
+      await userMoreInfo({ token, values: userData });
     },
   });
   const beforeUpload = (file: FileType) => {
@@ -89,9 +69,7 @@ function UserForm() {
   const getBase64 = file => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-
       reader.readAsDataURL(file);
-
       reader.onload = () => resolve(reader.result);
       reader.onerror = error => reject(error);
     });
@@ -121,6 +99,9 @@ function UserForm() {
     }
   };
 
+  if (isSuccess) {
+   return <Navigate to="/" />;
+  }
   return (
     <Form
       className="form-horizontal login-form"
@@ -132,11 +113,8 @@ function UserForm() {
     >
       <h1 className="fs-1 fw-bold my-5">Give me comapany details</h1>
       <Upload
-        // style={{
-        //   width: '100%',
-        // }}
-        name="avatar"
-        listType="picture-card"
+        name="companyLogo"
+        listType="picture"
         className="avatar-uploader"
         showUploadList={false}
         action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
@@ -146,7 +124,7 @@ function UserForm() {
         {base64URL ? (
           <img
             src={base64URL}
-            alt="avatar"
+            alt="companyLogo"
             className="my-4"
             style={{ width: '100%' }}
           />
@@ -228,7 +206,7 @@ function UserForm() {
 
       <div className="my-3 d-grid ">
         <button
-          // aria-disabled={isPending}
+          aria-disabled={isPending}
           // disabled={isPending}
           className="btn btn-block fw-bold text-white fs-5 rounded-5"
           type="submit"
@@ -242,7 +220,7 @@ function UserForm() {
               indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
             />
           ) : (
-            <>Submit</>
+            <>Update</>
           )}
         </button>
       </div>
