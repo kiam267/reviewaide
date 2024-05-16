@@ -23,9 +23,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Button, Spin } from 'antd';
 import boopSfx from '../../assets/sounds/mixkit-message-pop-alert-2354.mp3';
 
-import {
-  REACT_APP_SERVER_API,
-} from '../../helpers/url_helper';
+import { REACT_APP_SERVER_API } from '../../helpers/url_helper';
 import { useCreateClient, useReviewLogo } from 'api/clientApi';
 const ShortcutReview = () => {
   //meta title
@@ -97,7 +95,6 @@ const ShortcutReview = () => {
       clientName: Yup.string(),
     }),
     onSubmit: async (values: CreateClient) => {
-      
       await createClient({
         id: values.id,
         clientName: values.clientName,
@@ -122,7 +119,7 @@ const ShortcutReview = () => {
                       width: '150px',
                       objectFit: 'contain',
                     }}
-                    src={`${REACT_APP_SERVER_API}/api/uploads/${getReviewLogoInfo?.data?.companyLogo}`}
+                    src={`${getReviewLogoInfo?.data?.companyLogo}`}
                     alt="LOGO"
                   />
                   <CardBody>

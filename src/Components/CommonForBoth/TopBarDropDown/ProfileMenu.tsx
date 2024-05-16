@@ -22,8 +22,6 @@ import axios from 'axios';
 import { REACT_APP_SERVER_API } from '../../../helpers/url_helper';
 
 const ProfileMenu = (props: any) => {
-
-
   const [menu, setMenu] = useState(false);
   const selectProfileProperties = createSelector(
     (state: any) => state.Avater,
@@ -46,20 +44,13 @@ const ProfileMenu = (props: any) => {
           id="page-header-user-dropdown"
           tag="button"
         >
-          <Avatar
-            size="default"
-            src={
-              <img
-                src={`${REACT_APP_SERVER_API}/api/uploads/${props.companyLogo}`}
-                alt="avatar"
-                style={{ objectFit: 'cover' }}
-              />
-            }
-          >
-            {props?.companyName}
+          <Avatar size="default">
+            {props?.userName && props.userName.substring(0, 1)}
           </Avatar>
           <span className="d-none d-xl-inline-block ms-2 me-1">
-            {props?.companyName}
+            {props?.userName && props.userName.length > 5
+              ? props.userName.substring(0, 5)
+              : props.userName}
           </span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>

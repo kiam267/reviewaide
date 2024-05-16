@@ -285,7 +285,6 @@ export const usePutUserInfo = () => {
       formData.append('fullName', values.fullName);
       formData.append('phone', values.phone);
     }
-    console.log(formData);
 
     const response = await fetch(
       `${REACT_APP_SERVER_API}/api/my/user/user-moredata`,
@@ -348,8 +347,7 @@ interface Header {
   message: string;
   tokenInvalid?: boolean | null;
   data: {
-    companyName?: string;
-    companyLogo?: string;
+  userName?: string;
   } | null;
 }
 

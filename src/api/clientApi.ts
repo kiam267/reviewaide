@@ -30,6 +30,7 @@ export const useGetClient = (
     params.set('page', searchState.page.toString());
     params.set('clientName', searchState.clientName.toString());
     params.set('method', searchState.method.toString());
+    params.set('rating', String(searchState.rating));
 
     const response = await fetch(
       `${REACT_APP_SERVER_API}/api/my/client?${params}`,
@@ -119,23 +120,50 @@ export const useCreateClient = () => {
   return { createClient, isPending, error, isSuccess };
 };
 
-export const useReviewLink = () => {
+export interface QRCodeGen {
+  companyLogo: string;
+  companyName: string;
+  googleLink: string;
+  facebookLink: string;
+}
+
+export const useCretaeQrCodeLink = () => {
   const createCurrentQRCode = async ({
     token,
-    uniqueId,
+    user,
   }: {
     token: string;
-    uniqueId: number;
+    user: QRCodeGen;
   }) => {
+    if (!user.companyLogo) {
+      return toast.error('please add a company Logo', {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+        transition: Bounce,
+      });
+    }
+
+    const formData = new FormData();
+
+    formData.append('companyName', user?.companyName);
+    formData.append('googleLink', user?.googleLink);
+    formData.append('facebookLink', user?.facebookLink);
+    formData.append('companyLogo', user?.companyLogo);
+
     const response = await fetch(
       `${REACT_APP_SERVER_API}/api/my/client/link-generator`,
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           token: `Bearer ${token}`,
         },
-        body: JSON.stringify({ uniqueId }),
+        body: formData,
       }
     );
 
@@ -180,9 +208,7 @@ export const useReviewLink = () => {
   return { createQRCode, isPending, error, isSuccess };
 };
 interface ClientLinkResponse {
-  data?: {
-    uniqueId: number;
-  };
+  data?: [{ uniqueId: string; companyName: string }];
   success: boolean;
   message?: string;
   tokenInvalid: boolean;
@@ -205,7 +231,7 @@ export const useGetClientLink = (token: string) => {
   };
 
   const {
-    data: getClientLinkInfo, 
+    data: getClientLinkInfo,
     refetch,
     isSuccess,
     isPending,
@@ -224,7 +250,7 @@ export const useDeleteClientLink = () => {
     token,
   }: {
     uniqueId: string;
-    token : string;
+    token: string;
   }) => {
     const response = await fetch(
       `${REACT_APP_SERVER_API}/api/my/client/link-generator`,
@@ -278,7 +304,6 @@ export const useDeleteClientLink = () => {
 
   return { createClient, isPending, error, isSuccess };
 };
-
 
 interface ClientLogoResponse {
   data?: {

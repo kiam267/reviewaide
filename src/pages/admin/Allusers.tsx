@@ -1,4 +1,4 @@
-import React, {  useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { SearchOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd';
@@ -18,10 +18,7 @@ import {
   Modal,
   Spin,
 } from 'antd';
-import {
-
-  REACT_APP_SERVER_API,
-} from '../../helpers/url_helper';
+import { REACT_APP_SERVER_API } from '../../helpers/url_helper';
 import CustomeContainer from 'Components/Common/CustomeContainer';
 import user from 'Layouts/user';
 import { Alert, Form, FormFeedback, Input, Label } from 'reactstrap';
@@ -53,10 +50,10 @@ interface DataType {
   createdAt: string;
 }
 function Allusers(props) {
-
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
+  const [selectedUser, setSelectedUser] = useState<DataType>();
   const { confirm } = Modal;
   const [userSearch, setUserSearch] = useState<UserViaAdminSeachState>({
     page: 1,
@@ -69,10 +66,8 @@ function Allusers(props) {
   const token = localStorage.getItem('admin-token');
   //@ts-ignore
   const { getUserInfo, refetch } = useGetUserViaAdmin(token, userSearch);
-  const {
-    deleteUserViaAdmin,
-    isSuccess: isDelteSuccess,
-  } = useDeletUserViaAdmin();
+  const { deleteUserViaAdmin, isSuccess: isDelteSuccess } =
+    useDeletUserViaAdmin();
 
   useEffect(() => {
     refetch();
@@ -87,9 +82,7 @@ function Allusers(props) {
 
   const [open, setOpen] = useState(false);
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
+
 
   type InputRef = GetRef<typeof ANTInput>;
 
@@ -137,6 +130,7 @@ function Allusers(props) {
       refetch();
     }
   };
+
   const getColumnSearchProps = (
     dataIndex: DataIndex
   ): TableColumnType<DataType> => ({
@@ -244,17 +238,16 @@ function Allusers(props) {
       ),
   });
 
+
+  
+
   const columns: TableColumnsType<DataType> = [
     {
       title: 'User Image',
       dataIndex: 'companyLogo',
       key: 'companyLogo',
       render: (_, item) => {
-        return (
-          <Avatar
-            src={`${REACT_APP_SERVER_API}/api/uploads/${item.companyLogo}`}
-          ></Avatar>
-        );
+        return <Avatar>{item?.fullName.trim().substring(0, 1)}</Avatar>;
       },
     },
     {
@@ -277,22 +270,22 @@ function Allusers(props) {
       key: 'phone',
       ...getColumnSearchProps('phone'),
     },
-    {
-      title: 'Company Name',
-      dataIndex: 'companyName',
-      key: 'companyName',
-      ...getColumnSearchProps('companyName'),
-    },
-    {
-      title: 'Google Link',
-      dataIndex: 'googleLink',
-      key: 'googleLink',
-    },
-    {
-      title: 'Facebook Link',
-      dataIndex: 'facebookLink',
-      key: 'facebookLink',
-    },
+    // {
+    //   title: 'Company Name',
+    //   dataIndex: 'companyName',
+    //   key: 'companyName',
+    //   ...getColumnSearchProps('companyName'),
+    // },
+    // {
+    //   title: 'Google Link',
+    //   dataIndex: 'googleLink',
+    //   key: 'googleLink',
+    // },
+    // {
+    //   title: 'Facebook Link',
+    //   dataIndex: 'facebookLink',
+    //   key: 'facebookLink',
+    // },
     {
       title: 'Mode',
       dataIndex: 'userStatus',
@@ -335,32 +328,39 @@ function Allusers(props) {
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button
-            className="rounded-5"
-            style={{ border: ' 1px solid #F6653F' }}
-            onClick={showDrawer}
-          >
-            <i className="bx bxs-edit-alt text-black fs-4"></i>
-          </Button>
-          <UserEdit
-            onClose={onClose}
-            open={open}
-            user={record}
-            handelUpdateUser={isChange => handelUpdateUser({ isChange })}
-          />
-          <Button
-            danger
-            className="rounded-5"
-            style={{ border: ' 1px solid #F6653F' }}
-            onClick={() => showDeleteConfirm(record.email)}
-            type="dashed"
-          >
-            <i className="bx bxs-trash-alt"></i>
-          </Button>
-        </Space>
-      ),
+      render: (_, record) => {
+        return (
+          <Space size="middle">
+            <Button
+              key={record.id}
+              className="rounded-5"
+              style={{ border: ' 1px solid #F6653F' }}
+              onClick={() => {
+                setSelectedUser(record as DataType);
+                setOpen(true);
+              }}
+            >
+              <i className="bx bxs-edit-alt text-black fs-4"></i>
+            </Button>
+            <UserEdit
+              key={record.email}
+              onClose={onClose}
+              open={open}
+              user={selectedUser}
+              handelUpdateUser={isChange => handelUpdateUser({ isChange })}
+            />
+            <Button
+              danger
+              className="rounded-5"
+              style={{ border: ' 1px solid #F6653F' }}
+              onClick={() => showDeleteConfirm(record.email)}
+              type="dashed"
+            >
+              <i className="bx bxs-trash-alt"></i>
+            </Button>
+          </Space>
+        );
+      },
     },
   ];
 
@@ -371,6 +371,7 @@ function Allusers(props) {
     <CustomeContainer>
       {getUserInfo?.pagination?.total ? (
         <Table
+          key={getUserInfo?.data?.email}
           columns={columns}
           //@ts-ignore
           dataSource={getUserInfo?.data as (User | undefined)[]}
@@ -397,7 +398,7 @@ function UserEdit({
 }: {
   onClose: () => void;
   open: boolean;
-  user: DataType;
+  user: DataType | undefined;
   handelUpdateUser: (isChange: boolean) => void;
 }) {
   const selectProperties = createSelector(
@@ -407,38 +408,41 @@ function UserEdit({
     })
   );
 
+
   const { error } = useSelector(selectProperties);
   const { updateUserViaAdmin, isPending, isSuccess } = useUpdateUserViaAdmin();
   const token = localStorage.getItem('admin-token');
-  const dateData = dateFormat(user.createdAt, 'ddd, mmm dS, yyyy');
+  const dateData = dateFormat(user?.createdAt, 'ddd, mmm dS, yyyy');
   const validation: any = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
-      fullName: user.fullName,
-      email: user.email,
-      phone: user.phone,
+      fullName: user?.fullName,
+      email: user?.email,
+      phone: user?.phone,
       createdAt: dateData,
-      companyName: user.companyName,
-      facebookLink: user.facebookLink,
-      googleLink: user.googleLink,
-      userStatus: user.userStatus,
+      companyName: user?.companyName,
+      facebookLink: user?.facebookLink,
+      googleLink: user?.googleLink,
+      userStatus: user?.userStatus,
     },
     validationSchema: Yup.object({
       fullName: Yup.string().required('Enter your name'),
       email: Yup.string().email().trim().required('Enter your email'),
       phone: Yup.number().required('Enter your phone number'),
-      companyName: Yup.string(),
-      facebookLink: Yup.string(),
-      googleLink: Yup.string(),
+      // companyName: Yup.string(),
+      // facebookLink: Yup.string(),
+      // googleLink: Yup.string(),
       userStatus: Yup.string(),
     }),
-    onSubmit: (values: any) => {
+    onSubmit: async (values: any) => {
       //@ts-ignore
-      updateUserViaAdmin({ token, user: values });
+      await updateUserViaAdmin({ token, user: values });
     },
   });
+
+
+  
 
   useEffect(() => {
     if (isSuccess) handelUpdateUser(isSuccess);
@@ -482,6 +486,7 @@ function UserEdit({
           <Label className="form-label">Email</Label>
           <Input
             name="email"
+            disabled
             className="form-control"
             placeholder="jon@gmail.com"
             type="text"
@@ -519,7 +524,7 @@ function UserEdit({
             </FormFeedback>
           ) : null}
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           {error ? <Alert color="danger">{error}</Alert> : null}
           <Label className="form-label">Company Name</Label>
           <Input
@@ -540,8 +545,8 @@ function UserEdit({
               {validation.errors.companyName}
             </FormFeedback>
           ) : null}
-        </div>
-        <div className="mb-3">
+        </div> */}
+        {/* <div className="mb-3">
           {error ? <Alert color="danger">{error}</Alert> : null}
           <Label className="form-label">Facebook Link</Label>
           <Input
@@ -562,8 +567,8 @@ function UserEdit({
               {validation.errors.facebookLink}
             </FormFeedback>
           ) : null}
-        </div>
-        <div className="mb-3">
+        </div> */}
+        {/* <div className="mb-3">
           {error ? <Alert color="danger">{error}</Alert> : null}
           <Label className="form-label">google Link</Label>
           <Input
@@ -584,15 +589,13 @@ function UserEdit({
               {validation.errors.googleLink}
             </FormFeedback>
           ) : null}
-        </div>
+        </div> */}
         <div className="mb-3 ">
           {' '}
           <Label className="form-label">Select Status</Label>
           <Space>
             <Select
-              // className='p-5'
-
-              defaultValue={validation.values.userStatus}
+              value={validation.values.userStatus}
               style={{ width: 320 }}
               onChange={selectedOption => {
                 validation.setFieldValue('userStatus', selectedOption);

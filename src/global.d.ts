@@ -101,7 +101,8 @@ interface HeadeInfo {
 interface ClientSearchState {
   page: number;
   clientName: string;
-  method : string;
+  method: string;
+  rating?: number;
 
 }
 

@@ -33,11 +33,11 @@ const UpdateProfile = (props: any) => {
     validationSchema: Yup.object({
       fullName: Yup.string().required('Please Enter Your fullName'),
       phone: Yup.number().required('Please Enter Your phone number'),
-      companyName: Yup.string().required('Please Enter Your Company Name'),
-      googleLink: Yup.string().required('Please Enter Your googleLink Link'),
-      facebookLink: Yup.string().required(
-        'Please Enter Your facebookLink Link'
-      ),
+      // companyName: Yup.string().required('Please Enter Your Company Name'),
+      // googleLink: Yup.string().required('Please Enter Your googleLink Link'),
+      // facebookLink: Yup.string().required(
+      //   'Please Enter Your facebookLink Link'
+      // ),
     }),
     onSubmit: async (values: any, { setValues }) => {
       //@ts-ignore
@@ -113,7 +113,7 @@ const UpdateProfile = (props: any) => {
                   </FormFeedback>
                 ) : null}
               </div>
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 {error ? <Alert color="danger">{error}</Alert> : null}
                 <Label className="form-label text-capitalize">
                   companyName
@@ -194,7 +194,7 @@ const UpdateProfile = (props: any) => {
                     {validation.errors.facebookLink}
                   </FormFeedback>
                 ) : null}
-              </div>
+              </div> */}
               <div className="mt-3 d-grid">
                 {isEdit ? (
                   <div

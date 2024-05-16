@@ -19,6 +19,7 @@ function PrivateReview(props) {
   const sesstion = localStorage.getItem('user-token');
   const [clientSearch, setClientSearch] = useState<ClientSearchState>({
     page: 1,
+    rating : 2,
     clientName: '',
     method: '',
   });
@@ -50,7 +51,7 @@ function PrivateReview(props) {
   if (getClientInfo?.tokenInvalid) {
     return <Logout />;
   }
-  if (!getClientInfo?.pagination.total) {
+  if (!getClientInfo?.pagination?.total) {
     return (
       <CustomeContainer>
         <Breadcrumb title="private Review" breadcrumbItem="Private Review" />
@@ -105,8 +106,9 @@ function PrivateReview(props) {
       />
       <Pagination
         className="mt-2 p-2 d-flex justify-content-end "
-        defaultCurrent={getClientInfo?.pagination.page}
-        total={getClientInfo?.pagination.total}
+        pageSize={10}
+        defaultCurrent={getClientInfo?.pagination?.page}
+        total={getClientInfo?.pagination?.total}
         onChange={handlePageChange}
       />
     </CustomeContainer>

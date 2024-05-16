@@ -149,7 +149,7 @@ const Header = (props: any) => {
                 </form>
               </div>
             </div>
-           <div className="dropdown d-none d-lg-inline-block ms-1">
+            <div className="dropdown d-none d-lg-inline-block ms-1">
               <button
                 type="button"
                 onClick={() => {
@@ -162,10 +162,7 @@ const Header = (props: any) => {
               </button>
             </div>
 
-            <ProfileMenu
-              companyName={getHeaderInfo?.data?.companyName}
-              companyLogo={getHeaderInfo?.data?.companyLogo}
-            />
+            <ProfileMenu userName={getHeaderInfo?.data?.userName} />
           </div>
         </div>
       </header>
