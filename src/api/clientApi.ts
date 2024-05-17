@@ -157,7 +157,7 @@ export const useCretaeQrCodeLink = () => {
       formData.append('googleLink', user?.googleLink);
     }
     if (user?.facebookLink) {
-      formData.append('googleLink', user?.facebookLink);
+      formData.append('facebookLink', user?.facebookLink);
     }
     formData.append('companyLogo', user?.companyLogo);
 
