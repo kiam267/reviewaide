@@ -142,8 +142,8 @@ function QrGenForm({
     },
     validationSchema: Yup.object({
       companyName: Yup.string().required('Please enter company name'),
-      googleLink: Yup.string().required('Please enter google link'),
-      facebookLink: Yup.string().required('Please enter facebook link'),
+      googleLink: Yup.string(),
+      facebookLink: Yup.string(),
     }),
     onSubmit: async (values: UserMoreDetailInfo, { resetForm }) => {
       const userData = { ...values };

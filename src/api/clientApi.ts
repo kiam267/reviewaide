@@ -152,8 +152,13 @@ export const useCretaeQrCodeLink = () => {
     const formData = new FormData();
 
     formData.append('companyName', user?.companyName);
-    formData.append('googleLink', user?.googleLink);
-    formData.append('facebookLink', user?.facebookLink);
+
+    if (user?.googleLink) {
+      formData.append('googleLink', user?.googleLink);
+    }
+    if (user?.facebookLink) {
+      formData.append('googleLink', user?.facebookLink);
+    }
     formData.append('companyLogo', user?.companyLogo);
 
     const response = await fetch(
