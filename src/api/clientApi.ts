@@ -213,7 +213,7 @@ export const useCretaeQrCodeLink = () => {
   return { createQRCode, isPending, error, isSuccess };
 };
 interface ClientLinkResponse {
-  data?: [{ uniqueId: string; companyName: string }];
+  data?: [{ uniqueId: string; companyName: string; companyLogo: string;}];
   success: boolean;
   message?: string;
   tokenInvalid: boolean;

@@ -54,8 +54,6 @@ function QRcode() {
     setQRcodeStatus(getClientLinkInfo?.data ? 'active' : 'loading');
   }, [getClientLinkInfo?.data]);
 
-  console.log(getClientLinkInfo?.data);
-
   if (getClientLinkInfo?.tokenInvalid) {
     return <Logout />;
   }
@@ -70,6 +68,7 @@ function QRcode() {
             <Col sm={12} md={6} lg={3} key={link.uniqueId}>
               <Card className="my-4 d-flex justify-content-center rounded-5">
                 <QrCodeItem
+                  itemLogo={link.companyLogo}
                   haveAnyItem={beforeCreateQRcode}
                   item={link.uniqueId}
                   status={QRcodeStatus}
@@ -87,7 +86,7 @@ function QRcode() {
               className="bx bxs-plus-circle d-flex justify-content-center  align-items-center"
               style={{
                 fontSize: '7rem',
-                minHeight: '200px',
+                minHeight: '250px',
                 height: '100%',
                 cursor: 'pointer',
               }}
@@ -348,12 +347,14 @@ function QrCodeItem({
   haveAnyItem,
   handelQrCodeGenThenReaf,
   itemName,
+  itemLogo,
 }: {
   item: string;
   status: 'loading' | 'active';
   haveAnyItem: boolean;
   handelQrCodeGenThenReaf: () => void;
-  itemName :string;
+  itemName: string;
+  itemLogo: string;
 }) {
   const downloadQRCode = ({ id }) => {
     const canvas = document
@@ -385,7 +386,16 @@ function QrCodeItem({
   return (
     <div id={`myqrcode-${item}`}>
       <>
+        <img
+          src={itemLogo}
+          alt="logo"
+          width={40}
+          height={40}
+          className="d-block m-auto my-2 rounded-circle"
+          style={{ objectFit: 'contain' }}
+        />
         <p className="text-center text-secondary fs-6">{itemName}</p>
+
         <QRCode
           status={status}
           value={`${REVIEW_LINK}/review/shortcut/${item}`}

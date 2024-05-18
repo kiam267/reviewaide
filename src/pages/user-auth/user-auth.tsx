@@ -26,14 +26,19 @@ function UserAuth({ children }: { children: React.ReactNode }) {
           }}
         >
           <Link to="/">
-            {/* <img
+            <img
+              style={{
+                width: '120px',
+                height: '120px',
+                objectFit: 'contain',
+              }}
               className="py-3  user-auto-logo"
-              src={Logo as any}
+              src="/logo.png"
               alt="LOGO"
-            /> */}
-            <h1 className="fw-bold text-black">
+            />
+            {/* <h1 className="fw-bold text-black">
               REVIEW <span className="text-gradients">AIDE</span>
-            </h1>
+            </h1> */}
           </Link>
 
           <div
