@@ -40,12 +40,16 @@ const UserLogin = (props: any) => {
   const validation: any = useFormik({
     enableReinitialize: true,
     initialValues: {
-      email: '',
-      password: '',
+      email: 'vendor@gmail.com',
+      password: 'vendor@gmail.com',
     },
     validationSchema: Yup.object({
-      email: Yup.string().trim().required('Please Enter Your email'),
-      password: Yup.string().trim().required('Please Enter Your Password'),
+      email: Yup.string()
+        .trim()
+        .required('Please Enter Your email'),
+      password: Yup.string()
+        .trim()
+        .required('Please Enter Your Password'),
     }),
     onSubmit: (values: Login) => {
       userLogin(values);

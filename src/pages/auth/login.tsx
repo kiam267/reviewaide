@@ -49,12 +49,16 @@ const Login = (props: any) => {
     enableReinitialize: true,
 
     initialValues: {
-      email: '',
-      password: '',
+      email: 'vendor@gmail.com',
+      password: 'vendor@gmail.com',
     },
     validationSchema: Yup.object({
-      email: Yup.string().required('Please Enter Your email'),
-      password: Yup.string().required('Please Enter Your Password'),
+      email: Yup.string().required(
+        'Please Enter Your email'
+      ),
+      password: Yup.string().required(
+        'Please Enter Your Password'
+      ),
     }),
     onSubmit: async (values: any) => {
       await adminLogin(values);
