@@ -23,10 +23,9 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-/* 
+/*
  * This function working as a global error handeler
  */
-
 
 app.use(function (err, req, res, next) {
   return errorMessage(res, 500, 'Internal Server Error');
@@ -45,7 +44,7 @@ swagger(app);
 app.use('/api/uploads', express.static('uploads'));
 app.use('/api/photos', express.static('photos'));
 
-app.use('/api/v2/auth', authRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/client', clientRouter);
 app.use('/api/review', reviewRouter);

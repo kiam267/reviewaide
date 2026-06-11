@@ -4,7 +4,11 @@ const usresController = require('../controllers/useres-controller');
 const UserValidation = require('../middlewares/userValidation-middleware');
 const { isCheckUser } = require('../middlewares/checkUserValid-middleware');
 const multer = require('multer');
-router.route('/login').post(usresController.login);
+
+
+
+
+router.route('/').post(usresController.login);
 router.route('/forget-password').get(usresController.forgetPassword);
 router.route('/reset-password').get(usresController.resetPassword);
 router.route('/post-reset-password').post(usresController.postRestPassword);
@@ -37,7 +41,7 @@ let upload = multer({
 });
 
 router
-  .route('/create')
+  .route('/sign-up')
   .get(isCheckUser, usresController.getSingleUser)
   .post(isCheckUser, usresController.create);
 router.route('/users').get(isCheckUser, usresController.getUsers);

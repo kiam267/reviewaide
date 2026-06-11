@@ -33,7 +33,7 @@ export const useGetClient = (
     params.set('rating', String(searchState.rating));
 
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/client?${params}`,
+      `${REACT_APP_SERVER_API}/api/client?${params}`,
       {
         method: 'GET',
         headers: {
@@ -71,7 +71,7 @@ interface CreateClient {
 
 export const useCreateClient = () => {
   const createCurrentClient = async (client: CreateClient) => {
-    const response = await fetch(`${REACT_APP_SERVER_API}/api/my/client`, {
+    const response = await fetch(`${REACT_APP_SERVER_API}/api/client`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ export const useCretaeQrCodeLink = () => {
     formData.append('companyLogo', user?.companyLogo);
 
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/client/link-generator`,
+      `${REACT_APP_SERVER_API}/api/client/link-generator`,
       {
         method: 'POST',
         headers: {
@@ -221,7 +221,7 @@ interface ClientLinkResponse {
 export const useGetClientLink = (token: string) => {
   const getClientLink = async (): Promise<ClientLinkResponse> => {
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/client/link-generator`,
+      `${REACT_APP_SERVER_API}/api/client/link-generator`,
       {
         method: 'GET',
         headers: {
@@ -258,7 +258,7 @@ export const useDeleteClientLink = () => {
     token: string;
   }) => {
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/client/link-generator`,
+      `${REACT_APP_SERVER_API}/api/client/link-generator`,
       {
         method: 'DELETE',
         headers: {
@@ -325,7 +325,7 @@ export const useReviewLogo = ({ uniqueId }: { uniqueId: string }) => {
     const params = new URLSearchParams();
     params.set('uniqueId', uniqueId);
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/client/link-logo-query?${params}`,
+      `${REACT_APP_SERVER_API}/api/client/link-logo-query?${params}`,
       {
         method: 'GET',
         headers: {

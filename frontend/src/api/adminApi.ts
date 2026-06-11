@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export const useAdminLogin = () => {
   const adminLoginReponse = async (admin: Login) => {
-    const response = await fetch(`${REACT_APP_SERVER_API}/api/my/admin`, {
+    const response = await fetch(`${REACT_APP_SERVER_API}/api/admin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export const useAdminLogin = () => {
 export const useCreateAdmin = () => {
   const createCurrentAdminResponse = async (admin: SignUp) => {
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/admin/sign-up`,
+      `${REACT_APP_SERVER_API}/api/admin/sign-up`,
       {
         method: 'POST',
         headers: {
@@ -160,7 +160,7 @@ export const useGetUserViaAdmin = (
     params.set('searchCompanyName', searchState.searchCompanyName.toString());
 
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/admin?${params}`,
+      `${REACT_APP_SERVER_API}/api/admin?${params}`,
       {
         method: 'GET',
         headers: {
@@ -196,7 +196,7 @@ export const useDeletUserViaAdmin = () => {
     email: string;
     token: string;
   }) => {
-    const response = await fetch(`${REACT_APP_SERVER_API}/api/my/admin`, {
+    const response = await fetch(`${REACT_APP_SERVER_API}/api/admin`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -267,7 +267,7 @@ export const useUpdateUserViaAdmin = () => {
     user: DataType;
     token: string;
   }) => {
-    const response = await fetch(`${REACT_APP_SERVER_API}/api/my/admin`, {
+    const response = await fetch(`${REACT_APP_SERVER_API}/api/admin`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -1,19 +1,28 @@
 import { REACT_APP_SERVER_API } from '../helpers/url_helper';
 import { Navigate } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { date } from 'yup';
+import {
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
+import {
+  Bounce,
+  ToastContainer,
+  toast,
+} from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 export const useMatchMyUser = () => {
   const matchUserLogin = async (user: Login) => {
-    const response = await fetch(`${REACT_APP_SERVER_API}/api/my/user`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${REACT_APP_SERVER_API}/api/users`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user }),
       },
-      body: JSON.stringify({ user }),
-    });
+    );
 
     if (!response.ok) {
       throw new Error('Failed to get user');
@@ -64,14 +73,14 @@ export const useMatchMyUser = () => {
 export const useCreateUser = () => {
   const createCurrentUser = async (user: SignUp) => {
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/user/sign-up`,
+      `${REACT_APP_SERVER_API}/api/users/sign-up`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ...user }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -116,16 +125,19 @@ export const useCreateUser = () => {
 };
 
 export const useForgetPassword = () => {
-  const forgetPassword = async (email: { email: string; link: string }) => {
+  const forgetPassword = async (email: {
+    email: string;
+    link: string;
+  }) => {
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/user/user-forget-password`,
+      `${REACT_APP_SERVER_API}/api/users/user-forget-password`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ...email }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -166,7 +178,12 @@ export const useForgetPassword = () => {
     mutationFn: forgetPassword,
   });
 
-  return { userForgetPassword, isPending, error, isSuccess };
+  return {
+    userForgetPassword,
+    isPending,
+    error,
+    isSuccess,
+  };
 };
 
 type ResetPassword = {
@@ -175,9 +192,13 @@ type ResetPassword = {
   password: string;
 };
 export const useResetPassword = () => {
-  const resetPassword = async ({ id, token, password }: ResetPassword) => {
+  const resetPassword = async ({
+    id,
+    token,
+    password,
+  }: ResetPassword) => {
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/user/user-reset-password`,
+      `${REACT_APP_SERVER_API}/api/users/user-reset-password`,
       {
         method: 'POST',
         headers: {
@@ -186,7 +207,7 @@ export const useResetPassword = () => {
           token: `${token}`,
         },
         body: JSON.stringify({ password }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -241,13 +262,16 @@ type User = {
 
 export const useGetUser = (token: string) => {
   const getUser = async (): Promise<User> => {
-    const response = await fetch(`${REACT_APP_SERVER_API}/api/my/user`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        token: `Bearer ${token}`,
+    const response = await fetch(
+      `${REACT_APP_SERVER_API}/api/users`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          token: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     const data = await response.json();
     return data;
@@ -275,7 +299,7 @@ type UserInfo = {
 export const usePutUserInfo = () => {
   const userInfo = async ({ token, values }: UserInfo) => {
     console.log(token, values);
-    
+
     const formData = new FormData();
     formData.append('companyName', values.companyName);
     formData.append('googleLink', values?.googleLink);
@@ -287,14 +311,14 @@ export const usePutUserInfo = () => {
     }
 
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/user/user-moredata`,
+      `${REACT_APP_SERVER_API}/api/users/user-moredata`,
       {
         method: 'PUT',
         headers: {
           token: `Bearer ${token}`,
         },
         body: formData, // Use formData directly
-      }
+      },
     );
 
     const data = await response.json();
@@ -347,19 +371,22 @@ interface Header {
   message: string;
   tokenInvalid?: boolean | null;
   data: {
-  userName?: string;
+    userName?: string;
   } | null;
 }
 
 export const useGetHeader = (token: string | null) => {
   const getHeader = async (): Promise<Header> => {
-    const response = await fetch(`${REACT_APP_SERVER_API}/api/my/user/header`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        token: `Bearer ${token}`,
+    const response = await fetch(
+      `${REACT_APP_SERVER_API}/api/users/header`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          token: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     const data = await response.json();
     return data;
@@ -399,14 +426,14 @@ interface Profile {
 export const useGetProfile = (token: string | null) => {
   const getProfile = async (): Promise<Profile> => {
     const response = await fetch(
-      `${REACT_APP_SERVER_API}/api/my/user/profile`,
+      `${REACT_APP_SERVER_API}/api/users/profile`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           token: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     const data = await response.json();
