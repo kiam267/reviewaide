@@ -1,12 +1,12 @@
+require('dotenv').config();
 const { Queue } = require('bullmq');
-const password =
-  process.env.AIVEN_PASSWORD || 'dummy_password_for_github';
+
 
 const connectionRedis = {
-  host: process.env.AIVEN_PASSWORD,
-  port: 26246, // IMPORTANT: should be number, not string
-  username: AIVEN_PASSWORD,
-  password: AIVEN_PASSWORD,
+  host: process.env.REDIS_HOST,
+  port: Number(process.env.REDIS_PORT), // important: convert to number
+  username: process.env.REDIS_USER,
+  password: process.env.REDIS_PASSWORD,
 };
 
 const queueINIT = name => {
