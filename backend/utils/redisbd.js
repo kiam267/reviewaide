@@ -3,10 +3,10 @@ const password =
   process.env.AIVEN_PASSWORD || 'dummy_password_for_github';
 
 const connectionRedis = {
-  host: 'redis-3bd483dc-kiamhasan267-2de6.a.aivencloud.com',
+  host: process.env.AIVEN_PASSWORD,
   port: 26246, // IMPORTANT: should be number, not string
-  username: 'default',
-  password: 'AVNS_w_Y8mr85-XNX94mr9AL',
+  username: AIVEN_PASSWORD,
+  password: AIVEN_PASSWORD,
 };
 
 const queueINIT = name => {
