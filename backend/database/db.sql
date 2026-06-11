@@ -1,17 +1,27 @@
 -- Create a database
-CREATE DATABASE IF NOT EXISTS  docapt;
+CREATE DATABASE IF NOT EXISTS  defaultdb;
 
--- Create the admin table
+USE defaultdb;
+
+/* 
+ * 
+ *
+ *
+ *
+*/
+
+-- ADMIN
 CREATE TABLE IF NOT EXISTS admin (
-    id INT AUTO_INCREMENT PRIMARY KEY ,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(200) NOT NULL,
     email VARCHAR(200) NOT NULL,
     password VARCHAR(240) NOT NULL,
     isAdmin VARCHAR(10) NOT NULL
 );
 
+-- USERS
 CREATE TABLE IF NOT EXISTS users (
-  id INT NOT NULL AUTO_INCREMENT,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(200) NOT NULL,
   password VARCHAR(300) NOT NULL,
   date VARCHAR(100) DEFAULT NULL,
@@ -22,48 +32,34 @@ CREATE TABLE IF NOT EXISTS users (
   isValid BOOLEAN DEFAULT false,
   facebook_link VARCHAR(1000) DEFAULT NULL,
   google_link VARCHAR(1000) DEFAULT NULL,
-  temporaray_lock VARCHAR(100) DEFAULT NULL,
+  temporaray_lock VARCHAR(100) DEFAULT '1234',
   isTemporaryLock BOOLEAN DEFAULT false,
   degree VARCHAR(300) DEFAULT NULL,
   uniqueId VARCHAR(200),
   active_time VARCHAR(200) DEFAULT NULL,
   email_message VARCHAR(600) DEFAULT NULL,
   sms_message VARCHAR(600) DEFAULT NULL,
-  phato_path VARCHAR(200) DEFAULT NULL,
-  PRIMARY KEY (id)
+  phato_path VARCHAR(200) DEFAULT NULL
 );
 
-ALTER TABLE users
-ADD COLUMN phato_path VARCHAR(200) DEFAULT NULL;
-ALTER TABLE users
-MODIFY COLUMN temporaray_lock VARCHAR(100) DEFAULT '1234';
-
-
-
-
+-- CLIENT VISITOR
 CREATE TABLE IF NOT EXISTS client_visitor (
-    id INT AUTO_INCREMENT,
-    client_id VARCHAR(200) DEFAULT NULL,
-    method VARCHAR(40) DEFAULT NULL,
-    name VARCHAR(200) DEFAULT NULL,
-    email VARCHAR(200) DEFAULT NULL,
-    number VARCHAR(200) DEFAULT NULL,
-    date VARCHAR(200) DEFAULT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id VARCHAR(200),
+    method VARCHAR(40),
+    name VARCHAR(200),
+    email VARCHAR(200),
+    number VARCHAR(200),
+    date VARCHAR(200),
     review_method VARCHAR(200) DEFAULT 'pending',
-    user_email VARCHAR(200) DEFAULT NULL,
+    user_email VARCHAR(200),
     isSend BOOLEAN DEFAULT FALSE,
-    PRIMARY KEY (id)
+    count INT DEFAULT 0,
+    max_send_msg INT DEFAULT 2,
+    unsubscribe BOOLEAN DEFAULT true
 );
 
-ALTER TABLE client_visitor
-ADD COLUMN count INT DEFAULT 0,
-ADD COLUMN max_send_msg INT DEFAULT 2,
-ADD COLUMN unsubscribe BOOLEAN DEFAULT true;
-
-
-
-
-
+-- PRIVATE REVIEW
 CREATE TABLE IF NOT EXISTS private_review (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id VARCHAR(200),
@@ -76,85 +72,77 @@ CREATE TABLE IF NOT EXISTS private_review (
     date VARCHAR(200)
 );
 
+-- CUSTOMER SUPPORT
 CREATE TABLE IF NOT EXISTS customer_support (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(200) NOT NULL,
     text VARCHAR(1000) NOT NULL,
-    image_path VARCHAR(255) DEFAULT NULL
+    image_path VARCHAR(255)
 );
 
+-- USER MARKETING
 CREATE TABLE IF NOT EXISTS user_marketing (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  unique_id VARCHAR(36) UNIQUE,  -- Assuming a UUID format for uniqueness
+  unique_id VARCHAR(36) UNIQUE,
   name VARCHAR(200),
-  email VARCHAR(200) ,
-  user_email VARCHAR(200) , 
-  phone VARCHAR(20) ,
+  email VARCHAR(200),
+  user_email VARCHAR(200),
+  phone VARCHAR(20),
   methods VARCHAR(10),
   content VARCHAR(2000),
   unsubscribe BOOLEAN DEFAULT FALSE,
   send_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE qr_code (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+
+-- QR CODE
+CREATE TABLE IF NOT EXISTS qr_code (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     unique_id VARCHAR(100) UNIQUE,
     user_email VARCHAR(255) NOT NULL,
     valid BOOLEAN DEFAULT true,
     method VARCHAR(255) DEFAULT 'open_source'
 );
 
-
-
-
-
-
-CREATE TABLE open_private_review (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+-- OPEN PRIVATE REVIEW
+CREATE TABLE IF NOT EXISTS open_private_review (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     client_id VARCHAR(255),
     rating VARCHAR(10),
     textarea VARCHAR(1000),
     username VARCHAR(255) DEFAULT 'open source',
-    user_email VARCHAR(255) ,
+    user_email VARCHAR(255),
     email VARCHAR(255) DEFAULT 'open source',
     number VARCHAR(255) DEFAULT 'open source',
     date VARCHAR(25)
 );
 
--- shortcut
-CREATE TABLE shortcutsql (
+-- SHORTCUT
+CREATE TABLE IF NOT EXISTS shortcutsql (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     logo VARCHAR(255) NOT NULL,
-    google_link VARCHAR(255) DEFAULT NULL,
-    facebook_link VARCHAR(255) DEFAULT NULL,
-    yel_link VARCHAR(255) DEFAULT NULL,
-    helth_link VARCHAR(255) DEFAULT NULL,
+    google_link VARCHAR(255),
+    facebook_link VARCHAR(255),
+    yel_link VARCHAR(255),
+    helth_link VARCHAR(255),
     user_email VARCHAR(255) NOT NULL,
     unique_id VARCHAR(255) NOT NULL,
-    valid BOOLEAN DEFAULT true
+    valid BOOLEAN DEFAULT true,
+    custom_url VARCHAR(255) NOT NULL,
+    custom_phato_url VARCHAR(255) NOT NULL,
+    user_emial_view VARCHAR(255)
 );
 
-CREATE TABLE public_review_shortcut (
+-- PUBLIC REVIEW SHORTCUT
+CREATE TABLE IF NOT EXISTS public_review_shortcut (
     id INT AUTO_INCREMENT PRIMARY KEY,
     logo VARCHAR(255) NOT NULL,
     user_email VARCHAR(255) NOT NULL,
     date VARCHAR(255) NOT NULL,
-    method VARCHAR(255) DEFAULT 'waiting'
+    method VARCHAR(255) DEFAULT 'waiting',
+    company_name VARCHAR(255) NOT NULL,
+    user_emial_view VARCHAR(255)
 );
-ALTER TABLE public_review_shortcut
-ADD COLUMN company_name VARCHAR(255) NOT NULL;
-
---24/2/2024
-ALTER TABLE shortcutsql
-ADD COLUMN custom_url VARCHAR(255) NOT NULL;
-ALTER TABLE shortcutsql
-ADD COLUMN custom_phato_url VARCHAR(255) NOT NULL;
-
---3/3/2024
-ALTER TABLE shortcutsql
-ADD COLUMN user_emial_view VARCHAR(255) DEFAULT NULL;
-ALTER TABLE public_review_shortcut
-ADD COLUMN user_emial_view VARCHAR(255) DEFAULT NULL;
 
 
 

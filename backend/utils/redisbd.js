@@ -7,6 +7,7 @@ const connectionRedis = {
   port: Number(process.env.REDIS_PORT), // important: convert to number
   username: process.env.REDIS_USER,
   password: process.env.REDIS_PASSWORD,
+  tls: {},
 };
 
 const queueINIT = name => {

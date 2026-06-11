@@ -22,8 +22,13 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
+
+/* 
+ * This function working as a global error handeler
+ */
+
+
 app.use(function (err, req, res, next) {
-  console.log(err);
   return errorMessage(res, 500, 'Internal Server Error');
 });
 
@@ -34,6 +39,7 @@ app.get('/api/v2/test', function (req, res) {
 });
 
 // swagger setup
+swagger(app);
 
 // Serve static files from the 'uploads' directory
 app.use('/api/uploads', express.static('uploads'));
@@ -46,7 +52,7 @@ app.use('/api/review', reviewRouter);
 app.use('/api/customer', customerSupportRouter);
 app.use('/api/marketing', marketingRouter);
 app.use('/api/shortcut', shortcutRouter);
-swagger(app);
+
 app.listen(port, () => {
-  console.log(`App listening on ${port}`);
+  console.log(`App listening on http://localhost:${port}`);
 });
