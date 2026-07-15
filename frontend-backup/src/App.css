@@ -1,0 +1,241 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+}
+
+.animation {
+  transition: 2s;
+  animation: icon_animation 2s infinite;
+}
+/* user - login page  */
+.user-auth {
+  display: grid;
+  grid-template-columns: 1.8fr 3fr;
+  overflow: hidden;
+  /* box-sizing: border-box !important; */
+}
+
+.team-s__slider {
+  width: 400px !important;
+  height: 700px;
+  overflow: hidden;
+}
+.team-s__slider-single {
+}
+.user-auth-swiper-child {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  bottom: 0px;
+  left: 0px;
+}
+.user-auth-swiper-child::after {
+  content: '';
+  position: absolute;
+  top: 35%;
+  left: 38%;
+  transform: translate(-50%, -50%);
+  width: 350px;
+  height: 500px;
+  border: 2px solid #ff6347;
+  border-radius: 180px;
+}
+.user-auth-swiper-child img {
+  border-radius: 200px;
+}
+.login-right-image {
+  width: 600px !important;
+  /* height: 600px; */
+  overflow: hidden;
+  /* object-fit: cover;
+  object-position: top right; */
+}
+.user-auth-right-title {
+  font-size: 1.9rem;
+  width: 90%;
+  display: block;
+  margin: auto;
+}
+.user-auth-right-title span {
+  /* background: -webkit-linear-gradient(#eee, #333); */
+  background: -webkit-linear-gradient(#ffbf00, #ff6347);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.text-gradients {
+  background: -webkit-linear-gradient(#ffbf00, #ff6347);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.user-auth-right {
+  height: 100%;
+}
+
+@keyframes icon_animation {
+  0% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(20px);
+  }
+}
+
+.card_width {
+  width: 50%;
+}
+.user-auth-right {
+  margin: 0px 0px;
+}
+
+@media screen and (max-width: 1200px) {
+  .card_width {
+    width: 70%;
+  }
+  .user-auth {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+  }
+  .user-auth-right-title {
+    font-size: 2rem;
+  }
+}
+.login-form {
+  width: 80%;
+}
+.user-auto-logo {
+  width: 25%;
+}
+@media screen and (max-width: 900px) {
+  .user-auth {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* overflow: auto !important; */
+    height: 100% !important;
+  }
+  .user-auth-right-title {
+    width: 90%;
+    font-size: 1.5rem;
+    padding: 40px 0px 0px 0px;
+  }
+  .login-form {
+    width: 90%;
+  }
+  .user-auto-logo {
+    width: 30%;
+  }
+}
+@media screen and (max-width: 700px) {
+  .card_width {
+    width: 80%;
+  }
+}
+@media screen and (min-width: 1500px) {
+  .card_width {
+    width: 40%;
+  }
+  .user-auth-right {
+    padding: 32px 0px !important;
+  }
+  .user-auth-right-title {
+    font-size: 3rem;
+    width: 70%;
+    display: block;
+    margin: auto;
+  }
+}
+
+/* .container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+} */
+
+.gra {
+  background: #ffeeea;
+  /* background: linear-gradient(to bottom, #212121, #ffeeea); */
+}
+
+/* Base styles */
+.ele2 {
+  position: absolute;
+  inset-inline: 0;
+  top: -40px;
+  z-index: -10;
+  transform: translateZ(0);
+  overflow: hidden;
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+.element {
+  position: relative;
+  left: calc(50% - 11rem);
+  aspect-ratio: 1155 / 678;
+  width: 36.125rem;
+  transform: translateX(-50%) rotate(30deg);
+  background: linear-gradient(to right, #ff80b5, #9089fc);
+  opacity: 0.3;
+  clip-path: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)';
+}
+.gradiant {
+  position: absolute;
+  left: -15%;
+  clip-path: polygon(2% 25%, 100% 0%, 99% 55%, 0% 100%);
+  transform: rotate(-10deg);
+  opacity: 0.5;
+  background: linear-gradient(to top right, #06b6d4, #9089fc);
+  width: 80%;
+  height: 300px;
+}
+
+@media (min-width: 640px) {
+  .element {
+    left: calc(50% - 30rem);
+    width: 72.1875rem;
+  }
+  .ele2 {
+    top: -80px;
+  }
+}
+
+.App-logo {
+  height: 40vmin;
+
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
