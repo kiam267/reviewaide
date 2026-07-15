@@ -17,8 +17,12 @@
     "enabled": false
   },
   "keywords": [],
-  "author": "",
+  "author": "Abid Hassan Kiam",
   "license": "ISC",
+  "engines": {
+    "node": "20.18.0",
+    "npm": "10.8.2"
+  },
   "dependencies": {
     "@prisma/client": "6.16.3",
     "@vercel/blob": "^2.0.0",

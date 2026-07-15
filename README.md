@@ -1,2 +1,20 @@
 # ReviewAide
-Reviewaide is a project that mainly collects people's reviews and by these reviews, understands whether this company good or bad.  
+Reviewaide mainly collects user reviews rather than helping vendors understand whether users are satisfied.
+
+ ## PROJECT VIDEO 
+  
+
+ ## Conecpt to Production History
+
+ ## Old Version to New Version 
+ 
+
+ ## Improvement
+
+ ## Features 
+
+ ## Stack 
+
+ ## Diployment
+
+ ## End 

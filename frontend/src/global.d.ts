@@ -22,7 +22,6 @@ declare module 'react-table';
 declare module 'react-draft-wysiwyg';
 declare module 'moment';
 declare module 'typescript';
-declare module 'google-maps-react';
 
 interface UserData {
   company_name: string;

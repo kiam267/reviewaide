@@ -28,5 +28,5 @@ the capability to create multiple QR codes.
 
 
 #### `Website Link`
-Review Aide (https://reviewaide.vercel.app/)
+Review Aide (https://reviewaide.vercel.app)
 
