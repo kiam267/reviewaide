@@ -11,14 +11,14 @@ import {
   Form,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import withRouter from 'Components/Common/withRouter';
+import withRouter from '../../Components/Common/withRouter';
 // Formik Validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { LoadingOutlined } from '@ant-design/icons';
 import { RESETPASSWORD_LINK } from '../../helpers/url_helper';
 import { Spin, message } from 'antd';
-import { useForgetPassword } from 'api/userApi';
+import { useForgetPassword } from '../../api/userApi';
 
 const ForgetPasswordPage = props => {
   const { userForgetPassword, isPending } = useForgetPassword();

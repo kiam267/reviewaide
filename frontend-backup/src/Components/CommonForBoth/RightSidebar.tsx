@@ -21,7 +21,7 @@ import {
   changeSidebarImageType,
   changeLayout,
   changeLeftSidebarType
-} from "slices/thunk";
+} from "../../slices/thunk";
 
 //constants
 import {

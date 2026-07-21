@@ -21,8 +21,8 @@ import logo from '../../assets/images/logo.svg';
 import logoLightSvg from '../../assets/images/logo-light.svg';
 
 //i18n
-import { useGetHeader } from 'api/userApi';
-import Logout from 'pages/auth/Logout';
+import { useGetHeader } from '../../api/userApi';
+import Logout from '../../pages/auth/Logout';
 
 const Header = (props: any) => {
   const [search, setsearch] = useState(false);

@@ -19,8 +19,8 @@ import {
   Spin,
 } from 'antd';
 import { REACT_APP_SERVER_API } from '../../helpers/url_helper';
-import CustomeContainer from 'Components/Common/CustomeContainer';
-import user from 'Layouts/user';
+import CustomeContainer from '../../Components/Common/CustomeContainer';
+import user from '../../Layouts/user';
 import { Alert, Form, FormFeedback, Input, Label } from 'reactstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -31,7 +31,7 @@ import {
   useDeletUserViaAdmin,
   useGetUserViaAdmin,
   useUpdateUserViaAdmin,
-} from 'api/adminApi';
+} from '../../api/adminApi';
 import { Navigate } from 'react-router-dom';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 

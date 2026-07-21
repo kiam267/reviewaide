@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import Breadcrumb from 'Components/Common/Breadcrumb';
-import CustomeContainer from 'Components/Common/CustomeContainer';
+import Breadcrumb from '../../Components/Common/Breadcrumb';
+import CustomeContainer from '../../Components/Common/CustomeContainer';
 import {
   Card,
   Col,
@@ -13,8 +13,8 @@ import {
   Skeleton,
 } from 'antd';
 import dateFormat from 'dateformat';
-import Logout from 'pages/auth/Logout';
-import { useGetClient } from 'api/clientApi';
+import Logout from '../../pages/auth/Logout';
+import { useGetClient } from '../../api/clientApi';
 function PrivateReview(props) {
   const sesstion = localStorage.getItem('user-token');
   const [clientSearch, setClientSearch] = useState<ClientSearchState>({

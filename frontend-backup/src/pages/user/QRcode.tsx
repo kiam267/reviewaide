@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import CustomeContainer from 'Components/Common/CustomeContainer';
+import CustomeContainer from '../../Components/Common/CustomeContainer';
 
 import { Card, QRCode, Button, Modal } from 'antd';
-import Logout from 'pages/auth/Logout';
+import Logout from '../../pages/auth/Logout';
 import { Row, Col } from 'reactstrap';
 import {
   useDeleteClientLink,
   useGetClientLink,
   useCretaeQrCodeLink,
-} from 'api/clientApi';
+} from '../../api/clientApi';
 
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Form, Input, Label, FormFeedback, Alert } from 'reactstrap';

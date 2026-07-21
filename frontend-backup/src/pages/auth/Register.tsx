@@ -18,8 +18,8 @@ import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 import { createSelector } from 'reselect';
-import { useAuth } from 'contexts/auth';
-import { useCreateAdmin } from 'api/adminApi';
+import { useAuth } from '../../contexts/auth';
+import { useCreateAdmin } from '../../api/adminApi';
 import { Spin } from 'antd';
 const Register = () => {
   const [show, setShow] = useState(false);

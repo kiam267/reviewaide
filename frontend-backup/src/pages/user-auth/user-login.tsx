@@ -15,12 +15,12 @@ import { LoadingOutlined } from '@ant-design/icons';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
-import { useUserAuth } from 'contexts/UserAuth';
+import { useUserAuth } from '../../contexts/UserAuth';
 
-import withRouter from 'Components/Common/withRouter';
+import withRouter from '../../Components/Common/withRouter';
 import { createSelector } from 'reselect';
-import CustomePass from 'Components/CustomePass';
-import { useMatchMyUser } from 'api/userApi';
+import CustomePass from '../../Components/CustomePass';
+import { useMatchMyUser } from '../../api/userApi';
 
 const UserLogin = (props: any) => {
   const { userLogin, isPending } = useMatchMyUser();
@@ -31,7 +31,7 @@ const UserLogin = (props: any) => {
     (state: any) => state.Login,
     login => ({
       error: login.error,
-    })
+    }),
   );
 
   const { error } = useSelector(selectProperties);
@@ -71,10 +71,13 @@ const UserLogin = (props: any) => {
       }}
     >
       <h1 className="text-center fs-1 fw-semibold my-5">
-        Wellcome to our <span className="text-gradients">ReviewAide</span>
+        Wellcome to our{' '}
+        <span className="text-gradients">ReviewAide</span>
       </h1>
       <div className="mb-3">
-        {error ? <Alert color="danger">{error}</Alert> : null}
+        {error ? (
+          <Alert color="danger">{error}</Alert>
+        ) : null}
         <Label className="form-label fs-5">Email</Label>
         <Input
           name="email"
@@ -85,11 +88,17 @@ const UserLogin = (props: any) => {
           onBlur={validation.handleBlur}
           value={validation.values.email || ''}
           invalid={
-            validation.touched.email && validation.errors.email ? true : false
+            validation.touched.email &&
+            validation.errors.email
+              ? true
+              : false
           }
         />
-        {validation.touched.email && validation.errors.email ? (
-          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
+        {validation.touched.email &&
+        validation.errors.email ? (
+          <FormFeedback type="invalid">
+            {validation.errors.email}
+          </FormFeedback>
         ) : null}
       </div>
       <CustomePass
@@ -125,7 +134,12 @@ const UserLogin = (props: any) => {
               style={{
                 color: '#FFFFFF',
               }}
-              indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+              indicator={
+                <LoadingOutlined
+                  style={{ fontSize: 24 }}
+                  spin
+                />
+              }
             />
           ) : (
             <>Log In</>

@@ -6,10 +6,10 @@ import { Card, Spin } from 'antd';
 import withRouter from '../../Components/Common/withRouter';
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
-import CustomeContainer from 'Components/Common/CustomeContainer';
+import CustomeContainer from '../../Components/Common/CustomeContainer';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useGetProfile, usePutUserInfo } from 'api/userApi';
+import { useGetProfile, usePutUserInfo } from '../../api/userApi';
 const UpdateProfile = (props: any) => {
   const [isEdit, setIsEdit] = useState(true);
   const token = localStorage.getItem('user-token');

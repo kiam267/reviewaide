@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 // Redux
-import { Link, useNavigate, Navigate } from 'react-router-dom';
+import {
+  Link,
+  useNavigate,
+  Navigate,
+} from 'react-router-dom';
 import {
   Row,
   Col,
@@ -21,12 +25,12 @@ import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOutlined } from '@ant-design/icons';
 
-import withRouter from 'Components/Common/withRouter';
+import withRouter from '../../Components/Common/withRouter';
 import { createSelector } from 'reselect';
 
-import { useAdminLogin } from 'api/adminApi';
+import { useAdminLogin } from '../../api/adminApi';
 import { Spin } from 'antd';
-import { useAuth } from 'contexts/auth';
+import { useAuth } from '../../contexts/auth';
 
 const Login = (props: any) => {
   const [show, setShow] = useState(false);
@@ -38,7 +42,7 @@ const Login = (props: any) => {
     (state: any) => state.Login,
     login => ({
       error: login.error,
-    })
+    }),
   );
 
   const { error } = useSelector(selectProperties);
@@ -54,10 +58,10 @@ const Login = (props: any) => {
     },
     validationSchema: Yup.object({
       email: Yup.string().required(
-        'Please Enter Your email'
+        'Please Enter Your email',
       ),
       password: Yup.string().required(
-        'Please Enter Your Password'
+        'Please Enter Your Password',
       ),
     }),
     onSubmit: async (values: any) => {
@@ -80,7 +84,10 @@ const Login = (props: any) => {
               <Card className="py-lg-5 rounded-5">
                 <CardBody className="pt-0">
                   <h1 className="fw-bold text-black  text-center p-3">
-                    REVIEW <span className="text-gradients">AIDE</span>
+                    REVIEW{' '}
+                    <span className="text-gradients">
+                      AIDE
+                    </span>
                   </h1>
                   <div className="p-2">
                     <Form
@@ -92,8 +99,14 @@ const Login = (props: any) => {
                       }}
                     >
                       <div className="mb-3">
-                        {error ? <Alert color="danger">{error}</Alert> : null}
-                        <Label className="form-label">Email</Label>
+                        {error ? (
+                          <Alert color="danger">
+                            {error}
+                          </Alert>
+                        ) : null}
+                        <Label className="form-label">
+                          Email
+                        </Label>
                         <Input
                           cl
                           name="email"
@@ -102,14 +115,18 @@ const Login = (props: any) => {
                           type="text"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.email || ''}
+                          value={
+                            validation.values.email || ''
+                          }
                           invalid={
-                            validation.touched.email && validation.errors.email
+                            validation.touched.email &&
+                            validation.errors.email
                               ? true
                               : false
                           }
                         />
-                        {validation.touched.email && validation.errors.email ? (
+                        {validation.touched.email &&
+                        validation.errors.email ? (
                           <FormFeedback type="invalid">
                             {validation.errors.email}
                           </FormFeedback>
@@ -117,15 +134,24 @@ const Login = (props: any) => {
                       </div>
 
                       <div className="mb-3">
-                        <Label className="form-label">Password</Label>
+                        <Label className="form-label">
+                          Password
+                        </Label>
                         <div className="input-group auth-pass-inputgroup">
                           <Input
                             className="rounded-start-pill"
                             name="password"
-                            value={validation.values.password || ''}
-                            type={show ? 'text' : 'password'}
+                            value={
+                              validation.values.password ||
+                              ''
+                            }
+                            type={
+                              show ? 'text' : 'password'
+                            }
                             placeholder="Enter Password"
-                            onChange={validation.handleChange}
+                            onChange={
+                              validation.handleChange
+                            }
                             onBlur={validation.handleBlur}
                             invalid={
                               validation.touched.password &&

@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  Navigate,
-  useLocation,
-} from 'react-router-dom';
-import UsersLayout from 'Layouts/user';
+import { Navigate, useLocation } from 'react-router-dom';
+import UsersLayout from '../Layouts/user';
 const UserAuthProtected = props => {
   const router = useLocation();
 
