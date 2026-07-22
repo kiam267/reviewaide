@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import withRouter from '../../Components/Common/withRouter';
+import withRouter from '@/components/Common/withRouter';
 import { Navigate } from 'react-router-dom';
 
-import { useAuth } from '../../contexts/auth';
+import { useAuth } from '@/contexts/auth';
 
 const Logout = () => {
   const { isLoggedIn, LogoutUser } = useAuth();

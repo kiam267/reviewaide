@@ -21,13 +21,13 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useParams, Link } from 'react-router-dom';
 import { Button, Spin } from 'antd';
-import boopSfx from '../../assets/sounds/mixkit-message-pop-alert-2354.mp3';
+import boopSfx from '@/assets/sounds/mixkit-message-pop-alert-2354.mp3';
 
-import { REACT_APP_SERVER_API } from '../../helpers/url_helper';
+import { API_URL as REACT_APP_SERVER_API } from '@/api/axiosConfig';
 import {
   useCreateClient,
   useReviewLogo,
-} from '../../api/clientApi';
+} from '@/hook/useClient';
 const ShortcutReview = () => {
   //meta title
   const { id } = useParams();

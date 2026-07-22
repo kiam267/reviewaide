@@ -25,12 +25,12 @@ import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOutlined } from '@ant-design/icons';
 
-import withRouter from '../../Components/Common/withRouter';
+import withRouter from '@/components/Common/withRouter';
 import { createSelector } from 'reselect';
 
-import { useAdminLogin } from '../../api/adminApi';
+import { useAdminLogin } from '@/hook/useAdmin';
 import { Spin } from 'antd';
-import { useAuth } from '../../contexts/auth';
+import { useAuth } from '@/contexts/auth';
 
 const Login = (props: any) => {
   const [show, setShow] = useState(false);

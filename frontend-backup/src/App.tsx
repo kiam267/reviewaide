@@ -1,16 +1,16 @@
 import React, { Suspense } from 'react';
-import './App.css';
+import './global.css';
 import './assets/scss/theme.scss';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from 'react-toastify';
 import { Route, Routes } from 'react-router-dom';
 import {
   AdminAuthProtectedRouter,
   publicRoutes,
   UserProtectedRouter,
-} from './Routes/allRoutes';
-import AdminAuthProtected from './Routes/AdminAuthProtected';
-import UserAuthProtected from './Routes/UserAuthProtected';
+} from '@/routes/allRoutes';
+import AdminAuthProtected from '@/routes/AdminAuthProtected';
+import UserAuthProtected from '@/routes/UserAuthProtected';
 
 function App() {
   return (

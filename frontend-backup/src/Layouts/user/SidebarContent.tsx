@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 //i18n
 import { withTranslation } from 'react-i18next';
-import withRouter from '../../Components/Common/withRouter';
+import withRouter from '@/components/Common/withRouter';
 import { Badge } from 'antd';
 
 const SidebarContent = (props: any) => {

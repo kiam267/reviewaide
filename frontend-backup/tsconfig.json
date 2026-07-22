@@ -9,20 +9,19 @@
     "noImplicitAny": false,
     "esModuleInterop": true,
     "module": "esnext",
+
     "paths": {
-      "@component/*": ["./src/Components/views/*"],
-      "@common/*": ["./src/Components/Common/*"],
-      "@assets/*": ["./src/Components/assets/*"],
-      "@shared/*": ["./src/app/_shared/*"],
-      "@helpers/*": ["./src/helpers/*"]
+      "@/*": ["./src/*"]
     },
+    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+
+  "include": ["next-env.d.ts", "src"],
   "exclude": ["node_modules"],
   "ignoreDeprecations": "6.0"
 }

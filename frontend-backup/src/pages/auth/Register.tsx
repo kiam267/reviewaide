@@ -18,8 +18,8 @@ import { useFormik } from 'formik';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Navigate } from 'react-router-dom';
 import { createSelector } from 'reselect';
-import { useAuth } from '../../contexts/auth';
-import { useCreateAdmin } from '../../api/adminApi';
+import { useAuth } from '@/contexts/auth';
+import { useCreateAdmin } from '@/hook/useAdmin';
 import { Spin } from 'antd';
 const Register = () => {
   const [show, setShow] = useState(false);
@@ -33,9 +33,15 @@ const Register = () => {
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().required('Please Enter Your Email'),
-      fullName: Yup.string().required('Please Enter Your fullName'),
-      password: Yup.string().required('Please Enter Your Password'),
+      email: Yup.string().required(
+        'Please Enter Your Email',
+      ),
+      fullName: Yup.string().required(
+        'Please Enter Your fullName',
+      ),
+      password: Yup.string().required(
+        'Please Enter Your Password',
+      ),
     }),
     onSubmit: async values => {
       await userSignUp(values);
@@ -68,11 +74,16 @@ const Register = () => {
                       }}
                     >
                       <h1 className="fw-bold text-black">
-                        REVIEW <span className="text-gradients">AIDE</span>
+                        REVIEW{' '}
+                        <span className="text-gradients">
+                          AIDE
+                        </span>
                       </h1>
 
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
+                        <Label className="form-label">
+                          Email
+                        </Label>
                         <Input
                           id="email"
                           name="email"
@@ -81,14 +92,18 @@ const Register = () => {
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.email || ''}
+                          value={
+                            validation.values.email || ''
+                          }
                           invalid={
-                            validation.touched.email && validation.errors.email
+                            validation.touched.email &&
+                            validation.errors.email
                               ? true
                               : false
                           }
                         />
-                        {validation.touched.email && validation.errors.email ? (
+                        {validation.touched.email &&
+                        validation.errors.email ? (
                           <FormFeedback type="invalid">
                             {validation.errors.email}
                           </FormFeedback>
@@ -96,14 +111,18 @@ const Register = () => {
                       </div>
 
                       <div className="mb-3">
-                        <Label className="form-label">fullName</Label>
+                        <Label className="form-label">
+                          fullName
+                        </Label>
                         <Input
                           name="fullName"
                           type="text"
                           placeholder="Enter fullName"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.fullName || ''}
+                          value={
+                            validation.values.fullName || ''
+                          }
                           invalid={
                             validation.touched.fullName &&
                             validation.errors.fullName
@@ -119,15 +138,24 @@ const Register = () => {
                         ) : null}
                       </div>
                       <div className="mb-3">
-                        <Label className="form-label">Password</Label>
+                        <Label className="form-label">
+                          Password
+                        </Label>
                         <div className="input-group auth-pass-inputgroup">
                           <Input
                             name="password"
-                            type={show ? 'text' : 'password'}
+                            type={
+                              show ? 'text' : 'password'
+                            }
                             placeholder="Enter Password"
-                            onChange={validation.handleChange}
+                            onChange={
+                              validation.handleChange
+                            }
                             onBlur={validation.handleBlur}
-                            value={validation.values.password || ''}
+                            value={
+                              validation.values.password ||
+                              ''
+                            }
                             invalid={
                               validation.touched.password &&
                               validation.errors.password
@@ -158,7 +186,6 @@ const Register = () => {
                           className="btn btn-block rounded-5 w-75 m-auto text-white fw-semibold "
                           type="submit"
                         >
-                          
                           {isPending ? (
                             <Spin
                               style={{

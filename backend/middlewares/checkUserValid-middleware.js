@@ -5,7 +5,11 @@ const isCheckUser = (req, res, next) => {
   const token = req.headers.token;
   const isVerified = verifyToken(token);
 
-  console.log(isVerified, token);
+  console.log(
+    isVerified,
+    token,
+    'Token come form /users/signup',
+  );
 
   if (!isVerified.valid) {
     return res.json(

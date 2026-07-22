@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Form, FormFeedback, Input, Label, Alert, Row, Col } from 'reactstrap';
+import {
+  Form,
+  FormFeedback,
+  Input,
+  Label,
+  Alert,
+  Row,
+  Col,
+} from 'reactstrap';
 import { Card, Spin } from 'antd';
 // Redux
-import withRouter from '../../Components/Common/withRouter';
+import withRouter from '@/components/Common/withRouter';
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
-import CustomeContainer from '../../Components/Common/CustomeContainer';
+import CustomeContainer from '@/components/Common/CustomeContainer';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useGetProfile, usePutUserInfo } from '../../api/userApi';
+import {
+  useGetProfile,
+  usePutUserInfo,
+} from '@/hook/useUser';
 const UpdateProfile = (props: any) => {
   const [isEdit, setIsEdit] = useState(true);
   const token = localStorage.getItem('user-token');
   const { getProfileInfo } = useGetProfile(token);
-  const { userMoreInfo, isPending, isSuccess } = usePutUserInfo();
+  const { userMoreInfo, isPending, isSuccess } =
+    usePutUserInfo();
 
   useEffect(() => {
     setIsEdit(true);
@@ -31,8 +43,12 @@ const UpdateProfile = (props: any) => {
       facebookLink: getProfileInfo?.data?.facebookLink,
     },
     validationSchema: Yup.object({
-      fullName: Yup.string().required('Please Enter Your fullName'),
-      phone: Yup.number().required('Please Enter Your phone number'),
+      fullName: Yup.string().required(
+        'Please Enter Your fullName',
+      ),
+      phone: Yup.number().required(
+        'Please Enter Your phone number',
+      ),
       // companyName: Yup.string().required('Please Enter Your Company Name'),
       // googleLink: Yup.string().required('Please Enter Your googleLink Link'),
       // facebookLink: Yup.string().required(
@@ -49,7 +65,7 @@ const UpdateProfile = (props: any) => {
     (state: any) => state.Login,
     login => ({
       error: login.error,
-    })
+    }),
   );
   const { error } = useSelector(selectProperties);
   return (
@@ -66,8 +82,12 @@ const UpdateProfile = (props: any) => {
               }}
             >
               <div className="mb-3">
-                {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label text-capitalize ">fullName</Label>
+                {error ? (
+                  <Alert color="danger">{error}</Alert>
+                ) : null}
+                <Label className="form-label text-capitalize ">
+                  fullName
+                </Label>
                 <Input
                   name="fullName"
                   className="form-control"
@@ -78,20 +98,26 @@ const UpdateProfile = (props: any) => {
                   onBlur={validation.handleBlur}
                   value={validation.values.fullName || ''}
                   invalid={
-                    validation.touched.fullName && validation.errors.fullName
+                    validation.touched.fullName &&
+                    validation.errors.fullName
                       ? true
                       : false
                   }
                 />
-                {validation.touched.fullName && validation.errors.fullName ? (
+                {validation.touched.fullName &&
+                validation.errors.fullName ? (
                   <FormFeedback type="invalid">
                     {validation.errors.fullName}
                   </FormFeedback>
                 ) : null}
               </div>
               <div className="mb-3">
-                {error ? <Alert color="danger">{error}</Alert> : null}
-                <Label className="form-label text-capitalize">phone</Label>
+                {error ? (
+                  <Alert color="danger">{error}</Alert>
+                ) : null}
+                <Label className="form-label text-capitalize">
+                  phone
+                </Label>
                 <Input
                   name="phone"
                   className="form-control"
@@ -102,12 +128,14 @@ const UpdateProfile = (props: any) => {
                   onBlur={validation.handleBlur}
                   value={validation.values.phone || ''}
                   invalid={
-                    validation.touched.phone && validation.errors.phone
+                    validation.touched.phone &&
+                    validation.errors.phone
                       ? true
                       : false
                   }
                 />
-                {validation.touched.phone && validation.errors.phone ? (
+                {validation.touched.phone &&
+                validation.errors.phone ? (
                   <FormFeedback type="invalid">
                     {validation.errors.phone}
                   </FormFeedback>
@@ -216,7 +244,10 @@ const UpdateProfile = (props: any) => {
                           color: '#FFFFFF',
                         }}
                         indicator={
-                          <LoadingOutlined style={{ fontSize: 24 }} spin />
+                          <LoadingOutlined
+                            style={{ fontSize: 24 }}
+                            spin
+                          />
                         }
                       />
                     ) : (

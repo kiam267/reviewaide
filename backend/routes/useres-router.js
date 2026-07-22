@@ -2,16 +2,21 @@ const express = require('express');
 const router = express.Router();
 const usresController = require('../controllers/useres-controller');
 const UserValidation = require('../middlewares/userValidation-middleware');
-const { isCheckUser } = require('../middlewares/checkUserValid-middleware');
+const {
+  isCheckUser,
+} = require('../middlewares/checkUserValid-middleware');
 const multer = require('multer');
 
-
-
-
 router.route('/').post(usresController.login);
-router.route('/forget-password').get(usresController.forgetPassword);
-router.route('/reset-password').get(usresController.resetPassword);
-router.route('/post-reset-password').post(usresController.postRestPassword);
+router
+  .route('/forget-password')
+  .get(usresController.forgetPassword);
+router
+  .route('/reset-password')
+  .get(usresController.resetPassword);
+router
+  .route('/post-reset-password')
+  .post(usresController.postRestPassword);
 
 // img storage confing
 // Multer configuration
@@ -43,16 +48,23 @@ let upload = multer({
 router
   .route('/sign-up')
   .get(isCheckUser, usresController.getSingleUser)
-  .post(isCheckUser, usresController.create);
-router.route('/users').get(isCheckUser, usresController.getUsers);
+  .post(usresController.create);
+
+router.route('/users').post(usresController.login);
 router
   .route('/')
   .get(isCheckUser, usresController.getDashboadData)
   .put(isCheckUser, usresController.miniUpdatePut);
 
-  router.route('/mini-update').get(isCheckUser, usresController.miniUpdateGet);
+router
+  .route('/mini-update')
+  .get(isCheckUser, usresController.miniUpdateGet);
 router
   .route('/update')
-  .put(isCheckUser, upload.single('imageURL'), usresController.update);
+  .put(
+    isCheckUser,
+    upload.single('imageURL'),
+    usresController.update,
+  );
 
 module.exports = router;

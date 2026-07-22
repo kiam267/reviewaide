@@ -11,7 +11,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-
+import '@mdi/font/css/materialdesignicons.min.css';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );

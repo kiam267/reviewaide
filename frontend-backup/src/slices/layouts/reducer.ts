@@ -8,7 +8,7 @@ import {
   LEFT_SIDEBAR_TYPES,
   LEFT_SIDEBAR_THEME_TYPES,
   LEFTBAR_THEME_IMAGES_TYPES
-} from "../../Components/constants/layout";
+} from "@/components/constants/layout";
 
 export interface LayoutState {
   layoutTypes: LAYOUT_TYPES.VERTICAL | LAYOUT_TYPES.HORIZONTAL,

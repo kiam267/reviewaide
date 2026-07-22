@@ -3,10 +3,10 @@ const { Queue } = require('bullmq');
 
 
 const connectionRedis = {
-  host: process.env.REDIS_HOST,
-  port: Number(process.env.REDIS_PORT), // important: convert to number
-  username: process.env.REDIS_USER,
-  password: process.env.REDIS_PASSWORD,
+  host: process.env.VALKEY_HOST,
+  port: Number(process.env.VALKEY_PORT), // important: convert to number
+  username: process.env.VALKEY_USER,
+  password: process.env.VALKEY_PASSWORD,
   tls: {},
 };
 

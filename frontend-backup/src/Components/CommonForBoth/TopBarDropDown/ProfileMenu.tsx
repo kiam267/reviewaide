@@ -10,16 +10,13 @@ import { Avatar, Badge } from 'antd';
 import { withTranslation } from 'react-i18next';
 // Redux
 import { Link } from 'react-router-dom';
-import withRouter from '../../Common/withRouter';
+import withRouter from '@/components/Common/withRouter';
 import { createSelector } from 'reselect';
-import { useUserAuth } from '../../../contexts/UserAuth';
+import { useUserAuth } from '@/contexts/UserAuth';
 // users
-import user1 from '../../../assets/images/users/avatar-1.jpg';
+import user1 from '@/assets/images/users/avatar-1.jpg';
 
 import { useSelector } from 'react-redux';
-import { log } from 'console';
-import axios from 'axios';
-import { REACT_APP_SERVER_API } from '../../../helpers/url_helper';
 
 const ProfileMenu = (props: any) => {
   const [menu, setMenu] = useState(false);
@@ -27,7 +24,7 @@ const ProfileMenu = (props: any) => {
     (state: any) => state.Avater,
     profile => ({
       name: profile.name,
-    })
+    }),
   );
 
   const { name } = useSelector(selectProfileProperties);
@@ -45,7 +42,8 @@ const ProfileMenu = (props: any) => {
           tag="button"
         >
           <Avatar size="default">
-            {props?.userName && props.userName.substring(0, 1)}
+            {props?.userName &&
+              props.userName.substring(0, 1)}
           </Avatar>
           <span className="d-none d-xl-inline-block ms-2 me-1">
             {props?.userName && props.userName.length > 5

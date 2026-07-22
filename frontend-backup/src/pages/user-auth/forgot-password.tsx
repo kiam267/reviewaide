@@ -11,17 +11,18 @@ import {
   Form,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import withRouter from '../../Components/Common/withRouter';
+import withRouter from '@/components/Common/withRouter';
 // Formik Validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { LoadingOutlined } from '@ant-design/icons';
-import { RESETPASSWORD_LINK } from '../../helpers/url_helper';
+// import { API_URL as RESETPASSWORD_LINK } from '@/api/axiosConfig';
 import { Spin, message } from 'antd';
-import { useForgetPassword } from '../../api/userApi';
-
+import { useForgetPassword } from '@/hook/useUser';
+// TODO: Need to add RESETPASSWORD_LINK add here
 const ForgetPasswordPage = props => {
-  const { userForgetPassword, isPending } = useForgetPassword();
+  const { userForgetPassword, isPending } =
+    useForgetPassword();
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -29,19 +30,17 @@ const ForgetPasswordPage = props => {
 
     initialValues: {
       email: '',
-      link: RESETPASSWORD_LINK,
+      link: 'RESETPASSWORD_LINK',
     },
     validationSchema: Yup.object({
-      email: Yup.string().required('Please Enter Your Email'),
+      email: Yup.string().required(
+        'Please Enter Your Email',
+      ),
     }),
     onSubmit: values => {
       userForgetPassword(values);
     },
   });
-
-
-
-
 
   return (
     <React.Fragment>
@@ -54,7 +53,9 @@ const ForgetPasswordPage = props => {
                   <Row>
                     <Col xs={7}>
                       <div className="text-black p-4">
-                        <h5 className="text-black">Forget Passowrd!</h5>
+                        <h5 className="text-black">
+                          Forget Passowrd!
+                        </h5>
                         <p>Sign in to continue to Docapt</p>
                       </div>
                     </Col>
@@ -84,7 +85,9 @@ const ForgetPasswordPage = props => {
                       }}
                     >
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
+                        <Label className="form-label">
+                          Email
+                        </Label>
                         <Input
                           name="email"
                           className="form-control"
@@ -92,14 +95,18 @@ const ForgetPasswordPage = props => {
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.email || ''}
+                          value={
+                            validation.values.email || ''
+                          }
                           invalid={
-                            validation.touched.email && validation.errors.email
+                            validation.touched.email &&
+                            validation.errors.email
                               ? true
                               : false
                           }
                         />
-                        {validation.touched.email && validation.errors.email ? (
+                        {validation.touched.email &&
+                        validation.errors.email ? (
                           <FormFeedback type="invalid">
                             {validation.errors.email}
                           </FormFeedback>
@@ -108,7 +115,9 @@ const ForgetPasswordPage = props => {
                       <Row className="mb-3">
                         <Col className="text-end">
                           <button
-                            style={{ background: '#F77857' }}
+                            style={{
+                              background: '#F77857',
+                            }}
                             className="btn w-md fw-semibold text-white "
                             type="submit"
                           >
@@ -137,7 +146,10 @@ const ForgetPasswordPage = props => {
               <div className="mt-5 text-center">
                 <p>
                   Go back to{' '}
-                  <Link to="/" className="font-weight-medium text-primary">
+                  <Link
+                    to="/"
+                    className="font-weight-medium text-primary"
+                  >
                     Login
                   </Link>{' '}
                 </p>

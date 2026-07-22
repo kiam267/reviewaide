@@ -2,21 +2,21 @@ import { Navigate } from 'react-router-dom';
 
 
 // Auth
-import Login from '../pages/auth/login';
-import Logout from '../pages/auth/Logout';
-import ForgotPassword from '../pages/user-auth/forgot-password';
-import SignUp from '../pages/auth/Register';
-import PrivateReview from '../pages/review/PrivateReview';
+import Login from '@/pages/auth/login';
+import Logout from '@/pages/auth/Logout';
+import ForgotPassword from '@/pages/user-auth/forgot-password';
+import SignUp from '@/pages/auth/Register';
+import PrivateReview from '@/pages/review/PrivateReview';
 
 
-import Pages404 from '../pages/pages-404';
-import Allusers from '../pages/admin/Allusers';
+import Pages404 from '@/pages/404';
+import Allusers from '@/pages/admin/Allusers';
 
-import { UpdateProfile, QRcode, ClientRecoard } from '../pages/user';
-import AdminLogout from '../pages/auth/AdminLogout';
-import ResetPassword from '../pages/user-auth/reset-password';
-import ShortcutReview from '../pages/user/ShortcutReview';
-import UserAuth from '../pages/user-auth/user-auth';
+import { UpdateProfile, QRcode, ClientRecoard } from '@/pages/user';
+import AdminLogout from '@/pages/auth/AdminLogout';
+import ResetPassword from '@/pages/user-auth/reset-password';
+import ShortcutReview from '@/pages/user/ShortcutReview';
+import UserAuth from '@/pages/user-auth/user-auth';
 
 import { lazy } from 'react';
 

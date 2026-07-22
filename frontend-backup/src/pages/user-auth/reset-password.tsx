@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { LoadingOutlined } from '@ant-design/icons';
-import { useResetPassword } from '../../api/userApi';
+import { useResetPassword } from '@/hook/useUser';
 import { Spin } from 'antd';
 function ResetPassword() {
   const { id, token } = useParams();
