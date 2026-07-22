@@ -50,7 +50,7 @@ router
   .get(isCheckUser, usresController.getSingleUser)
   .post(usresController.create);
 
-router.route('/users').post(usresController.login);
+router.route('/login').post(usresController.login);
 router
   .route('/')
   .get(isCheckUser, usresController.getDashboadData)

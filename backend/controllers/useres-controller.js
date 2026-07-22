@@ -11,17 +11,13 @@ const {
 const db = require('../utils/db');
 
 const login = async (req, res) => {
-  const { email, password, temporary } = req.body?.user;
-
+  const { email, password, temporary } = req.body;
   try {
     // 1. Check user
     const [rows] = await db.query(
       'SELECT * FROM users WHERE email = ?',
       [email],
     );
-
-    console.log('loop', rows);
-
     if (rows.length === 0) {
       return res.json(
         authErrorMessage(
@@ -60,7 +56,7 @@ const login = async (req, res) => {
       msg: { name: 'success' },
     });
   } catch (error) {
-    console.error(error);
+    console.error(error, req.body);
 
     return res.json(
       authErrorMessage('error', 'Something went wrong'),

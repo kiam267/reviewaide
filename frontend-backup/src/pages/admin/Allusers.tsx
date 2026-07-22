@@ -25,9 +25,7 @@ import {
   Modal,
   Spin,
 } from 'antd';
-import { API_URL } from '@/api/axiosConfig';
 import CustomeContainer from '@/components/Common/CustomeContainer';
-import user from '@/layouts/user';
 import {
   Alert,
   Form,
@@ -40,28 +38,13 @@ import * as Yup from 'yup';
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
 import {
-  UserViaAdminSeachState,
-  useDeletUserViaAdmin,
+  useDeleteUserViaAdmin,
   useGetUserViaAdmin,
   useUpdateUserViaAdmin,
 } from '@/hook/useAdmin';
 import { Navigate } from 'react-router-dom';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
-type UserStatus = 'active' | 'pending' | 'deactivated';
-interface DataType {
-  id: number;
-  fullName: string;
-  password: string;
-  email: string;
-  phone: number;
-  companyLogo: string;
-  companyName: string;
-  googleLink: string;
-  facebookLink: string;
-  userStatus: UserStatus;
-  createdAt: string;
-}
 function Allusers(props) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -82,12 +65,12 @@ function Allusers(props) {
     'admin-token',
   ) as string;
   //@ts-ignore
-  const { getUserInfo, refetch } = useGetUserViaAdmin(
-    token,
-    userSearch,
-  );
-  const { deleteUserViaAdmin, isSuccess: isDelteSuccess } =
-    useDeletUserViaAdmin();
+  const { getUserInfo, refetch } =
+    useGetUserViaAdmin(userSearch);
+  const {
+    data: deleteUserViaAdmin,
+    isSuccess: isDelteSuccess,
+  } = useDeleteUserViaAdmin();
 
   useEffect(() => {
     refetch();
@@ -421,7 +404,7 @@ function Allusers(props) {
   return (
     <CustomeContainer>
       {getUserInfo?.pagination?.total ? (
-        <Table
+        <Table<DataType>
           key={getUserInfo?.data?.email}
           columns={columns}
           //@ts-ignore
@@ -462,8 +445,11 @@ function UserEdit({
   );
 
   const { error } = useSelector(selectProperties);
-  const { updateUserViaAdmin, isPending, isSuccess } =
-    useUpdateUserViaAdmin();
+  const {
+    data: updateUserViaAdmin,
+    isPending,
+    isSuccess,
+  } = useUpdateUserViaAdmin();
   const token = localStorage.getItem('admin-token');
   const dateData = dateFormat(
     user?.createdAt,

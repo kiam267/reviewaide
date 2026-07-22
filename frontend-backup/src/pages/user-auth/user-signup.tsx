@@ -20,7 +20,7 @@ import { createSelector } from 'reselect';
 import CustomePass from '@/components/CustomePass';
 import { useCreateUser } from '@/hook/useUser';
 function UserSignUp() {
-  const { userSignUp, isPending } = useCreateUser();
+  const { mutate: userSignUp, isPending } = useCreateUser();
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({

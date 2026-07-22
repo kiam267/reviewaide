@@ -4,7 +4,7 @@ import UsersLayout from '@/layouts/user';
 const UserAuthProtected = props => {
   const router = useLocation();
 
-  if (!localStorage.getItem('user-token')) {
+  if (!localStorage.getItem('token')) {
     return <Navigate to={{ pathname: '/' }} />;
   }
 

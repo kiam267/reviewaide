@@ -10,10 +10,12 @@ export const useMatchMyUser = () => {
     mutationKey: ['user-login'],
 
     mutationFn: (user: Login) =>
-      apiClient.post<any>('/api/users', user),
+      apiClient.post<any>('/api/users/login', user),
 
     onSuccess: data => {
-      if (!data?.success) {
+      console.log(data);
+      
+      if (!data) {
         toast.error(data.message);
         return;
       }
@@ -21,7 +23,7 @@ export const useMatchMyUser = () => {
       toast.success(data.message);
 
       if (data.token) {
-        localStorage.setItem('user-token', data.token);
+        localStorage.setItem('token', data.token);
         window.location.href = '/user';
       }
     },

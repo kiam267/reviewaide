@@ -7,7 +7,7 @@ import { Row, Col } from 'reactstrap';
 import {
   useDeleteClientLink,
   useGetClientLink,
-  useCretaeQrCodeLink,
+  useCreateQrCodeLink,
 } from '@/hook/useClient';
 
 import {
@@ -36,13 +36,8 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { REVIEW_LINK } from '@/helpers/url_helper';
 function QRcode() {
-  const token = localStorage.getItem(
-    'user-token',
-  ) as string;
-
   //@ts-ignore
-  const { getClientLinkInfo, refetch } =
-    useGetClientLink(token);
+  const { getClientLinkInfo, refetch } = useGetClientLink();
 
   const handelQrCodeGenThenReaf = async () => {
     refetch();
@@ -156,8 +151,11 @@ function QrGenForm({
   // api call to create a new qr code
   const token: string | null =
     localStorage.getItem('user-token');
-  const { createQRCode, isSuccess, isPending } =
-    useCretaeQrCodeLink();
+  const {
+    data: createQRCode,
+    isSuccess,
+    isPending,
+  } = useCreateQrCodeLink();
   const { error } = useSelector(selectProperties);
 
   useEffect(() => {
@@ -443,8 +441,11 @@ function QrCodeItem({
   // api call for deleting current qrcode image
   const token: string | null =
     localStorage.getItem('user-token');
-  const { createClient, isSuccess, isPending } =
-    useDeleteClientLink();
+  const {
+    data: createClient,
+    isSuccess,
+    isPending,
+  } = useDeleteClientLink();
   const QRCodeDeleteButton = async ({ id }) => {
     await createClient({
       //@ts-ignore

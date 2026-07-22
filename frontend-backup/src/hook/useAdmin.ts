@@ -23,7 +23,7 @@ export const useAdminLogin = () => {
 
     onSuccess: data => {
       toast.success(data.message);
-      localStorage.setItem('admin-token', data.token);
+      localStorage.setItem('token', data.token);
       window.location.href = '/super-admin/allUsers';
     },
 
