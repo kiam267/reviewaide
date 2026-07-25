@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Row,
@@ -11,57 +11,59 @@ import {
   Input,
   FormFeedback,
   Form,
-} from "reactstrap";
+} from 'reactstrap';
 
 // Formik Validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
 
-import withRouter from "Components/Common/withRouter";
+import withRouter from '@/components/Common/withRouter';
 
 //Import Breadcrumb
-import Breadcrumb from "Components/Common/Breadcrumb";
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
-import avatar from "../../assets/images/users/avatar-1.jpg";
+import avatar from '@/assets/images/users/avatar-1.jpg';
 
 // import { editProfile, resetProfileFlag } from "slices/thunk";
 import { createSelector } from 'reselect';
 
 const UserProfile = () => {
-
-
   const dispatch = useDispatch<any>();
 
-  const [email, setEmail] = useState("admin@gmail.com");
+  const [email, setEmail] = useState('admin@gmail.com');
   const [name, setName] = useState(null);
   const [idx, setIdx] = useState(1);
 
   const selectProperties = createSelector(
     (state: any) => state.Profile,
-    (profile) => ({
+    profile => ({
       user: profile.user,
       error: profile.error,
-      success: profile.success
-    })
+      success: profile.success,
+    }),
   );
 
-  const { error, success, user } = useSelector(selectProperties);
+  const { error, success, user } = useSelector(
+    selectProperties,
+  );
 
   useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      const storedUser: any = localStorage.getItem("authUser");
+    if (localStorage.getItem('authUser')) {
+      const storedUser: any =
+        localStorage.getItem('authUser');
       const obj = JSON.parse(storedUser);
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-
+      if (
+        import.meta.env.VITE_DEFAULT_AUTH === 'firebase'
+      ) {
         setName(obj.displayName);
         setEmail(obj.email);
         setIdx(obj.uid);
       } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
+        import.meta.env.VITE_DEFAULT_AUTH === 'fake' ||
+        import.meta.env.VITE_DEFAULT_AUTH === 'jwt'
       ) {
         setName(user?.username);
         setEmail(user?.email);
@@ -82,11 +84,13 @@ const UserProfile = () => {
       idx: idx || 1,
     },
     validationSchema: Yup.object({
-      username: Yup.string().required("Please Enter Your UserName"),
+      username: Yup.string().required(
+        'Please Enter Your UserName',
+      ),
     }),
-    onSubmit: (values) => {
+    onSubmit: values => {
       // dispatch(editProfile(values));
-    }
+    },
   });
 
   return (
@@ -94,12 +98,19 @@ const UserProfile = () => {
       <div className="page-content">
         <Container fluid>
           {/* Render Breadcrumb */}
-          <Breadcrumb title="Skote" breadcrumbItem="Profile" />
+          <Breadcrumb
+            title="Skote"
+            breadcrumbItem="Profile"
+          />
 
           <Row>
             <Col lg="12">
-              {error && error ? <Alert color="danger">{error}</Alert> : null}
-              {success ? <Alert color="success">{success}</Alert> : null}
+              {error && error ? (
+                <Alert color="danger">{error}</Alert>
+              ) : null}
+              {success ? (
+                <Alert color="success">{success}</Alert>
+              ) : null}
 
               <Card>
                 <CardBody>
@@ -113,9 +124,13 @@ const UserProfile = () => {
                     </div>
                     <div className="flex-grow-1 align-self-center">
                       <div className="text-muted">
-                        <h5>{name || "admin"}</h5>
-                        <p className="mb-1">{email || "admin@gmail.com"}</p>
-                        <p className="mb-0">Id no: #{idx || 1}</p>
+                        <h5>{name || 'admin'}</h5>
+                        <p className="mb-1">
+                          {email || 'admin@gmail.com'}
+                        </p>
+                        <p className="mb-0">
+                          Id no: #{idx || 1}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -124,20 +139,24 @@ const UserProfile = () => {
             </Col>
           </Row>
 
-          <h4 className="card-title mb-4">Change User Name</h4>
+          <h4 className="card-title mb-4">
+            Change User Name
+          </h4>
 
           <Card>
             <CardBody>
               <Form
                 className="form-horizontal"
-                onSubmit={(e) => {
+                onSubmit={e => {
                   e.preventDefault();
                   validation.handleSubmit();
                   return false;
                 }}
               >
                 <div className="form-group">
-                  <Label className="form-label">User Name</Label>
+                  <Label className="form-label">
+                    User Name
+                  </Label>
                   <Input
                     name="username"
                     className="form-control"
@@ -145,13 +164,19 @@ const UserProfile = () => {
                     type="text"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.username || ""}
+                    value={validation.values.username || ''}
                     invalid={
-                      validation.touched.username && validation.errors.username ? true : false
+                      validation.touched.username &&
+                      validation.errors.username
+                        ? true
+                        : false
                     }
                   />
-                  {validation.touched.username && validation.errors.username ? (
-                    <FormFeedback type="invalid">{validation.errors.username}</FormFeedback>
+                  {validation.touched.username &&
+                  validation.errors.username ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.username}
+                    </FormFeedback>
                   ) : null}
                   {/* <Input name="idx" value={idx} type="hidden" /> */}
                 </div>

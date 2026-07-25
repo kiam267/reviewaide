@@ -21,19 +21,28 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useParams, Link } from 'react-router-dom';
 import { Button, Spin } from 'antd';
-import boopSfx from '../../assets/sounds/mixkit-message-pop-alert-2354.mp3';
+import boopSfx from '@/assets/sounds/mixkit-message-pop-alert-2354.mp3';
 
-import { REACT_APP_SERVER_API } from '../../helpers/url_helper';
-import { useCreateClient, useReviewLogo } from 'api/clientApi';
+import { API_URL as REACT_APP_SERVER_API } from '@/api/axiosConfig';
+import {
+  useCreateClient,
+  useReviewLogo,
+} from '@/hook/useClient';
 const ShortcutReview = () => {
   //meta title
   const { id } = useParams();
   const { createClient, isPending } = useCreateClient();
-  const { getReviewLogoInfo } = useReviewLogo({ uniqueId: String(id) });
-  const [textareabadge, settextareabadge] = useState(0) as any[];
+  const { getReviewLogoInfo } = useReviewLogo({
+    uniqueId: String(id),
+  });
+  const [textareabadge, settextareabadge] = useState(
+    0,
+  ) as any[];
   const [textcount, settextcount] = useState(0);
   const [rating, setRating] = useState<number>(4);
-  const [method, setMethod] = useState<'facebook' | 'google'>();
+  const [method, setMethod] = useState<
+    'facebook' | 'google'
+  >();
 
   const [retingShow, setRatingShow] = useState(true);
 
@@ -48,7 +57,11 @@ const ShortcutReview = () => {
   type Method = 'facebook' | 'google';
 
   const methodHandeler = async (id, method: Method) => {
-    await createClient({ id: id.toString(), method, rating });
+    await createClient({
+      id: id.toString(),
+      method,
+      rating,
+    });
   };
   const paly = () => {
     const audio = new Audio(boopSfx);
@@ -59,7 +72,7 @@ const ShortcutReview = () => {
     (state: any) => state.Login,
     login => ({
       error: login.error,
-    })
+    }),
   );
 
   const { error } = useSelector(selectProperties);
@@ -91,7 +104,9 @@ const ShortcutReview = () => {
       rating,
     },
     validationSchema: Yup.object({
-      clientMessage: Yup.string().required('Please Enter Your Textarea'),
+      clientMessage: Yup.string().required(
+        'Please Enter Your Textarea',
+      ),
       clientName: Yup.string(),
     }),
     onSubmit: async (values: CreateClient) => {
@@ -128,9 +143,10 @@ const ShortcutReview = () => {
                         {retingShow ? (
                           <div className="p-4 text-center">
                             <h5 className="font-16 m-b-15 fs-5">
-                              We kindly invite you to rate our service using
-                              below. Your feedback is greatly valued and helps
-                              us improve.
+                              We kindly invite you to rate
+                              our service using below. Your
+                              feedback is greatly valued and
+                              helps us improve.
                             </h5>
 
                             <Rating
@@ -155,7 +171,9 @@ const ShortcutReview = () => {
                                   overflow: 'hidden',
                                   minHeight: '50px',
                                 }}
-                                onClick={() => setRatingShow(false)}
+                                onClick={() =>
+                                  setRatingShow(false)
+                                }
                               >
                                 <i className="bx bx-right-arrow-alt fs-2 animation"></i>
                               </Button>
@@ -166,16 +184,21 @@ const ShortcutReview = () => {
                             {rating > 3 ? (
                               <div className="mt-5 mb-3 rounded-4">
                                 <h4 className=" text-center mb-4 fs-5 lh-base">
-                                  Thank you for planning to review us! If you
-                                  could share your experience on Google or
-                                  social media, it would greatly benefit our
-                                  community and help us grow.
+                                  Thank you for planning to
+                                  review us! If you could
+                                  share your experience on
+                                  Google or social media, it
+                                  would greatly benefit our
+                                  community and help us
+                                  grow.
                                 </h4>
                                 <div className="d-flex jsutify-content-center">
                                   <Link
                                     style={{
                                       display: `${
-                                        getReviewLogoInfo?.data?.googleLink ===
+                                        getReviewLogoInfo
+                                          ?.data
+                                          ?.googleLink ===
                                         ''
                                           ? 'none'
                                           : 'block'
@@ -183,23 +206,30 @@ const ShortcutReview = () => {
                                       background: '#F6653F',
                                     }}
                                     to={
-                                      getReviewLogoInfo?.data
+                                      getReviewLogoInfo
+                                        ?.data
                                         ?.googleLink as string
                                     }
                                     className="btn btn-primary  m-auto w-75  border-0"
                                     onClick={() => {
-                                      methodHandeler(id, 'google');
+                                      methodHandeler(
+                                        id,
+                                        'google',
+                                      );
                                       setMethod('google');
                                     }}
                                   >
-                                    {isPending && method === 'google' ? (
+                                    {isPending &&
+                                    method === 'google' ? (
                                       <Spin
                                         style={{
                                           color: '#FFFFFF',
                                         }}
                                         indicator={
                                           <LoadingOutlined
-                                            style={{ fontSize: 24 }}
+                                            style={{
+                                              fontSize: 24,
+                                            }}
                                             spin
                                           />
                                         }
@@ -207,7 +237,9 @@ const ShortcutReview = () => {
                                     ) : (
                                       <i
                                         className="bx bxl-google"
-                                        style={{ fontSize: '40px' }}
+                                        style={{
+                                          fontSize: '40px',
+                                        }}
                                       ></i>
                                     )}
                                   </Link>
@@ -216,32 +248,42 @@ const ShortcutReview = () => {
                                   <Link
                                     style={{
                                       display: `${
-                                        getReviewLogoInfo?.data
-                                          ?.facebookLink === ''
+                                        getReviewLogoInfo
+                                          ?.data
+                                          ?.facebookLink ===
+                                        ''
                                           ? 'none'
                                           : 'block'
                                       }`,
                                       background: '#F6653F',
                                     }}
                                     to={
-                                      getReviewLogoInfo?.data
+                                      getReviewLogoInfo
+                                        ?.data
                                         ?.facebookLink as string
                                     }
                                     className="btn btn-primary  m-auto w-75 border-0"
                                     type="submit"
                                     onClick={() => {
-                                      methodHandeler(id, 'facebook');
+                                      methodHandeler(
+                                        id,
+                                        'facebook',
+                                      );
                                       setMethod('facebook');
                                     }}
                                   >
-                                    {isPending && method === 'facebook' ? (
+                                    {isPending &&
+                                    method ===
+                                      'facebook' ? (
                                       <Spin
                                         style={{
                                           color: '#FFFFFF',
                                         }}
                                         indicator={
                                           <LoadingOutlined
-                                            style={{ fontSize: 24 }}
+                                            style={{
+                                              fontSize: 24,
+                                            }}
                                             spin
                                           />
                                         }
@@ -249,7 +291,9 @@ const ShortcutReview = () => {
                                     ) : (
                                       <i
                                         className="bx bxl-facebook-circle"
-                                        style={{ fontSize: '40px' }}
+                                        style={{
+                                          fontSize: '40px',
+                                        }}
                                       ></i>
                                     )}
                                   </Link>
@@ -268,35 +312,48 @@ const ShortcutReview = () => {
                                   >
                                     <div className="mb-3">
                                       <Label className="fs-5">
-                                        Share your recent visit experience with
-                                        us! Leave your name and feedback below.
+                                        Share your recent
+                                        visit experience
+                                        with us! Leave your
+                                        name and feedback
+                                        below.
                                       </Label>
                                       <Input
                                         style={{
-                                          borderColor: '#F6653F',
+                                          borderColor:
+                                            '#F6653F',
                                         }}
                                         name="clientName"
                                         type="text"
                                         className="fs-5"
-                                        onChange={validation.handleChange}
+                                        onChange={
+                                          validation.handleChange
+                                        }
                                         value={
-                                          validation.values.clientName || ''
+                                          validation.values
+                                            .clientName ||
+                                          ''
                                         }
                                         placeholder="Enter Your Name "
                                       />
                                     </div>
                                     <div className="mb-3">
                                       {error ? (
-                                        <Alert color="danger">{error}</Alert>
+                                        <Alert color="danger">
+                                          {error}
+                                        </Alert>
                                       ) : null}
                                       <Label className="fs-5">
-                                        We value your feedback as it helps us
-                                        enhance our services.
+                                        We value your
+                                        feedback as it helps
+                                        us enhance our
+                                        services.
                                       </Label>
                                       <Input
                                         style={{
                                           height: '150px',
-                                          borderColor: '#F6653F',
+                                          borderColor:
+                                            '#F6653F',
                                         }}
                                         name="clientMessage"
                                         type="textarea"
@@ -304,15 +361,23 @@ const ShortcutReview = () => {
                                         className="fs-5"
                                         onChange={e => {
                                           textareachange(e);
-                                          validation.handleChange(e);
+                                          validation.handleChange(
+                                            e,
+                                          );
                                         }}
-                                        onBlur={validation.handleBlur}
+                                        onBlur={
+                                          validation.handleBlur
+                                        }
                                         value={
-                                          validation.values.clientMessage || ''
+                                          validation.values
+                                            .clientMessage ||
+                                          ''
                                         }
                                         invalid={
-                                          validation.touched.clientMessage &&
-                                          validation.errors.clientMessage
+                                          validation.touched
+                                            .clientMessage &&
+                                          validation.errors
+                                            .clientMessage
                                             ? true
                                             : false
                                         }
@@ -320,16 +385,23 @@ const ShortcutReview = () => {
                                         rows="3"
                                         placeholder="Write your Feedback...."
                                       />
-                                      {validation.touched.clientMessage &&
-                                      validation.errors.clientMessage ? (
+                                      {validation.touched
+                                        .clientMessage &&
+                                      validation.errors
+                                        .clientMessage ? (
                                         <FormFeedback type="invalid">
-                                          {validation.errors.clientMessage}
+                                          {
+                                            validation
+                                              .errors
+                                              .clientMessage
+                                          }
                                         </FormFeedback>
                                       ) : null}
                                       {textareabadge ? (
                                         <span className="badgecount badge bg-success">
                                           {' '}
-                                          {textcount} / 900{' '}
+                                          {textcount} /
+                                          900{' '}
                                         </span>
                                       ) : null}
                                     </div>
@@ -338,7 +410,8 @@ const ShortcutReview = () => {
                                       <button
                                         type="submit"
                                         style={{
-                                          background: '#F6653F',
+                                          background:
+                                            '#F6653F',
                                         }}
                                         // onClick={handleClick}
                                         className="btn btn-block fs-5 px-5 py-2 text-white fw-semibold rounded-5 shadow"
@@ -346,11 +419,14 @@ const ShortcutReview = () => {
                                         {isPending ? (
                                           <Spin
                                             style={{
-                                              color: '#FFFFFF',
+                                              color:
+                                                '#FFFFFF',
                                             }}
                                             indicator={
                                               <LoadingOutlined
-                                                style={{ fontSize: 24 }}
+                                                style={{
+                                                  fontSize: 24,
+                                                }}
                                                 spin
                                               />
                                             }
@@ -402,7 +478,9 @@ const ShortcutReview = () => {
           </Container>
         </div>
       ) : (
-        <h1 className="text-center p-3">This URL Not Valid</h1>
+        <h1 className="text-center p-3">
+          This URL Not Valid
+        </h1>
       )}
     </React.Fragment>
   );

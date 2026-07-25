@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { SearchOutlined, LoadingOutlined } from '@ant-design/icons';
-import type { GetRef, TableColumnsType, TableColumnType } from 'antd';
+import {
+  SearchOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
+import type {
+  GetRef,
+  TableColumnsType,
+  TableColumnType,
+} from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import dateFormat from 'dateformat';
 import Highlighter from 'react-highlight-words';
@@ -18,56 +25,52 @@ import {
   Modal,
   Spin,
 } from 'antd';
-import { REACT_APP_SERVER_API } from '../../helpers/url_helper';
-import CustomeContainer from 'Components/Common/CustomeContainer';
-import user from 'Layouts/user';
-import { Alert, Form, FormFeedback, Input, Label } from 'reactstrap';
+import CustomeContainer from '@/components/Common/CustomeContainer';
+import {
+  Alert,
+  Form,
+  FormFeedback,
+  Input,
+  Label,
+} from 'reactstrap';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
 import {
-  UserViaAdminSeachState,
-  useDeletUserViaAdmin,
+  useDeleteUserViaAdmin,
   useGetUserViaAdmin,
   useUpdateUserViaAdmin,
-} from 'api/adminApi';
+} from '@/hook/useAdmin';
 import { Navigate } from 'react-router-dom';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
-type UserStatus = 'active' | 'pending' | 'deactivated';
-interface DataType {
-  id: number;
-  fullName: string;
-  password: string;
-  email: string;
-  phone: number;
-  companyLogo: string;
-  companyName: string;
-  googleLink: string;
-  facebookLink: string;
-  userStatus: UserStatus;
-  createdAt: string;
-}
 function Allusers(props) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
-  const [selectedUser, setSelectedUser] = useState<DataType>();
+  const [selectedUser, setSelectedUser] =
+    useState<DataType>();
   const { confirm } = Modal;
-  const [userSearch, setUserSearch] = useState<UserViaAdminSeachState>({
-    page: 1,
-    searchCompanyName: '',
-    searchPhoneNumber: '',
-    searchUserEmail: '',
-    searchUserName: '',
-    searchUserStatus: '',
-  });
-  const token = localStorage.getItem('admin-token');
+  const [userSearch, setUserSearch] =
+    useState<UserViaAdminSeachState>({
+      page: 1,
+      searchCompanyName: '',
+      searchPhoneNumber: '',
+      searchUserEmail: '',
+      searchUserName: '',
+      searchUserStatus: '',
+    });
+  const token = localStorage.getItem(
+    'admin-token',
+  ) as string;
   //@ts-ignore
-  const { getUserInfo, refetch } = useGetUserViaAdmin(token, userSearch);
-  const { deleteUserViaAdmin, isSuccess: isDelteSuccess } =
-    useDeletUserViaAdmin();
+  const { getUserInfo, refetch } =
+    useGetUserViaAdmin(userSearch);
+  const {
+    data: deleteUserViaAdmin,
+    isSuccess: isDelteSuccess,
+  } = useDeleteUserViaAdmin();
 
   useEffect(() => {
     refetch();
@@ -81,8 +84,6 @@ function Allusers(props) {
   };
 
   const [open, setOpen] = useState(false);
-
-
 
   type InputRef = GetRef<typeof ANTInput>;
 
@@ -106,7 +107,10 @@ function Allusers(props) {
         //@ts-ignore
         await deleteUserViaAdmin({ email, token });
         return new Promise((resolve, reject) => {
-          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+          setTimeout(
+            Math.random() > 0.5 ? resolve : reject,
+            1000,
+          );
         }).catch(() => console.log('Oops errors!'));
       },
     });
@@ -114,7 +118,7 @@ function Allusers(props) {
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -125,14 +129,18 @@ function Allusers(props) {
     clearFilters();
     setSearchText('');
   };
-  const handelUpdateUser = ({ isChange }: { isChange: boolean }) => {
+  const handelUpdateUser = ({
+    isChange,
+  }: {
+    isChange: boolean;
+  }) => {
     if (isChange) {
       refetch();
     }
   };
 
   const getColumnSearchProps = (
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ): TableColumnType<DataType> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -140,16 +148,25 @@ function Allusers(props) {
       confirm,
       clearFilters,
     }) => (
-      <div style={{ padding: 8 }} onKeyDown={e => e.stopPropagation()}>
+      <div
+        style={{ padding: 8 }}
+        onKeyDown={e => e.stopPropagation()}
+      >
         <ANTInput
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
+            setSelectedKeys(
+              e.target.value ? [e.target.value] : [],
+            )
           }
           onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
+            handleSearch(
+              selectedKeys as string[],
+              confirm,
+              dataIndex,
+            )
           }
           style={{ marginBottom: 8, display: 'block' }}
         />
@@ -181,7 +198,11 @@ function Allusers(props) {
                     : pre.searchUserStatus,
               }));
 
-              handleSearch(selectedKeys as string[], confirm, dataIndex);
+              handleSearch(
+                selectedKeys as string[],
+                confirm,
+                dataIndex,
+              );
             }}
             icon={<SearchOutlined />}
             size="small"
@@ -213,7 +234,9 @@ function Allusers(props) {
       </div>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      <SearchOutlined
+        style={{ color: filtered ? '#1677ff' : undefined }}
+      />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -228,7 +251,10 @@ function Allusers(props) {
     render: text =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
           searchWords={[searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
@@ -238,16 +264,17 @@ function Allusers(props) {
       ),
   });
 
-
-  
-
   const columns: TableColumnsType<DataType> = [
     {
       title: 'User Image',
       dataIndex: 'companyLogo',
       key: 'companyLogo',
       render: (_, item) => {
-        return <Avatar>{item?.fullName.trim().substring(0, 1)}</Avatar>;
+        return (
+          <Avatar>
+            {item?.fullName.trim().substring(0, 1)}
+          </Avatar>
+        );
       },
     },
     {
@@ -320,7 +347,10 @@ function Allusers(props) {
       key: 'createdAt',
       width: '30%',
       render: (_, data) => {
-        const dateData = dateFormat(data.createdAt, 'ddd, mmm dS, yyyy');
+        const dateData = dateFormat(
+          data.createdAt,
+          'ddd, mmm dS, yyyy',
+        );
         return <p>{dateData}</p>;
       },
     },
@@ -347,13 +377,17 @@ function Allusers(props) {
               onClose={onClose}
               open={open}
               user={selectedUser}
-              handelUpdateUser={isChange => handelUpdateUser({ isChange })}
+              handelUpdateUser={isChange =>
+                handelUpdateUser({ isChange })
+              }
             />
             <Button
               danger
               className="rounded-5"
               style={{ border: ' 1px solid #F6653F' }}
-              onClick={() => showDeleteConfirm(record.email)}
+              onClick={() =>
+                showDeleteConfirm(record.email)
+              }
               type="dashed"
             >
               <i className="bx bxs-trash-alt"></i>
@@ -370,11 +404,13 @@ function Allusers(props) {
   return (
     <CustomeContainer>
       {getUserInfo?.pagination?.total ? (
-        <Table
+        <Table<DataType>
           key={getUserInfo?.data?.email}
           columns={columns}
           //@ts-ignore
-          dataSource={getUserInfo?.data as (User | undefined)[]}
+          dataSource={
+            getUserInfo?.data as (User | undefined)[]
+          }
           pagination={{
             pageSize: 10,
             current: getUserInfo?.pagination?.page || 1,
@@ -405,14 +441,20 @@ function UserEdit({
     (state: any) => state.Login,
     login => ({
       error: login.error,
-    })
+    }),
   );
 
-
   const { error } = useSelector(selectProperties);
-  const { updateUserViaAdmin, isPending, isSuccess } = useUpdateUserViaAdmin();
+  const {
+    data: updateUserViaAdmin,
+    isPending,
+    isSuccess,
+  } = useUpdateUserViaAdmin();
   const token = localStorage.getItem('admin-token');
-  const dateData = dateFormat(user?.createdAt, 'ddd, mmm dS, yyyy');
+  const dateData = dateFormat(
+    user?.createdAt,
+    'ddd, mmm dS, yyyy',
+  );
   const validation: any = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -428,8 +470,13 @@ function UserEdit({
     },
     validationSchema: Yup.object({
       fullName: Yup.string().required('Enter your name'),
-      email: Yup.string().email().trim().required('Enter your email'),
-      phone: Yup.number().required('Enter your phone number'),
+      email: Yup.string()
+        .email()
+        .trim()
+        .required('Enter your email'),
+      phone: Yup.number().required(
+        'Enter your phone number',
+      ),
       // companyName: Yup.string(),
       // facebookLink: Yup.string(),
       // googleLink: Yup.string(),
@@ -440,9 +487,6 @@ function UserEdit({
       await updateUserViaAdmin({ token, user: values });
     },
   });
-
-
-  
 
   useEffect(() => {
     if (isSuccess) handelUpdateUser(isSuccess);
@@ -459,7 +503,9 @@ function UserEdit({
         }}
       >
         <div className="mb-3">
-          {error ? <Alert color="danger">{error}</Alert> : null}
+          {error ? (
+            <Alert color="danger">{error}</Alert>
+          ) : null}
           <Label className="form-label">Name</Label>
           <Input
             name="fullName"
@@ -470,19 +516,23 @@ function UserEdit({
             onBlur={validation.handleBlur}
             value={validation.values.fullName || ''}
             invalid={
-              validation.touched.fullName && validation.errors.fullName
+              validation.touched.fullName &&
+              validation.errors.fullName
                 ? true
                 : false
             }
           />
-          {validation.touched.fullName && validation.errors.fullName ? (
+          {validation.touched.fullName &&
+          validation.errors.fullName ? (
             <FormFeedback type="invalid">
               {validation.errors.fullName}
             </FormFeedback>
           ) : null}
         </div>
         <div className="mb-3">
-          {error ? <Alert color="danger">{error}</Alert> : null}
+          {error ? (
+            <Alert color="danger">{error}</Alert>
+          ) : null}
           <Label className="form-label">Email</Label>
           <Input
             name="email"
@@ -494,17 +544,23 @@ function UserEdit({
             onBlur={validation.handleBlur}
             value={validation.values.email || ''}
             invalid={
-              validation.touched.email && validation.errors.email ? true : false
+              validation.touched.email &&
+              validation.errors.email
+                ? true
+                : false
             }
           />
-          {validation.touched.email && validation.errors.email ? (
+          {validation.touched.email &&
+          validation.errors.email ? (
             <FormFeedback type="invalid">
               {validation.errors.email}
             </FormFeedback>
           ) : null}
         </div>
         <div className="mb-3">
-          {error ? <Alert color="danger">{error}</Alert> : null}
+          {error ? (
+            <Alert color="danger">{error}</Alert>
+          ) : null}
           <Label className="form-label">Phone</Label>
           <Input
             name="phone"
@@ -515,10 +571,14 @@ function UserEdit({
             onBlur={validation.handleBlur}
             value={validation.values.phone || ''}
             invalid={
-              validation.touched.phone && validation.errors.phone ? true : false
+              validation.touched.phone &&
+              validation.errors.phone
+                ? true
+                : false
             }
           />
-          {validation.touched.phone && validation.errors.phone ? (
+          {validation.touched.phone &&
+          validation.errors.phone ? (
             <FormFeedback type="invalid">
               {validation.errors.phone}
             </FormFeedback>
@@ -592,13 +652,18 @@ function UserEdit({
         </div> */}
         <div className="mb-3 ">
           {' '}
-          <Label className="form-label">Select Status</Label>
+          <Label className="form-label">
+            Select Status
+          </Label>
           <Space>
             <Select
               value={validation.values.userStatus}
               style={{ width: 320 }}
               onChange={selectedOption => {
-                validation.setFieldValue('userStatus', selectedOption);
+                validation.setFieldValue(
+                  'userStatus',
+                  selectedOption,
+                );
               }}
               options={[
                 { value: 'pending', label: 'Pending' },
@@ -619,7 +684,12 @@ function UserEdit({
                 style={{
                   color: '#FFFFFF',
                 }}
-                indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+                indicator={
+                  <LoadingOutlined
+                    style={{ fontSize: 24 }}
+                    spin
+                  />
+                }
               />
             ) : (
               <>Update</>

@@ -16,11 +16,12 @@ import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { LoadingOutlined } from '@ant-design/icons';
-import { useResetPassword } from 'api/userApi';
+import { useResetPassword } from '@/hook/useUser';
 import { Spin } from 'antd';
 function ResetPassword() {
   const { id, token } = useParams();
-  const { userResetPassword, isPending } = useResetPassword();
+  const { userResetPassword, isPending } =
+    useResetPassword();
   const [show, setShow] = useState(false);
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -30,7 +31,9 @@ function ResetPassword() {
       password: '',
     },
     validationSchema: Yup.object({
-      password: Yup.string().required('Please Enter Your Paaword'),
+      password: Yup.string().required(
+        'Please Enter Your Paaword',
+      ),
     }),
     onSubmit: values => {
       userResetPassword({ ...values, id, token });
@@ -47,7 +50,9 @@ function ResetPassword() {
                 <Row>
                   <Col xs={7}>
                     <div className="text-black p-4">
-                      <h5 className="text-black">Reset Passowrd!</h5>
+                      <h5 className="text-black">
+                        Reset Passowrd!
+                      </h5>
                     </div>
                   </Col>
                 </Row>
@@ -60,7 +65,9 @@ function ResetPassword() {
                     className="img-fluid w-50 d-block m-auto"
                   /> */}
 
-                  <h1 className="text-gradients">Review Aide</h1>
+                  <h1 className="text-gradients">
+                    Review Aide
+                  </h1>
                 </div>
                 <div className="p-2">
                   <Form
@@ -72,7 +79,9 @@ function ResetPassword() {
                     }}
                   >
                     <div className="mb-3">
-                      <Label className="form-label">Password</Label>
+                      <Label className="form-label">
+                        Password
+                      </Label>
                       <div className="input-group auth-pass-inputgroup">
                         <Input
                           name="password"
@@ -81,7 +90,9 @@ function ResetPassword() {
                           type={show ? 'text' : 'password'}
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.password || ''}
+                          value={
+                            validation.values.password || ''
+                          }
                           invalid={
                             validation.touched.password &&
                             validation.errors.password
@@ -138,7 +149,10 @@ function ResetPassword() {
             <div className="mt-5 text-center">
               <p>
                 Go back to{' '}
-                <Link to="/" className="font-weight-medium text-primary">
+                <Link
+                  to="/"
+                  className="font-weight-medium text-primary"
+                >
                   Login
                 </Link>{' '}
               </p>

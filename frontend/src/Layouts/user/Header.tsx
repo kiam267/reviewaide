@@ -3,31 +3,37 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // Reactstrap
-import { Row, Col, Dropdown, DropdownToggle, DropdownMenu } from 'reactstrap';
+import {
+  Row,
+  Col,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+} from 'reactstrap';
 
-import NotificationDropDown from '../../Components/CommonForBoth/NotificationDropDown';
-import ProfileMenu from '../../Components/CommonForBoth/TopBarDropDown/ProfileMenu';
-import megamenuImg from '../../assets/images/megamenu-img.png';
+import NotificationDropDown from '@/components/CommonForBoth/NotificationDropDown';
+import ProfileMenu from '@/components/CommonForBoth/TopBarDropDown/ProfileMenu';
+import megamenuImg from '@/assets/images/megamenu-img.png';
 
 // import images
-import github from '../../assets/images/brands/github.png';
-import bitbucket from '../../assets/images/brands/bitbucket.png';
-import dribbble from '../../assets/images/brands/dribbble.png';
-import dropbox from '../../assets/images/brands/dropbox.png';
-import mail_chimp from '../../assets/images/brands/mail_chimp.png';
-import slack from '../../assets/images/brands/slack.png';
+import github from '@/assets/images/brands/github.png';
+import bitbucket from '@/assets/images/brands/bitbucket.png';
+import dribbble from '@/assets/images/brands/dribbble.png';
+import dropbox from '@/assets/images/brands/dropbox.png';
+import mail_chimp from '@/assets/images/brands/mail_chimp.png';
+import slack from '@/assets/images/brands/slack.png';
 
-import logo from '../../assets/images/logo.svg';
-import logoLightSvg from '../../assets/images/logo-light.svg';
+import logo from '@/assets/images/logo.svg';
+import logoLightSvg from '@/assets/images/logo-light.svg';
 
 //i18n
-import { useGetHeader } from 'api/userApi';
-import Logout from 'pages/auth/Logout';
+import { useGetHeader } from '@/hook/useUser';
+import Logout from '@/pages/auth/Logout';
 
 const Header = (props: any) => {
   const [search, setsearch] = useState(false);
   const token = localStorage.getItem('user-token');
-  const { getHeaderInfo } = useGetHeader(token);
+  const { data: getHeaderInfo } = useGetHeader();
 
   const toggleFullscreen = () => {
     let document: any = window.document;
@@ -40,9 +46,13 @@ const Header = (props: any) => {
       // current working methods
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
+      } else if (
+        document.documentElement.mozRequestFullScreen
+      ) {
         document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
+      } else if (
+        document.documentElement.webkitRequestFullscreen
+      ) {
         document.documentElement.webkitRequestFullscreen();
       }
     } else {
@@ -63,9 +73,18 @@ const Header = (props: any) => {
       )
         document.body.classList.remove('fullscreen-enable');
     };
-    document.addEventListener('fullscreenchange', exitHandler);
-    document.addEventListener('webkitfullscreenchange', exitHandler);
-    document.addEventListener('mozfullscreenchange', exitHandler);
+    document.addEventListener(
+      'fullscreenchange',
+      exitHandler,
+    );
+    document.addEventListener(
+      'webkitfullscreenchange',
+      exitHandler,
+    );
+    document.addEventListener(
+      'mozfullscreenchange',
+      exitHandler,
+    );
   };
 
   function tToggle() {
@@ -82,8 +101,6 @@ const Header = (props: any) => {
     return <Logout />;
   }
 
-
-
   return (
     <React.Fragment>
       <header id="page-topbar">
@@ -98,7 +115,11 @@ const Header = (props: any) => {
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
-                  <img src={logoLightSvg} alt="" height="22" />
+                  <img
+                    src={logoLightSvg}
+                    alt=""
+                    height="22"
+                  />
                 </span>
               </Link>
             </div>
@@ -121,6 +142,8 @@ const Header = (props: any) => {
                 id="page-header-search-dropdown"
               >
                 <i className="mdi mdi-magnify" />
+
+                <span className="mdi mdi-close"></span>
               </button>
               <div
                 className={
@@ -140,7 +163,10 @@ const Header = (props: any) => {
                         aria-label="Recipient's username"
                       />
                       <div className="input-group-append">
-                        <button className="btn btn-primary" type="submit">
+                        <button
+                          className="btn btn-primary"
+                          type="submit"
+                        >
                           <i className="mdi mdi-magnify" />
                         </button>
                       </div>
@@ -162,7 +188,9 @@ const Header = (props: any) => {
               </button>
             </div>
 
-            <ProfileMenu userName={getHeaderInfo?.data?.userName} />
+            <ProfileMenu
+              userName={getHeaderInfo?.data?.username}
+            />
           </div>
         </div>
       </header>

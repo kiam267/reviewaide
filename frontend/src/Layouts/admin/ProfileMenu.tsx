@@ -10,7 +10,7 @@ import { Avatar, Badge } from 'antd';
 import { withTranslation } from 'react-i18next';
 // Redux
 import { Link } from 'react-router-dom';
-import withRouter from '../../Components/Common/withRouter';
+import withRouter from '@/components/Common/withRouter';
 import { createSelector } from 'reselect';
 // users
 import user1 from '../../../assets/images/users/avatar-1.jpg';

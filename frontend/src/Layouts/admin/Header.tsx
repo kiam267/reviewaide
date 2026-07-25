@@ -10,8 +10,8 @@ import ProfileMenu from './ProfileMenu';
 
 
 
-import logo from '../../assets/images/logo.svg';
-import logoLightSvg from '../../assets/images/logo-light.svg';
+import logo from '@/assets/images/logo.svg';
+import logoLightSvg from '@/assets/images/logo-light.svg';
 
 
 const Header = (props: any) => {

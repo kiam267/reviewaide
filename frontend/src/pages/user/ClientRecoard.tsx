@@ -1,15 +1,26 @@
-import CustomeContainer from 'Components/Common/CustomeContainer';
+import CustomeContainer from '@/components/Common/CustomeContainer';
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Empty, Input, Space, Table, Tag } from 'antd';
-import type { GetRef, TableColumnType, TableProps } from 'antd';
-import UsersLayout from 'Layouts/user';
+import {
+  Button,
+  Empty,
+  Input,
+  Space,
+  Table,
+  Tag,
+} from 'antd';
+import type {
+  GetRef,
+  TableColumnType,
+  TableProps,
+} from 'antd';
+import UsersLayout from '@/layouts/user';
 import { SearchOutlined } from '@ant-design/icons';
-import { useGetUser } from 'api/userApi';
+import { useGetUser } from '@/hook/useUser';
 // import UserAuth from 'pages/user-auth/user-auth';
 import { Navigate } from 'react-router-dom';
-// import UserForm from 'Components/UserForm';
+// import UserForm from 'components/UserForm';
 import { Rating } from 'react-simple-star-rating';
-import { useGetClient } from 'api/clientApi';
+import { useGetClient } from '@/hook/useClient';
 import dateFormat from 'dateformat';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import type { InputRef, TableColumnsType } from 'antd';
@@ -26,14 +37,20 @@ export interface DataType {
 
 function ClientRecoard() {
   const sesstion = localStorage.getItem('user-token');
-  const { getUerInfo, isPending } = useGetUser(sesstion as string);
-  const [clientSearch, setClientSearch] = useState<ClientSearchState>({
-    page: 1,
-    clientName: '',
-    method: '',
-  });
+  const { getUerInfo, isPending } = useGetUser(
+    sesstion as string,
+  );
+  const [clientSearch, setClientSearch] =
+    useState<ClientSearchState>({
+      page: 1,
+      clientName: '',
+      method: '',
+    });
 
-  const { getClientInfo, refetch } = useGetClient(sesstion, clientSearch);
+  const { getClientInfo, refetch } = useGetClient(
+    sesstion,
+    clientSearch,
+  );
 
   const userData = getUerInfo;
   // console.log(searchText);
@@ -67,7 +84,7 @@ function ClientRecoard() {
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -80,7 +97,7 @@ function ClientRecoard() {
   };
 
   const getColumnSearchProps = (
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ): TableColumnType<DataType> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -89,16 +106,25 @@ function ClientRecoard() {
       clearFilters,
       close,
     }) => (
-      <div style={{ padding: 8 }} onKeyDown={e => e.stopPropagation()}>
+      <div
+        style={{ padding: 8 }}
+        onKeyDown={e => e.stopPropagation()}
+      >
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
+            setSelectedKeys(
+              e.target.value ? [e.target.value] : [],
+            )
           }
           onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
+            handleSearch(
+              selectedKeys as string[],
+              confirm,
+              dataIndex,
+            )
           }
           style={{ marginBottom: 8, display: 'block' }}
         />
@@ -106,7 +132,11 @@ function ClientRecoard() {
           <Button
             type="primary"
             onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
+              handleSearch(
+                selectedKeys as string[],
+                confirm,
+                dataIndex,
+              )
             }
             icon={<SearchOutlined />}
             size="small"
@@ -115,7 +145,9 @@ function ClientRecoard() {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() =>
+              clearFilters && handleReset(clearFilters)
+            }
             size="small"
             style={{ width: 90 }}
           >
@@ -145,7 +177,9 @@ function ClientRecoard() {
       </div>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      <SearchOutlined
+        style={{ color: filtered ? '#1677ff' : undefined }}
+      />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -160,7 +194,10 @@ function ClientRecoard() {
     render: text =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
           searchWords={[searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
@@ -237,7 +274,10 @@ function ClientRecoard() {
       dataIndex: 'date',
       key: 'date',
       render: (_, data) => {
-        const dateData = dateFormat(data.date, 'ddd, mmm dS, yyyy');
+        const dateData = dateFormat(
+          data.date,
+          'ddd, mmm dS, yyyy',
+        );
         return <p>{dateData}</p>;
       },
     },
@@ -259,12 +299,15 @@ function ClientRecoard() {
             <Table
               key={Math.random() * Date.now()}
               columns={columns}
-              dataSource={getClientInfo?.data as unknown as DataType[]}
+              dataSource={
+                getClientInfo?.data as unknown as DataType[]
+              }
               pagination={{
                 pageSize: 10,
                 //@ts-ignore
                 total: getClientInfo?.pagination?.total | 0,
-                current: getClientInfo?.pagination?.page || 0, // Set the current page
+                current:
+                  getClientInfo?.pagination?.page || 0, // Set the current page
                 onChange: handlePageChange, // Pass the handlePageChange function
               }}
             />

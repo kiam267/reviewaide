@@ -54,8 +54,10 @@ router.route('/login').post(usresController.login);
 router
   .route('/')
   .get(isCheckUser, usresController.getDashboadData)
-  .put(isCheckUser, usresController.miniUpdatePut);
+  .put(usresController.updateUserProfile);
 
+router.get('/header', usresController.getHeader);
+router.get('/profile', usresController.getProfile);
 router
   .route('/mini-update')
   .get(isCheckUser, usresController.miniUpdateGet);

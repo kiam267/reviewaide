@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import Breadcrumb from 'Components/Common/Breadcrumb';
-import CustomeContainer from 'Components/Common/CustomeContainer';
+import Breadcrumb from '@/components/Common/Breadcrumb';
+import CustomeContainer from '@/components/Common/CustomeContainer';
 import {
   Card,
   Col,
@@ -13,16 +13,17 @@ import {
   Skeleton,
 } from 'antd';
 import dateFormat from 'dateformat';
-import Logout from 'pages/auth/Logout';
-import { useGetClient } from 'api/clientApi';
+import Logout from '@/pages/auth/Logout';
+import { useGetClient } from '@/hook/useClient';
 function PrivateReview(props) {
   const sesstion = localStorage.getItem('user-token');
-  const [clientSearch, setClientSearch] = useState<ClientSearchState>({
-    page: 1,
-    rating : 2,
-    clientName: '',
-    method: '',
-  });
+  const [clientSearch, setClientSearch] =
+    useState<ClientSearchState>({
+      page: 1,
+      rating: 2,
+      clientName: '',
+      method: '',
+    });
 
   const handlePageChange = (page: number) => {
     setClientSearch(prevState => ({
@@ -30,10 +31,8 @@ function PrivateReview(props) {
       page,
     }));
   };
-  const { getClientInfo, refetch, isPending } = useGetClient(
-    sesstion,
-    clientSearch
-  );
+  const { getClientInfo, refetch, isPending } =
+    useGetClient(sesstion, clientSearch);
   useEffect(() => {
     refetch();
   }, [clientSearch]);
@@ -54,29 +53,48 @@ function PrivateReview(props) {
   if (!getClientInfo?.pagination?.total) {
     return (
       <CustomeContainer>
-        <Breadcrumb title="private Review" breadcrumbItem="Private Review" />
+        <Breadcrumb
+          title="private Review"
+          breadcrumbItem="Private Review"
+        />
         <Empty />
       </CustomeContainer>
     );
   }
   return (
     <CustomeContainer>
-      <Breadcrumb title="private Review" breadcrumbItem="Private Review" />
+      <Breadcrumb
+        title="private Review"
+        breadcrumbItem="Private Review"
+      />
       <List
         itemLayout="vertical"
         size="large"
         dataSource={getClientInfo?.data as any}
         renderItem={(item: ClientItme) => {
           const checkItem = item.rating >= 4;
-          
+
           if (checkItem) return null;
           return (
             <List.Item key={item.id}>
-              <Skeleton loading={isPending} active paragraph={{ rows: 4 }}>
-                <Card className="red-3" style={{ background: '#f0f0f0' }}>
-                  <Row gutter={[15, 32]} className="text-black">
+              <Skeleton
+                loading={isPending}
+                active
+                paragraph={{ rows: 4 }}
+              >
+                <Card
+                  className="red-3"
+                  style={{ background: '#f0f0f0' }}
+                >
+                  <Row
+                    gutter={[15, 32]}
+                    className="text-black"
+                  >
                     <Col span={24}>
-                      <Rate disabled defaultValue={Number(item.rating)} />
+                      <Rate
+                        disabled
+                        defaultValue={Number(item.rating)}
+                      />
                     </Col>
                     <Col span={24}>
                       <h3 className="fs-3 text-capitalize">
@@ -84,9 +102,14 @@ function PrivateReview(props) {
                       </h3>
                     </Col>
                     <Col span={24}>
-                      <h6 className="fs-6">{item?.email}</h6>
+                      <h6 className="fs-6">
+                        {item?.email}
+                      </h6>
                     </Col>
-                    <Col span={24} className="text-body-tertiary">
+                    <Col
+                      span={24}
+                      className="text-body-tertiary"
+                    >
                       {item?.private}
                     </Col>
                     <Col

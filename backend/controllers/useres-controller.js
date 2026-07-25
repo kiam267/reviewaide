@@ -529,46 +529,155 @@ const miniUpdateGet = (req, res) => {
     return res.json(authErrorMessage('error', 'no data'));
   }
 };
-const miniUpdatePut = (req, res) => {
-  const token = req.headers.token;
+const updateUserProfile = async (req, res) => {
+  const { authorization } = req.headers;
+  
+
+  if (!authorization) {
+    return res.status(401).json({
+      success: false,
+      message: 'No token provided',
+    });
+  }
+
+  const token = authorization.split(' ')[1];
+
   const {
     username,
     phone,
-    companyName,
-    google,
-    facebook,
+    company_name,
+    google_link,
+    facebook_link,
+    company_logo,
+    fullName,
     editEmail,
     editSms,
     temporary,
   } = req.body;
-  try {
-    const isVarify = verifyToken(token);
-    const updateUser =
-      'UPDATE users SET username = ?, phone = ?, company_name = ?, google_link = ?, facebook_link = ?, sms_message = ?, email_message = ? , temporaray_lock = ? WHERE email = ?';
 
-    db.query(
-      updateUser,
-      [
-        username,
-        phone,
-        companyName,
-        google,
-        facebook,
-        editSms,
-        editEmail,
-        temporary,
-        isVarify.decoded.email,
-      ],
-      async (err, result) => {
-        return res.json(
-          authErrorMessage('success', 'Update successful'),
-        );
-      },
-    );
+  try {
+    const isVerify = verifyToken(token);
+
+    const updateUser = `
+      UPDATE users SET 
+        username = ?, 
+        phone = ?, 
+        company_name = ?, 
+        google_link = ?, 
+        facebook_link = ?, 
+        sms_message = ?, 
+        email_message = ?, 
+        temporaray_lock = ?
+      WHERE email = ?
+    `;
+
+    const [result] = await db.query(updateUser, [
+      username || null,
+      phone || null,
+      company_name || null,
+      google_link || null,
+      facebook_link || null,
+      // company_logo === 'undefined' ? null : company_logo,
+      editSms || null,
+      editEmail || null,
+      temporary || null,
+      isVerify.decoded.email,
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      affectedRows: result.affectedRows,
+    });
   } catch (error) {
-    return res.json(
-      authErrorMessage('error', 'Data not updated'),
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Data not updated',
+    });
+  }
+};
+
+const getHeader = async (req, res) => {
+  const { authorization } = req.headers;
+  console.log(req.headers);
+
+  if (!authorization) {
+    return res.status(401).json({
+      success: false,
+      message: 'No token provided',
+    });
+  }
+
+  const token = authorization.split(' ')[1];
+
+  try {
+    const secret = process.env.VERIFY_SIGNATURE;
+
+    let payload = jwt.verify(token, secret);
+
+    const [[user]] = await db.query(
+      'SELECT username FROM users WHERE id = ?',
+      [payload.id],
     );
+
+    return res.status(200).json({
+      data: user,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid token',
+      tokenInvalid: true,
+    });
+  }
+};
+const getProfile = async (req, res) => {
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res.status(401).json({
+      success: false,
+      message: 'No token provided',
+    });
+  }
+
+  const token = authorization.split(' ')[1];
+
+  try {
+    const secret = process.env.VERIFY_SIGNATURE;
+
+    const payload = jwt.verify(token, secret);
+
+    const [[user]] = await db.query(
+      `SELECT 
+    id,
+    email,
+    username,
+    phone,
+    company_name AS companyName,
+    facebook_link AS facebookLink,
+    google_link AS googleLink,
+    phato_path AS avatar
+  FROM users 
+  WHERE id = ?`,
+      [payload.id],
+    );
+
+    return res.status(200).json({
+      data: user,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid token',
+      tokenInvalid: true,
+    });
   }
 };
 module.exports = {
@@ -582,5 +691,7 @@ module.exports = {
   postRestPassword,
   getDashboadData,
   miniUpdateGet,
-  miniUpdatePut,
+  updateUserProfile,
+  getHeader,
+  getProfile,
 };

@@ -1,31 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import CustomeContainer from 'Components/Common/CustomeContainer';
+import CustomeContainer from '@/components/Common/CustomeContainer';
 
 import { Card, QRCode, Button, Modal } from 'antd';
-import Logout from 'pages/auth/Logout';
+import Logout from '@/pages/auth/Logout';
 import { Row, Col } from 'reactstrap';
 import {
   useDeleteClientLink,
   useGetClientLink,
-  useCretaeQrCodeLink,
-} from 'api/clientApi';
+  useCreateQrCodeLink,
+} from '@/hook/useClient';
 
-import { Navigate, useNavigate } from 'react-router-dom';
-import { Form, Input, Label, FormFeedback, Alert } from 'reactstrap';
-import { GetProp, Spin, Upload, UploadProps, message } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  Form,
+  Input,
+  Label,
+  FormFeedback,
+  Alert,
+} from 'reactstrap';
+import {
+  GetProp,
+  Spin,
+  Upload,
+  UploadProps,
+  message,
+} from 'antd';
+import {
+  LoadingOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 
 // Formik validation
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { REVIEW_LINK } from '../../helpers/url_helper';
+import { REVIEW_LINK } from '@/helpers/url_helper';
 function QRcode() {
-  const token: string | null = localStorage.getItem('user-token');
-
   //@ts-ignore
-  const { getClientLinkInfo, refetch } = useGetClientLink(token);
+  const { getClientLinkInfo, refetch } = useGetClientLink();
 
   const handelQrCodeGenThenReaf = async () => {
     refetch();
@@ -36,10 +48,11 @@ function QRcode() {
   //   refetch();
   // }, [isDeleteSuccess]);
 
-  const [QRcodeStatus, setQRcodeStatus] = useState<'active' | 'loading'>(
-    'loading'
-  );
-  const [beforeCreateQRcode, setBeforeCreateQRcode] = useState<boolean>(false);
+  const [QRcodeStatus, setQRcodeStatus] = useState<
+    'active' | 'loading'
+  >('loading');
+  const [beforeCreateQRcode, setBeforeCreateQRcode] =
+    useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -51,7 +64,9 @@ function QRcode() {
 
   useEffect(() => {
     setBeforeCreateQRcode(!!getClientLinkInfo?.data);
-    setQRcodeStatus(getClientLinkInfo?.data ? 'active' : 'loading');
+    setQRcodeStatus(
+      getClientLinkInfo?.data ? 'active' : 'loading',
+    );
   }, [getClientLinkInfo?.data]);
 
   if (getClientLinkInfo?.tokenInvalid) {
@@ -72,7 +87,9 @@ function QRcode() {
                   haveAnyItem={beforeCreateQRcode}
                   item={link.uniqueId}
                   status={QRcodeStatus}
-                  handelQrCodeGenThenReaf={handelQrCodeGenThenReaf}
+                  handelQrCodeGenThenReaf={
+                    handelQrCodeGenThenReaf
+                  }
                   itemName={link.companyName}
                 />
               </Card>
@@ -92,8 +109,16 @@ function QRcode() {
               }}
             ></i>
 
-            <Modal open={isModalOpen} onCancel={handleCancel} footer={[]}>
-              <QrGenForm handelQrCodeGenThenReaf={handelQrCodeGenThenReaf} />
+            <Modal
+              open={isModalOpen}
+              onCancel={handleCancel}
+              footer={[]}
+            >
+              <QrGenForm
+                handelQrCodeGenThenReaf={
+                  handelQrCodeGenThenReaf
+                }
+              />
             </Modal>
           </Card>
         </Col>
@@ -113,17 +138,24 @@ function QrGenForm({
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [base64URL, setBase64URL] = useState('');
-  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+  type FileType = Parameters<
+    GetProp<UploadProps, 'beforeUpload'>
+  >[0];
 
   const selectProperties = createSelector(
     (state: any) => state.Login,
     login => ({
       error: login.error,
-    })
+    }),
   );
   // api call to create a new qr code
-  const token: string | null = localStorage.getItem('user-token');
-  const { createQRCode, isSuccess, isPending } = useCretaeQrCodeLink();
+  const token: string | null =
+    localStorage.getItem('user-token');
+  const {
+    data: createQRCode,
+    isSuccess,
+    isPending,
+  } = useCreateQrCodeLink();
   const { error } = useSelector(selectProperties);
 
   useEffect(() => {
@@ -140,11 +172,16 @@ function QrGenForm({
       facebookLink: '',
     },
     validationSchema: Yup.object({
-      companyName: Yup.string().required('Please enter company name'),
+      companyName: Yup.string().required(
+        'Please enter company name',
+      ),
       googleLink: Yup.string(),
       facebookLink: Yup.string(),
     }),
-    onSubmit: async (values: UserMoreDetailInfo, { resetForm }) => {
+    onSubmit: async (
+      values: UserMoreDetailInfo,
+      { resetForm },
+    ) => {
       const userData = { ...values };
       //@ts-ignore
       await createQRCode({ token, user: userData });
@@ -154,7 +191,9 @@ function QrGenForm({
     },
   });
   const beforeUpload = (file: FileType) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    const isJpgOrPng =
+      file.type === 'image/jpeg' ||
+      file.type === 'image/png';
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!');
     }
@@ -175,7 +214,10 @@ function QrGenForm({
   };
 
   const uploadButton = (
-    <button style={{ border: 0, background: 'none' }} type="button">
+    <button
+      style={{ border: 0, background: 'none' }}
+      type="button"
+    >
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>Upload</div>
     </button>
@@ -191,7 +233,10 @@ function QrGenForm({
           setBase64URL(result as any);
         })
         .catch(error => {
-          console.error('Error converting file to base64:', error);
+          console.error(
+            'Error converting file to base64:',
+            error,
+          );
         });
     }
   };
@@ -247,8 +292,12 @@ function QrGenForm({
       </Upload>
 
       <div className="mb-5">
-        {error ? <Alert color="danger">{error}</Alert> : null}
-        <Label className="form-label fs-5">Company Name</Label>
+        {error ? (
+          <Alert color="danger">{error}</Alert>
+        ) : null}
+        <Label className="form-label fs-5">
+          Company Name
+        </Label>
         <Input
           name="companyName"
           className="form-control rounded-4 fs-5"
@@ -258,12 +307,14 @@ function QrGenForm({
           onBlur={validation.handleBlur}
           value={validation.values.companyName || ''}
           invalid={
-            validation.touched.companyName && validation.errors.companyName
+            validation.touched.companyName &&
+            validation.errors.companyName
               ? true
               : false
           }
         />
-        {validation.touched.companyName && validation.errors.companyName ? (
+        {validation.touched.companyName &&
+        validation.errors.companyName ? (
           <FormFeedback type="invalid">
             {validation.errors.companyName}
           </FormFeedback>
@@ -271,8 +322,12 @@ function QrGenForm({
       </div>
 
       <div className="mb-5">
-        {error ? <Alert color="danger">{error}</Alert> : null}
-        <Label className="form-label fs-5">Google Link</Label>
+        {error ? (
+          <Alert color="danger">{error}</Alert>
+        ) : null}
+        <Label className="form-label fs-5">
+          Google Link
+        </Label>
         <Input
           name="googleLink"
           className="form-control rounded-4 fs-5"
@@ -282,20 +337,26 @@ function QrGenForm({
           onBlur={validation.handleBlur}
           value={validation.values.googleLink || ''}
           invalid={
-            validation.touched.googleLink && validation.errors.googleLink
+            validation.touched.googleLink &&
+            validation.errors.googleLink
               ? true
               : false
           }
         />
-        {validation.touched.googleLink && validation.errors.googleLink ? (
+        {validation.touched.googleLink &&
+        validation.errors.googleLink ? (
           <FormFeedback type="invalid">
             {validation.errors.googleLink}
           </FormFeedback>
         ) : null}
       </div>
       <div className="mb-5">
-        {error ? <Alert color="danger">{error}</Alert> : null}
-        <Label className="form-label fs-5">Facebook Link</Label>
+        {error ? (
+          <Alert color="danger">{error}</Alert>
+        ) : null}
+        <Label className="form-label fs-5">
+          Facebook Link
+        </Label>
         <Input
           name="facebookLink"
           className="form-control rounded-4 fs-5"
@@ -305,12 +366,14 @@ function QrGenForm({
           onBlur={validation.handleBlur}
           value={validation.values.facebookLink || ''}
           invalid={
-            validation.touched.facebookLink && validation.errors.facebookLink
+            validation.touched.facebookLink &&
+            validation.errors.facebookLink
               ? true
               : false
           }
         />
-        {validation.touched.facebookLink && validation.errors.facebookLink ? (
+        {validation.touched.facebookLink &&
+        validation.errors.facebookLink ? (
           <FormFeedback type="invalid">
             {validation.errors.facebookLink}
           </FormFeedback>
@@ -330,7 +393,12 @@ function QrGenForm({
               style={{
                 color: '#FFFFFF',
               }}
-              indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+              indicator={
+                <LoadingOutlined
+                  style={{ fontSize: 24 }}
+                  spin
+                />
+              }
             />
           ) : (
             <>Create</>
@@ -371,8 +439,13 @@ function QrCodeItem({
     }
   };
   // api call for deleting current qrcode image
-  const token: string | null = localStorage.getItem('user-token');
-  const { createClient, isSuccess, isPending } = useDeleteClientLink();
+  const token: string | null =
+    localStorage.getItem('user-token');
+  const {
+    data: createClient,
+    isSuccess,
+    isPending,
+  } = useDeleteClientLink();
   const QRCodeDeleteButton = async ({ id }) => {
     await createClient({
       //@ts-ignore
@@ -394,7 +467,9 @@ function QrCodeItem({
           className="d-block m-auto my-2 rounded-circle"
           style={{ objectFit: 'contain' }}
         />
-        <p className="text-center text-secondary fs-6">{itemName}</p>
+        <p className="text-center text-secondary fs-6">
+          {itemName}
+        </p>
 
         <QRCode
           status={status}
@@ -422,7 +497,12 @@ function QrCodeItem({
                 style={{
                   color: '#FFFFFF',
                 }}
-                indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+                indicator={
+                  <LoadingOutlined
+                    style={{ fontSize: 24 }}
+                    spin
+                  />
+                }
               />
             ) : (
               <>Delete</>

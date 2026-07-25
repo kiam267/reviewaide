@@ -10,7 +10,7 @@
 //     setFolderOnSelectedMails as setFolderOnSelectedMailsApi,
 //     staredMail as staredMailApi,
 //     trashMail as trashMailApi
-// } from "../../helpers/fakebackend_helper";
+// } from "@/helpers/fakebackend_helper";
 
 // export const getMailsLists = createAsyncThunk("email/getMailsLists", async () => {
 //     try {

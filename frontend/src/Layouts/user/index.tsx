@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import RightSidebar from 'Components/CommonForBoth/RightSidebar';
-import withRouter from '../../Components/Common/withRouter';
+import RightSidebar from '@/components/CommonForBoth/RightSidebar';
+import withRouter from '@/components/Common/withRouter';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
@@ -13,7 +13,7 @@ import {
   changeLeftSidebarType,
   changeLeftSidebarTheme,
   changeSidebarImageType,
-} from 'slices/layouts/thunk';
+} from '@/slices/layouts/thunk';
 
 const VerticalLayout = (props: any) => {
   const dispatch: any = useDispatch();

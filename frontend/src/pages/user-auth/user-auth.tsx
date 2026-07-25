@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'antd';
-import autoRightImageOne from '../../assets/images/user-auth/business-1.jpg';
-import autoRightImageTwo from '../../assets/images/user-auth/business-2.jpg';
-import autoRightImageThree from '../../assets/images/user-auth/business-3.jpg';
-import Logo from '../../assets/images/logo.png';
+import autoRightImageOne from '@/assets/images/user-auth/business-1.jpg';
+import autoRightImageTwo from '@/assets/images/user-auth/business-2.jpg';
+import autoRightImageThree from '@/assets/images/user-auth/business-3.jpg';
+import Logo from '@/assets/images/logo.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import { TypeAnimation } from 'react-type-animation';

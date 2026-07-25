@@ -27,6 +27,10 @@ the capability to create multiple QR codes.
   email notification.
 
 
+# BIG Move 
+- we need to move ``` create-react-app``` to ``` vite```
+
+
 #### `Website Link`
 Review Aide (https://reviewaide.vercel.app)
 
