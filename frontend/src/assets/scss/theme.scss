@@ -1,9 +1,8 @@
-@import "./icons.scss";
+@import './icons';
 
 // Light Theme
-@import "./bootstrap.scss";
-@import "./app.scss";
-@import "../../Components/CommonForBoth/rightbar.scss";
+@import './app';
+@import '../../Components/CommonForBoth/rightbar';
 
 // RTL Mode
 // @import "./rtl/bootstrap-rtl";
@@ -38,7 +37,7 @@ body {
   z-index: 1;
 }
 
-svg>rect:first-child {
+svg > rect:first-child {
   fill-opacity: 0 !important;
 }
 
@@ -67,13 +66,13 @@ svg>rect:first-child {
     padding: 1.25rem;
 
     [data-rbd-draggable-context-id] {
-      >div {
+      > div {
         display: block !important;
       }
     }
   }
 
-  >div {
+  > div {
     display: flex;
     justify-content: center;
     gap: 25px;
@@ -92,7 +91,7 @@ svg>rect:first-child {
   width: 33.33%;
 }
 
-.react-kanban-column>div {
+.react-kanban-column > div {
   display: block !important;
 }
 
@@ -292,8 +291,8 @@ span.flatpickr-weekday {
 
   .fc {
     .fc-toolbar {
-      >* {
-        >* {
+      > * {
+        > * {
           float: none;
         }
       }
@@ -315,7 +314,8 @@ span.flatpickr-weekday {
   border: 0;
   font-size: 10px;
   padding: 1.35rem 1.25rem;
-  background: transparent escape-svg($btn-close-bg) center / $btn-close-width auto no-repeat;
+  background: transparent escape-svg($btn-close-bg) center /
+    $btn-close-width auto no-repeat;
   position: absolute;
   top: 0;
   right: 0;
@@ -483,7 +483,9 @@ span.flatpickr-weekday {
 }
 
 .css-4ljt47-MenuList {
-  background-color: var(--#{$prefix}custom-white) !important;
+  background-color: var(
+    --#{$prefix}custom-white
+  ) !important;
   border-radius: 4px !important;
 }
 
@@ -501,14 +503,15 @@ span.flatpickr-weekday {
   color: $white !important;
 }
 
-
 // rdw-editor
 
 .rdw-editor-toolbar,
 .rdw-option-wrapper,
 .rdw-editor-main {
   border-color: $input-border-color !important;
-  background-color: var(--#{$prefix}custom-white) !important;
+  background-color: var(
+    --#{$prefix}custom-white
+  ) !important;
 }
 
 .rdw-option-wrapper {
@@ -526,8 +529,7 @@ span.flatpickr-weekday {
   color: var(--#{$prefix}body-color) !important;
 }
 
-[data-layout-mode="dark"] {
-
+[data-layout-mode='dark'] {
   .rdw-option-wrapper,
   .rdw-dropdown-selectedtext {
     img {
@@ -548,13 +550,16 @@ span.flatpickr-weekday {
   color: var(--#{$prefix}body-color) !important;
 }
 
-.ck.ck-editor__main>.ck-editor__editable {
-  background-color: var(--#{$prefix}custom-white) !important;
+.ck.ck-editor__main > .ck-editor__editable {
+  background-color: var(
+    --#{$prefix}custom-white
+  ) !important;
   color: var(--#{$prefix}body-color) !important;
   height: 300px !important;
 }
 
-.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+.ck.ck-editor__main
+  > .ck-editor__editable:not(.ck-focused) {
   border-color: $input-border-color !important;
 }
 
@@ -584,13 +589,16 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px var(--#{$prefix}custom-white) inset !important;
-  background-color: var(--#{$prefix}custom-white) !important;
+  -webkit-box-shadow: 0 0 0 30px
+    var(--#{$prefix}custom-white) inset !important;
+  background-color: var(
+    --#{$prefix}custom-white
+  ) !important;
   color: var(--#{$prefix}body-color) !important;
-  -webkit-text-fill-color: var(--#{$prefix}body-color) !important;
+  -webkit-text-fill-color: var(
+    --#{$prefix}body-color
+  ) !important;
 }
-
-
 
 // Select2
 
@@ -606,8 +614,9 @@ input:-webkit-autofill:active {
 .select__menu,
 .css-1nmdiq5-menu {
   background-color: var(--#{$prefix}card-bg) !important;
-  box-shadow: 0 0 0 1px var(--#{$prefix}border-color),
-  0 4px 11px var(--#{$prefix}border-color) !important;
+  box-shadow:
+    0 0 0 1px var(--#{$prefix}border-color),
+    0 4px 11px var(--#{$prefix}border-color) !important;
 }
 
 .select2-selection__option--is-focused,
@@ -632,7 +641,6 @@ input:-webkit-autofill:active {
     &:hover,
     &:focus {
       border-color: var(--#{$prefix}primary);
-
     }
 
     .css-1p3m7a8-multiValue {
@@ -660,7 +668,7 @@ input:-webkit-autofill:active {
 }
 
 .css-13cymwt-control {
-  border-color: hsl(0, 0%, 80%) !important
+  border-color: hsl(0, 0%, 80%) !important;
 }
 
 .select__multi-value__label,
@@ -679,7 +687,7 @@ input:-webkit-autofill:active {
 
 // auth-logo
 
-[data-layout-mode="dark"] {
+[data-layout-mode='dark'] {
   .auth-logo {
     .auth-logo-light {
       display: block;
@@ -699,7 +707,7 @@ aside.EmojiPickerReact.epr-main {
   right: 110px;
 }
 
-[dir="rtl"] .EmojiPickerReact.epr-main {
+[dir='rtl'] .EmojiPickerReact.epr-main {
   right: unset !important;
   left: 116px !important;
 }
@@ -710,7 +718,7 @@ aside.EmojiPickerReact.epr-main {
   text-align: left;
   border-left: 2px solid rgba(var(--tb-success-rgb), 1);
   border-radius: 4px;
-  background-color: rgba(29, 207, 122, .1);
+  background-color: rgba(29, 207, 122, 0.1);
 }
 
 // noUi slider
@@ -765,6 +773,6 @@ aside.EmojiPickerReact.epr-main {
 }
 
 // dark moda
-[data-layout-mode=dark] .form-select {
+[data-layout-mode='dark'] .form-select {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ced4da' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
 }
