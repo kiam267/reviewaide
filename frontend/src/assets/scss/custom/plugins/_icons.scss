@@ -2,7 +2,7 @@
 // icons.scss
 //
 
-@use "./icons/materialdesignicons" as *;
-@use "./icons/boxicons" as *;
-@use "./icons/fontawesome-all" as *;
-@use "./icons/dripicons" as *;
+@import "icons/materialdesignicons";
+@import "icons/boxicons";
+@import "icons/fontawesome-all";
+@import "icons/dripicons";

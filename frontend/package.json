@@ -67,6 +67,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:sass": "sass --load-path=node_modules src/assets/scss/theme.scss dist/theme.css --quiet-deps",
     "preview": "vite preview"
   }
 }
