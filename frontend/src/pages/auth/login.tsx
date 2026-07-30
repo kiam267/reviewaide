@@ -36,7 +36,7 @@ const Login = (props: any) => {
   const [show, setShow] = useState(false);
   const { isLoggedIn } = useAuth();
 
-  const { adminLogin, isPending } = useAdminLogin();
+  const { mutate: adminLogin, isPending } = useAdminLogin();
   const navigation = useNavigate();
   const selectProperties = createSelector(
     (state: any) => state.Login,
