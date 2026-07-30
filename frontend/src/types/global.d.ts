@@ -212,17 +212,23 @@ interface QRCodeGen {
   facebookLink: string;
 }
 interface ClientLinkResponse {
-  data?: [
-    {
-      uniqueId: string;
-      companyName: string;
-      companyLogo: string;
-    },
-  ];
+  response: ResposeVisitor;
+}
+
+type ResposeVisitor = {
+  data:
+    | [
+        {
+          uniqueId: string;
+          companyName: string;
+          companyLogo: string;
+        },
+      ]
+    | null;
   success: boolean;
   message?: string;
   tokenInvalid: boolean;
-}
+};
 interface ClientLogoResponse {
   data?: {
     companyLogo: string;

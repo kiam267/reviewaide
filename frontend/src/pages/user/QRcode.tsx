@@ -37,7 +37,10 @@ import { createSelector } from 'reselect';
 import { REVIEW_LINK } from '@/helpers/url_helper';
 function QRcode() {
   //@ts-ignore
-  const { getClientLinkInfo, refetch } = useGetClientLink();
+  const { data: getClientLinkInfo, refetch } =
+    useGetClientLink();
+
+  console.log(getClientLinkInfo, 'visitor - qrcode gen');
 
   const handelQrCodeGenThenReaf = async () => {
     refetch();
@@ -63,34 +66,38 @@ function QRcode() {
   };
 
   useEffect(() => {
-    setBeforeCreateQRcode(!!getClientLinkInfo?.data);
-    setQRcodeStatus(
-      getClientLinkInfo?.data ? 'active' : 'loading',
+    setBeforeCreateQRcode(
+      !!getClientLinkInfo?.response.data,
     );
-  }, [getClientLinkInfo?.data]);
+    setQRcodeStatus(
+      getClientLinkInfo?.response.data
+        ? 'active'
+        : 'loading',
+    );
+  }, [getClientLinkInfo?.response.data]);
 
-  if (getClientLinkInfo?.tokenInvalid) {
-    return <Logout />;
-  }
+
   return (
     <CustomeContainer>
       <Row className="justify-content-center">
-        {getClientLinkInfo?.data?.map(link => {
-          if (link.uniqueId === '0') {
-            return;
-          }
+        {getClientLinkInfo?.response?.data?.map(visitor => {
           return (
-            <Col sm={12} md={6} lg={3} key={link.uniqueId}>
+            <Col
+              sm={12}
+              md={6}
+              lg={3}
+              key={visitor.uniqueId}
+            >
               <Card className="my-4 d-flex justify-content-center rounded-5">
                 <QrCodeItem
-                  itemLogo={link.companyLogo}
+                  itemLogo={visitor.companyLogo}
                   haveAnyItem={beforeCreateQRcode}
-                  item={link.uniqueId}
+                  item={visitor.uniqueId}
                   status={QRcodeStatus}
                   handelQrCodeGenThenReaf={
                     handelQrCodeGenThenReaf
                   }
-                  itemName={link.companyName}
+                  itemName={visitor.companyName}
                 />
               </Card>
             </Col>
@@ -100,7 +107,7 @@ function QRcode() {
           <Card className="my-4 d-flex justify-content-center rounded-5 align-items-end">
             <i
               onClick={showModal}
-              className="bx bxs-plus-circle d-flex justify-content-center  align-items-center"
+              className="fa-solid fa-qrcode d-flex justify-content-center  align-items-center"
               style={{
                 fontSize: '7rem',
                 minHeight: '250px',
@@ -152,7 +159,7 @@ function QrGenForm({
   const token: string | null =
     localStorage.getItem('user-token');
   const {
-    data: createQRCode,
+    mutate: createQRCode,
     isSuccess,
     isPending,
   } = useCreateQrCodeLink();
@@ -161,6 +168,8 @@ function QrGenForm({
   useEffect(() => {
     handelQrCodeGenThenReaf();
   }, [isSuccess]);
+
+  type QrCode = Omit<UserMoreDetailInfo, 'username'>;
 
   // Form validation
   const validation: any = useFormik({
@@ -178,13 +187,12 @@ function QrGenForm({
       googleLink: Yup.string(),
       facebookLink: Yup.string(),
     }),
-    onSubmit: async (
-      values: UserMoreDetailInfo,
-      { resetForm },
-    ) => {
+    onSubmit: async (values: QrCode, { resetForm }) => {
       const userData = { ...values };
+      console.log('userdata', 'visitor');
+
       //@ts-ignore
-      await createQRCode({ token, user: userData });
+      createQRCode({ user: userData });
       resetForm();
       setFileDetail(null);
       setBase64URL('');

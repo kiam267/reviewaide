@@ -51,6 +51,10 @@ router
   .post(usresController.create);
 
 router.route('/login').post(usresController.login);
+// User
+/**
+ * 
+ */
 router
   .route('/')
   .get(isCheckUser, usresController.getDashboadData)

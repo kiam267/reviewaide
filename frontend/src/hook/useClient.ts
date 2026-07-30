@@ -45,9 +45,10 @@ export const useCreateQrCodeLink = () => {
     mutationKey: ['qrcode'],
 
     mutationFn: async (user: QRCodeGen) => {
-      if (!user.companyLogo) {
-        throw new Error('Please add a company logo');
-      }
+      // if (!user.companyLogo) {
+      //   throw new Error('Please add a company logo');
+      // }
+  
 
       const formData = new FormData();
 
@@ -62,10 +63,7 @@ export const useCreateQrCodeLink = () => {
         formData.append('facebookLink', user.facebookLink);
       }
 
-      return apiClient.post(
-        '/api/client/link-generator',
-        formData,
-      );
+      return apiClient.post('/api/client/qr_gen', user);
     },
 
     onSuccess: (data: any) => {
@@ -85,7 +83,7 @@ export const useGetClientLink = () => {
     queryKey: ['client-links'],
 
     queryFn: (): Promise<ClientLinkResponse> =>
-      apiClient.get('/api/client/link-generator'),
+      apiClient.get('/api/client/qr_gen'),
   });
 };
 

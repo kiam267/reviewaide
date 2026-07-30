@@ -142,8 +142,6 @@ const Header = (props: any) => {
                 id="page-header-search-dropdown"
               >
                 <i className="mdi mdi-magnify" />
-
-                <span className="mdi mdi-close"></span>
               </button>
               <div
                 className={

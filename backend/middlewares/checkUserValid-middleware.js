@@ -1,19 +1,15 @@
-const { authErrorMessage } = require('../utils/error.js');
+const { responseMessage } = require('../utils/error.js');
 const { verifyToken } = require('../utils/utils.js');
 
 const isCheckUser = (req, res, next) => {
-  const token = req.headers.token;
-  const isVerified = verifyToken(token);
+  const { authorization } = req.headers;
 
-  console.log(
-    isVerified,
-    token,
-    'Token come form /users/signup',
-  );
+  const token = authorization.split(' ')[1];
+  const isVerified = verifyToken(token);
 
   if (!isVerified.valid) {
     return res.json(
-      authErrorMessage('auth', 'Unauthorized access'),
+      responseMessage('auth', 'Unauthorized access'),
     );
   }
 

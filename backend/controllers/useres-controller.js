@@ -1,4 +1,4 @@
-const { authErrorMessage } = require('../utils/error');
+const { responseMessage } = require('../utils/error');
 const uniqId = require('uniqid');
 const { queueINIT } = require('../utils/redisbd');
 const jwt = require('jsonwebtoken');
@@ -20,7 +20,7 @@ const login = async (req, res) => {
     );
     if (rows.length === 0) {
       return res.json(
-        authErrorMessage(
+        responseMessage(
           'error',
           'This is not a valid email or temporary password',
         ),
@@ -35,7 +35,7 @@ const login = async (req, res) => {
 
     if (!hasPassword) {
       return res.json(
-        authErrorMessage('error', 'Password mismatch'),
+        responseMessage('error', 'Password mismatch'),
       );
     }
 
@@ -59,7 +59,7 @@ const login = async (req, res) => {
     console.error(error, req.body);
 
     return res.json(
-      authErrorMessage('error', 'Something went wrong'),
+      responseMessage('error', 'Something went wrong'),
     );
   }
 };
@@ -73,7 +73,7 @@ const forgetPassword = (req, res) => {
     db.query(hasEmail, [email], async (err, result) => {
       if (result.length === 0) {
         return res.json(
-          authErrorMessage('error', 'Email invalid'),
+          responseMessage('error', 'Email invalid'),
         );
       }
       const payload = {
@@ -81,21 +81,18 @@ const forgetPassword = (req, res) => {
         uniqId: result[0].uniqId,
         email: result[0].email,
       };
-      console.log(result[0].password);
       const secret =
         process.env.VERIFY_SIGNATURE + result[0].password;
       const forget_token = await jwt.sign(payload, secret, {
         expiresIn: '15m',
       });
       const reset_link = `${link}/user/reset-password/${result[0].uniqueId}/${forget_token}`;
-      console.log(reset_link);
       await queue.add(`forget-password`, {
         link: reset_link,
         email: result[0].email,
       });
-      console.log('work');
       res.json(
-        authErrorMessage('success', 'check email', {
+        responseMessage('success', 'check email', {
           valid: true,
         }),
       );
@@ -108,21 +105,17 @@ const forgetPassword = (req, res) => {
 const resetPassword = (req, res) => {
   const { id, token } = req.headers;
   try {
-    console.log(id);
     const hasEmail =
       'SELECT * FROM users WHERE uniqueId = ?';
     db.query(hasEmail, [id], async (err, result) => {
       if (result === undefined) {
         return res.json(
-          authErrorMessage(
-            'error',
-            'You  are not register',
-          ),
+          responseMessage('error', 'You  are not register'),
         );
       }
       if (result.length === 0) {
         return res.json(
-          authErrorMessage('error', 'Email Invalid'),
+          responseMessage('error', 'Email Invalid'),
         );
       }
       const secret =
@@ -131,12 +124,12 @@ const resetPassword = (req, res) => {
         let payload = jwt.verify(token, secret);
         if (!payload) {
           return res.json(
-            authErrorMessage('success', 'every think ok'),
+            responseMessage('success', 'every think ok'),
           );
         }
       } catch (error) {
         return res.json(
-          authErrorMessage(
+          responseMessage(
             'error',
             'You Have  Already Change Password',
             {
@@ -147,8 +140,12 @@ const resetPassword = (req, res) => {
       }
     });
   } catch (error) {
-    console.log(error);
-    // res.json(authErrorMessage('error', 'You Have  Already Change Password'));
+    res.json(
+      responseMessage(
+        'error',
+        'You Have  Already Change Password',
+      ),
+    );
   }
 };
 const postRestPassword = (req, res) => {
@@ -165,7 +162,7 @@ const postRestPassword = (req, res) => {
         [hashPassword, result[0].uniqueId],
         async (err, result) => {
           res.json(
-            authErrorMessage('success', 'Password changed'),
+            responseMessage('success', 'Password changed'),
           );
         },
       );
@@ -173,7 +170,7 @@ const postRestPassword = (req, res) => {
   } catch (error) {
     console.log('getpasswords error');
     res.json(
-      authErrorMessage(
+      responseMessage(
         'error',
         'You Have  Already Change Password',
       ),
@@ -194,7 +191,7 @@ const create = async (req, res) => {
 
       if (result[0].count > 0) {
         return res.json(
-          authErrorMessage('error', 'Email already exists'),
+          responseMessage('error', 'Email already exists'),
         );
       }
     },
@@ -204,7 +201,7 @@ const create = async (req, res) => {
   try {
     // if (rows[0].count > 0) {
     //   return res.json(
-    //     authErrorMessage('error', 'Email already exists'),
+    //     responseMessage('error', 'Email already exists'),
     //   );
     // }
 
@@ -222,7 +219,7 @@ const create = async (req, res) => {
     ]);
 
     return res.json(
-      authErrorMessage(
+      responseMessage(
         'success',
         'User created successfully',
       ),
@@ -233,7 +230,7 @@ const create = async (req, res) => {
       error,
     );
     return res.json(
-      authErrorMessage('error', 'Server or Database error'),
+      responseMessage('error', 'Server or Database error'),
     );
   }
 };
@@ -266,7 +263,7 @@ const update = async (req, res) => {
       async (err, result) => {
         if (result.length === 0) {
           return res.json(
-            authErrorMessage(
+            responseMessage(
               'error',
               'This is not a valid email',
             ),
@@ -274,7 +271,7 @@ const update = async (req, res) => {
         }
         if (result[0].email === email) {
           return res.json(
-            authErrorMessage(
+            responseMessage(
               'error',
               'This email is already in the system.',
             ),
@@ -305,7 +302,7 @@ const update = async (req, res) => {
         db.query(sql, upData, async (err, result) => {
           if (err) {
             return res.json(
-              authErrorMessage('error', 'Could not update'),
+              responseMessage('error', 'Could not update'),
             );
           }
           const hasEmail =
@@ -337,7 +334,7 @@ const update = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.json(
-      authErrorMessage('error', 'Something went wrong'),
+      responseMessage('error', 'Something went wrong'),
     );
   }
 };
@@ -352,7 +349,7 @@ const getUsers = async (req, res) => {
     );
     if (!isAdmin) {
       return res.json(
-        authErrorMessage('error', 'This problem'),
+        responseMessage('error', 'This problem'),
       );
     }
     const sql =
@@ -360,16 +357,16 @@ const getUsers = async (req, res) => {
     db.query(sql, async (err, result) => {
       if (err) {
         return res.json(
-          authErrorMessage('error', 'This problem'),
+          responseMessage('error', 'This problem'),
         );
       }
       return res.json(
-        authErrorMessage('success', 'ok', [...result]),
+        responseMessage('success', 'ok', [...result]),
       );
     });
   } catch (error) {
     return res.json(
-      authErrorMessage('error', 'This problem'),
+      responseMessage('error', 'This problem'),
     );
   }
 };
@@ -388,7 +385,7 @@ const getSingleUser = async (req, res) => {
       async (err, result) => {
         if (result.length === 0) {
           return res.json(
-            authErrorMessage(
+            responseMessage(
               'error',
               'This is not a valid email',
             ),
@@ -419,84 +416,87 @@ const getSingleUser = async (req, res) => {
     );
   } catch (error) {
     return res.json(
-      authErrorMessage('error', 'This problem'),
+      responseMessage('error', 'This problem'),
     );
   }
 };
 
 // DASHBOARD DATA
 const getDashboadData = async (req, res) => {
-  const token = req.headers.token;
+  const { authorization } = req.headers;
+  const token = authorization.split(' ')[1];
   const isVerified = verifyToken(token);
 
   try {
     const hasEmail =
       'SELECT name, method, review_method FROM client_visitor WHERE user_email = (?)';
-    db.query(
-      hasEmail,
-      [isVerified.decoded.email],
-      async (err, result) => {
-        if (result.length === 0) {
-          return res.json(
-            authErrorMessage(
-              'error',
-              'This is not a valid email',
-            ),
-          );
-        }
-        // let email = [];
-        // let sms = [];
-        // let both = [];
-        // result.map((user, inx) => {
-        //   if (user.method === 'email') {
-        //     let count = 0;
-        //     email = [{ email: count++ }];
-        //   } else if (user.method === 'sms') {
-        //     let count = 0;
-        //     sms.push( [{ sms: count++ }])
-        //     console.log(count);
-        //   } else if (user.method === 'both') {
-        //     let count = 0;
-        //     both = [{ both: count++ }];
-        //   }
-        // });
-        return res.json(
-          authErrorMessage('success', 'ok', {
-            data: result,
-          }),
-        );
-        // const methods =
-        //   'SELECT COUNT(*) AS methods FROM client_visitor  WHERE user_email = ?';
+    const [user] = await db.query(hasEmail, [
+      isVerified.decoded.email,
+    ]);
+    console.log(user.length);
 
-        // db.query(methods, [isVerified.decoded.email], async (err, result) => {
-        //   data = [...result];
-        // });
-
-        // const methods =
-        //   'SELECT COUNT(*) AS methods FROM client_visitor  WHERE user_email = ?';
-
-        // db.query(methods, [isVerified.decoded.email], async (err, result) => {
-        //   data = [...result];
-        // });
-
-        // const sql = 'SELECT id, email, date, isValid FROM users WHERE email = ?';
-        // db.query(sql, [result[0].email], async (err, result) => {
-        //   if (err) {
-        //     return res.json({ error: 'Problem get all users' });
-        //   }
-        //   return res.json({
-        //     email: result[0].email,
-        //     username: result[0].username,
-        //     id: result[0].id,
-        //     isValid: result[0].isValid,
-        //     valid: true,
-        //   });
-        // });
-      },
+    if (user.length) {
+      return res.json(
+        responseMessage('error', 'No Visitor available'),
+      );
+    }
+    let email = [];
+    let sms = [];
+    let both = [];
+    user.map((user, inx) => {
+      if (user.method === 'email') {
+        let count = 0;
+        email = [{ email: count++ }];
+      } else if (user.method === 'sms') {
+        let count = 0;
+        sms.push([{ sms: count++ }]);
+        console.log(count);
+      } else if (user.method === 'both') {
+        let count = 0;
+        both = [{ both: count++ }];
+      }
+    });
+    return res.json(
+      responseMessage('success', 'ok', {
+        data: result,
+      }),
     );
+    const countUserVisitsSql = `
+  SELECT COUNT(*) AS visitorCount 
+  FROM client_visitor 
+  WHERE user_email = ?
+`;
+
+    const [[{ visitorCount }]] = await db.query(
+      countUserVisitsSql,
+      [isVerified.decoded.email],
+    );
+
+    // data = [...methods];
+
+    // const sql =
+    //   'SELECT id, email, date, isValid FROM users WHERE email = ?';
+    // db.query(
+    //   sql,
+    //   [result[0].email],
+    //   async (err, result) => {
+    //     if (err) {
+    //       return res.json({
+    //         error: 'Problem get all users',
+    //       });
+    //     }
+    //     return res.json({
+    //       email: result[0].email,
+    //       username: result[0].username,
+    //       id: result[0].id,
+    //       isValid: result[0].isValid,
+    //       valid: true,
+    //     });
+    //   },
+    // );
   } catch (error) {
     return res.json(
-      authErrorMessage('error', 'This problem'),
+      responseMessage('error', 'This problem'),
     );
   }
 };
@@ -515,23 +515,22 @@ const miniUpdateGet = (req, res) => {
         console.log(result);
         if (result.length === 0) {
           return res.json(
-            authErrorMessage('error', 'no data'),
+            responseMessage('error', 'no data'),
           );
         }
         return res.json(
-          authErrorMessage('success', 'no data', {
+          responseMessage('success', 'no data', {
             data: result,
           }),
         );
       },
     );
   } catch (error) {
-    return res.json(authErrorMessage('error', 'no data'));
+    return res.json(responseMessage('error', 'no data'));
   }
 };
 const updateUserProfile = async (req, res) => {
   const { authorization } = req.headers;
-  
 
   if (!authorization) {
     return res.status(401).json({
@@ -601,7 +600,6 @@ const updateUserProfile = async (req, res) => {
 
 const getHeader = async (req, res) => {
   const { authorization } = req.headers;
-  console.log(req.headers);
 
   if (!authorization) {
     return res.status(401).json({

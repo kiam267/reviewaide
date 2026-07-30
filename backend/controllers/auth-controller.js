@@ -93,10 +93,8 @@ const login = async (req, res) => {
 
 // Get all users (example)
 const getAll = async (req, res) => {
-  console.log('ok');
   const { token } = req.headers;
   const tokenVerify = verifyToken(token);
-  console.log(req.headers, 'pok');
 
   try {
     const users = await prisma.user.findMany();

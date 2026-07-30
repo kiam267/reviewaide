@@ -8,7 +8,7 @@ export const API_URL =
 // 🔥 Create instance
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  // timeout: 10000,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',

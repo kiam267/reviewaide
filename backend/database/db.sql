@@ -100,6 +100,9 @@ CREATE TABLE IF NOT EXISTS qr_code (
     unique_id VARCHAR(100) UNIQUE,
     user_email VARCHAR(255) NOT NULL,
     valid BOOLEAN DEFAULT true,
+    facebook_link VARCHAR(2000) NOT NULL,
+    compnay_logo VARCHAR(255),
+    google_link VARCHAR(2000) NOT NULL,
     method VARCHAR(255) DEFAULT 'open_source'
 );
 

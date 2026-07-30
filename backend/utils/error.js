@@ -1,4 +1,4 @@
-const authErrorMessage = (
+const responseMessage = (
   status = 'error',
   message = '',
   data = null,
@@ -13,5 +13,5 @@ const authErrorMessage = (
 };
 
 module.exports = {
-  authErrorMessage,
+  responseMessage,
 };
