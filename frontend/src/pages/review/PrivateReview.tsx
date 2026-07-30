@@ -31,14 +31,17 @@ function PrivateReview(props) {
       page,
     }));
   };
-  const { getClientInfo, refetch, isPending } =
-    useGetClient(sesstion, clientSearch);
+  const {
+    data: getClientInfo,
+    refetch,
+    isPending,
+  } = useGetClient(clientSearch);
   useEffect(() => {
     refetch();
   }, [clientSearch]);
   interface ClientItme {
     clientName: string;
-    createdAt: string; // Assuming createdAt is always in ISO 8601 format
+    createdAt: string;
     email: string;
     id: number;
     method: string;
@@ -46,21 +49,70 @@ function PrivateReview(props) {
     rating: number;
     uniqueId: number;
   }
+  const clientData: ClientItme[] = [
+    {
+      id: 1,
+      clientName: 'John Brown',
+      email: 'john@example.com',
+      rating: 4,
+      method: 'google',
+      private: 'no',
+      uniqueId: 1001,
+      createdAt: '2026-07-30T10:30:00Z',
+    },
+    {
+      id: 2,
+      clientName: 'Sarah Smith',
+      email: 'sarah@example.com',
+      rating: 5,
+      method: 'facebook',
+      private: 'yes',
+      uniqueId: 1002,
+      createdAt: '2026-07-29T08:15:00Z',
+    },
+    {
+      id: 3,
+      clientName: 'Michael Lee',
+      email: 'michael@example.com',
+      rating: 3,
+      method: 'google',
+      private: 'no',
+      uniqueId: 1003,
+      createdAt: '2026-07-28T14:45:00Z',
+    },
+    {
+      id: 4,
+      clientName: 'Emily Davis',
+      email: 'emily@example.com',
+      rating: 5,
+      method: 'open_source',
+      private: 'yes',
+      uniqueId: 1004,
+      createdAt: '2026-07-27T12:00:00Z',
+    },
+    {
+      id: 5,
+      clientName: 'David Wilson',
+      email: 'david@example.com',
+      rating: 2,
+      method: 'google',
+      private: 'no',
+      uniqueId: 1005,
+      createdAt: '2026-07-26T09:20:00Z',
+    },
+  ];
 
-  if (getClientInfo?.tokenInvalid) {
-    return <Logout />;
-  }
-  if (!getClientInfo?.pagination?.total) {
-    return (
-      <CustomeContainer>
-        <Breadcrumb
-          title="private Review"
-          breadcrumbItem="Private Review"
-        />
-        <Empty />
-      </CustomeContainer>
-    );
-  }
+  // if (!getClientInfo?.pagination?.total) {
+  //   return (
+  //     <CustomeContainer>
+  //       <Breadcrumb
+  //         title="private Review"
+  //         breadcrumbItem="Private Review"
+  //       />
+  //       <Empty />
+  //     </CustomeContainer>
+  //   );
+  // }
   return (
     <CustomeContainer>
       <Breadcrumb
@@ -70,7 +122,7 @@ function PrivateReview(props) {
       <List
         itemLayout="vertical"
         size="large"
-        dataSource={getClientInfo?.data as any}
+        dataSource={clientData as any}
         renderItem={(item: ClientItme) => {
           const checkItem = item.rating >= 4;
 
