@@ -277,30 +277,36 @@ function ClientRecoard() {
     },
   ];
 
-  if (isPending) {
-    return <>Loading... </>;
-  }
 
   return (
     <>
       {/* getClientInfo?.pagination?.total */}
       <UsersLayout>
         <CustomeContainer>
-          <Table
-            key={Math.random() * Date.now()}
-            columns={columns}
-            dataSource={data as DataType[]}
-            // dataSource={
-            //   getClientInfo?.data as unknown as DataType[]
-            // }
-            pagination={{
-              pageSize: 10,
-              //@ts-ignore
-             /*  total: getClientInfo?.pagination?.total | 0,
+          {isPending ? (
+            <div
+              className="w-100 d-flex justify-content-center align-items-center "
+              style={{ height: '70vh' }}
+            >
+              <div className="loader"></div>
+            </div>
+          ) : (
+            <Table
+              key={Math.random() * Date.now()}
+              columns={columns}
+              dataSource={data as DataType[]}
+              // dataSource={
+              //   getClientInfo?.data as unknown as DataType[]
+              // }
+              pagination={{
+                pageSize: 10,
+                //@ts-ignore
+                /*  total: getClientInfo?.pagination?.total | 0,
               current: getClientInfo?.pagination?.page || 0, // Set the current page
               onChange: handlePageChange, // Pass the handlePageChange function */
-            }}
-          />
+              }}
+            />
+          )}
           {/*    {data ? (
             <Table
               key={Math.random() * Date.now()}
