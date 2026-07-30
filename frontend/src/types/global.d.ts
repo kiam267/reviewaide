@@ -212,10 +212,10 @@ interface QRCodeGen {
   facebookLink: string;
 }
 interface ClientLinkResponse {
-  response: ResposeVisitor;
+  response: VisitorLinkResponse;
 }
 
-type ResposeVisitor = {
+type VisitorLinkResponse = {
   data:
     | [
         {
@@ -230,6 +230,10 @@ type ResposeVisitor = {
   tokenInvalid: boolean;
 };
 interface ClientLogoResponse {
+  response: VisitorPublicResponse;
+}
+
+type VisitorPublicResponse = {
   data?: {
     companyLogo: string;
     facebookLink: string;
@@ -238,4 +242,4 @@ interface ClientLogoResponse {
   success: boolean;
   message?: string;
   tokenInvalid: boolean;
-}
+};

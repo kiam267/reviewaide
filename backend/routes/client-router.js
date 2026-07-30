@@ -19,6 +19,8 @@ router
   .post(clientController.qr_code_gen)
   .delete(clientController.qr_code_delete);
 
-
+router
+  .route('/link-logo-query')
+  .get(clientController.getReviewLogo);
 
 module.exports =  router;

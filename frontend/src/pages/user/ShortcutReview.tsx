@@ -23,7 +23,6 @@ import { useParams, Link } from 'react-router-dom';
 import { Button, Spin } from 'antd';
 import boopSfx from '@/assets/sounds/mixkit-message-pop-alert-2354.mp3';
 
-import { API_URL as REACT_APP_SERVER_API } from '@/api/axiosConfig';
 import {
   useCreateClient,
   useReviewLogo,
@@ -31,10 +30,11 @@ import {
 const ShortcutReview = () => {
   //meta title
   const { id } = useParams();
-  const { createClient, isPending } = useCreateClient();
-  const { getReviewLogoInfo } = useReviewLogo({
-    uniqueId: String(id),
-  });
+  const { mutate: createClient, isPending } =
+    useCreateClient();
+  const uniqueId = String(id);
+  const { data: getReviewLogoInfo } =
+    useReviewLogo(uniqueId);
   const [textareabadge, settextareabadge] = useState(
     0,
   ) as any[];
@@ -47,12 +47,13 @@ const ShortcutReview = () => {
   const [retingShow, setRatingShow] = useState(true);
 
   const [URLValid, setURLValid] = useState<boolean>(false);
+  console.log(getReviewLogoInfo);
 
   useEffect(() => {
-    if (getReviewLogoInfo?.data?.companyLogo) {
+    if (getReviewLogoInfo?.response?.data?.facebookLink) {
       setURLValid(true);
     }
-  }, [getReviewLogoInfo?.data?.companyLogo]);
+  }, [getReviewLogoInfo?.response?.data?.companyLogo]);
 
   type Method = 'facebook' | 'google';
 
@@ -134,7 +135,7 @@ const ShortcutReview = () => {
                       width: '150px',
                       objectFit: 'contain',
                     }}
-                    src={`${getReviewLogoInfo?.data?.companyLogo}`}
+                    src={`${getReviewLogoInfo?.response?.data?.companyLogo}`}
                     alt="LOGO"
                   />
                   <CardBody>
@@ -159,7 +160,8 @@ const ShortcutReview = () => {
                                 paly();
                               }}
                             />
-
+                            <i className="bx bx-arrow-right-stroke bx-remove-padding" />
+                            <i className="" />
                             <div className=" d-flex justify-content-center pt-4">
                               <Button
                                 className="rounded-5 d-flex justify-content-center  align-items-center"
@@ -175,7 +177,8 @@ const ShortcutReview = () => {
                                   setRatingShow(false)
                                 }
                               >
-                                <i className="bx bx-right-arrow-alt fs-2 animation"></i>
+                           
+                                <i className="fa-solid fa-angle-right fs-3 animation"></i>
                               </Button>
                             </div>
                           </div>
@@ -197,7 +200,7 @@ const ShortcutReview = () => {
                                     style={{
                                       display: `${
                                         getReviewLogoInfo
-                                          ?.data
+                                          ?.response?.data
                                           ?.googleLink ===
                                         ''
                                           ? 'none'
@@ -207,7 +210,7 @@ const ShortcutReview = () => {
                                     }}
                                     to={
                                       getReviewLogoInfo
-                                        ?.data
+                                        ?.response?.data
                                         ?.googleLink as string
                                     }
                                     className="btn btn-primary  m-auto w-75  border-0"
@@ -249,7 +252,7 @@ const ShortcutReview = () => {
                                     style={{
                                       display: `${
                                         getReviewLogoInfo
-                                          ?.data
+                                          ?.response?.data
                                           ?.facebookLink ===
                                         ''
                                           ? 'none'
@@ -259,7 +262,7 @@ const ShortcutReview = () => {
                                     }}
                                     to={
                                       getReviewLogoInfo
-                                        ?.data
+                                        ?.response?.data
                                         ?.facebookLink as string
                                     }
                                     className="btn btn-primary  m-auto w-75 border-0"

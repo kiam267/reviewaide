@@ -311,14 +311,15 @@ const qr_code_gen = async (req, res) => {
         company_name
       ) VALUES (?, ?, ?, ?, ?, ?)
     `;
+    console.log(user);
 
     const [visitor] = await con.query(sql, [
       uniqId,
       isVerify.decoded.email,
-      user.facebook_link || '', // Facebook
-      user.google_link || '', // Google
-      user.company_logo || '', // Company Logo
-      user.company_name || '', // Company Name
+      user.facebookLink || '', // Facebook
+      user.googleLink || '', // Google
+      user.companyLogo || '', // Company Logo
+      user.companyName || '', // Company Name
     ]);
 
     return res.status(200).json(
@@ -369,7 +370,68 @@ const qr_code_delete = (req, res) => {
     );
   }
 };
+const getReviewLogo = async (req, res) => {
+  try {
+    const { authorization } = req.headers;
+    const { uniqueId } = req.query;
 
+    // 🔐 Check token
+    if (!authorization) {
+      return res.json(
+        responseMessage('error', 'No token provided'),
+      );
+    }
+
+    const token = authorization.split(' ')[1];
+    const isVerify = verifyToken(token);
+
+    // ❌ Invalid uniqueId
+    if (!uniqueId || Number(uniqueId) === 0) {
+      return res.json(
+        responseMessage('error', 'Invalid uniqueId'),
+      );
+    }
+
+    // ✅ Prisma query
+    const sql =
+      'SELECT * FROM qr_code  WHERE unique_id = ?';
+    const [[visitor]] = await con.query(sql, [uniqueId]);
+
+    // ❌ No data found
+    if (!visitor) {
+      return res.json(
+        responseMessage('success', {
+          id: 'none',
+          valid: false,
+        }),
+      );
+    }
+
+    const convertToCamelCase = obj => {
+      return Object.keys(obj).reduce((acc, key) => {
+        const camelKey = key.replace(
+          /_([a-z])/g,
+          (_, char) => char.toUpperCase(),
+        );
+        acc[camelKey] = obj[key];
+        return acc;
+      }, {});
+    };
+    const newVisitor = convertToCamelCase(visitor);
+    // ✅ Success response
+    return res.json(
+      responseMessage(
+        'success',
+        'visitor get successfully',
+        newVisitor,
+      ),
+    );
+  } catch (error) {
+    return res.json(
+      responseMessage('error', 'Internal Server Error'),
+    );
+  }
+};
 module.exports = {
   visitor,
   getVisitor,
@@ -379,4 +441,5 @@ module.exports = {
   qr_code_get,
   qr_code_gen,
   qr_code_delete,
+  getReviewLogo,
 };

@@ -23,7 +23,6 @@ import { Rating } from 'react-simple-star-rating';
 import { useGetClient } from '@/hook/useClient';
 import dateFormat from 'dateformat';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
-import type { InputRef, TableColumnsType } from 'antd';
 import Highlighter from 'react-highlight-words';
 type Method = 'facebook' | 'google' | 'private';
 export interface DataType {
@@ -36,10 +35,7 @@ export interface DataType {
 }
 
 function ClientRecoard() {
-  const sesstion = localStorage.getItem('user-token');
-  const { getUerInfo, isPending } = useGetUser(
-    sesstion as string,
-  );
+  const { data: getUerInfo, isPending } = useGetUser();
   const [clientSearch, setClientSearch] =
     useState<ClientSearchState>({
       page: 1,
@@ -47,10 +43,8 @@ function ClientRecoard() {
       method: '',
     });
 
-  const { getClientInfo, refetch } = useGetClient(
-    sesstion,
-    clientSearch,
-  );
+  const { data: getClientInfo, refetch } =
+    useGetClient(clientSearch);
 
   const userData = getUerInfo;
   // console.log(searchText);
@@ -70,7 +64,7 @@ function ClientRecoard() {
       clientName: 'John Brown',
       rating: 3,
       method: 'google',
-      date: '34897534895',
+      date: new Date(34897534895),
     },
   ];
 
@@ -283,37 +277,50 @@ function ClientRecoard() {
     },
   ];
 
-  if (getClientInfo?.tokenInvalid) {
-    return <Navigate to="/logout" />;
-  }
-
   if (isPending) {
     return <>Loading... </>;
   }
 
   return (
     <>
+      {/* getClientInfo?.pagination?.total */}
       <UsersLayout>
         <CustomeContainer>
-          {getClientInfo?.pagination?.total ? (
+          <Table
+            key={Math.random() * Date.now()}
+            columns={columns}
+            dataSource={data as DataType[]}
+            // dataSource={
+            //   getClientInfo?.data as unknown as DataType[]
+            // }
+            pagination={{
+              pageSize: 10,
+              //@ts-ignore
+             /*  total: getClientInfo?.pagination?.total | 0,
+              current: getClientInfo?.pagination?.page || 0, // Set the current page
+              onChange: handlePageChange, // Pass the handlePageChange function */
+            }}
+          />
+          {/*    {data ? (
             <Table
               key={Math.random() * Date.now()}
               columns={columns}
-              dataSource={
-                getClientInfo?.data as unknown as DataType[]
-              }
-              pagination={{
-                pageSize: 10,
-                //@ts-ignore
-                total: getClientInfo?.pagination?.total | 0,
-                current:
-                  getClientInfo?.pagination?.page || 0, // Set the current page
-                onChange: handlePageChange, // Pass the handlePageChange function
-              }}
+              dataSource={data as unknown as DataType[]}
+              // dataSource={
+              //   getClientInfo?.data as unknown as DataType[]
+              // }
+              // pagination={{
+              //   pageSize: 10,
+              //   //@ts-ignore
+              //   total: getClientInfo?.pagination?.total | 0,
+              //   current:
+              //     getClientInfo?.pagination?.page || 0, // Set the current page
+              //   onChange: handlePageChange, // Pass the handlePageChange function
+              // }}
             />
           ) : (
             <Empty />
-          )}
+          )} */}
           {/* <App /> */}
         </CustomeContainer>
       </UsersLayout>
