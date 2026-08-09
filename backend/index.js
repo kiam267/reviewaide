@@ -14,6 +14,7 @@ const marketingRouter = require('./routes/marketing-route');
 const shortcutRouter = require('./routes/shortcut-router');
 
 const { errorMessage } = require('./utils/message.js');
+const { startCronJobs } = require('./utils/corn.js');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -44,7 +45,7 @@ app.get(
 
 // Swagger setup
 swagger(app);
-
+startCronJobs();
 // Static files
 app.use('/api/uploads', express.static('uploads'));
 app.use('/public', express.static('public'));

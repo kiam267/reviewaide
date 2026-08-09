@@ -36,6 +36,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { REVIEW_LINK } from '@/helpers/url_helper';
 import { API_URL } from '@/api';
+import { Link } from 'react-router-dom';
 function QRcode() {
   //@ts-ignore
   const { data: getClientLinkInfo, refetch } =
@@ -473,16 +474,27 @@ function QrCodeItem({
           className="d-block m-auto my-2 rounded-circle"
           style={{ objectFit: 'contain' }}
         />
-        <p className="text-center text-secondary fs-6">
-          {itemName}
-        </p>
+        <div className="d-flex justify-content-between align-items-center position-relative p-2">
+          <div className="">
+            <h5 className=" mb-0">Kiam</h5>
+          </div>
 
+          <Link
+            to={`${REVIEW_LINK}/review/shortcut/${item}`}
+            target="_blank"
+            className="position-absolute top-0 end-0 m-2 text-black"
+          >
+            <i className="fa-solid fa-arrow-up-right-from-square"></i>
+          </Link>
+        </div>
         <QRCode
+          className='mt-2'
           status={status}
           value={`${REVIEW_LINK}/review/shortcut/${item}`}
           bgColor="#fff"
           style={{ marginBottom: 16 }}
         />
+
         <div className="gap-3 d-flex justify-content-center">
           <Button
             type="primary"

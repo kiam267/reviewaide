@@ -27,6 +27,7 @@ import {
   useCreateClient,
   useReviewLogo,
 } from '@/hook/useClient';
+import { API_URL } from '@/api';
 const ShortcutReview = () => {
   //meta title
   const { id } = useParams();
@@ -135,7 +136,7 @@ const ShortcutReview = () => {
                       width: '150px',
                       objectFit: 'contain',
                     }}
-                    src={`${getReviewLogoInfo?.response?.data?.companyLogo}`}
+                    src={`${API_URL}/public/orgImages/${getReviewLogoInfo?.response?.data?.companyLogo}`}
                     alt="LOGO"
                   />
                   <CardBody>
@@ -177,7 +178,6 @@ const ShortcutReview = () => {
                                   setRatingShow(false)
                                 }
                               >
-                           
                                 <i className="fa-solid fa-angle-right fs-3 animation"></i>
                               </Button>
                             </div>
