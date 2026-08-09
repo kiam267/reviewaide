@@ -3,6 +3,7 @@ const uniqid = require('uniqid');
 const { responseMessage } = require('../utils/error');
 const { verifyToken } = require('../utils/utils');
 const { queueINIT } = require('../utils/redisbd');
+const { toCamelCase } = require('../utils/data-conveter');
 
 const queue = queueINIT('email-queue');
 const kiam = 'kiam';
@@ -252,7 +253,7 @@ const qr_code_get = async (req, res) => {
       responseMessage(
         'success',
         'visitor get successfully',
-        visitor,
+        toCamelCase(visitor),
       ),
     );
   } catch (error) {
@@ -265,8 +266,9 @@ const qr_code_get = async (req, res) => {
 const qr_code_gen = async (req, res) => {
   try {
     const { authorization } = req.headers;
-    const { user } = req.body;
 
+    const orgDeatils = req.body;
+    const orgLogo = req.file; // Access the uploaded file
     // 1. Guard clause: Ensure Authorization header exists
     if (
       !authorization ||
@@ -311,15 +313,14 @@ const qr_code_gen = async (req, res) => {
         company_name
       ) VALUES (?, ?, ?, ?, ?, ?)
     `;
-    console.log(user);
 
     const [visitor] = await con.query(sql, [
       uniqId,
       isVerify.decoded.email,
-      user.facebookLink || '', // Facebook
-      user.googleLink || '', // Google
-      user.companyLogo || '', // Company Logo
-      user.companyName || '', // Company Name
+      orgDeatils.facebookLink || '', // Facebook
+      orgDeatils.googleLink || '', // Google
+      orgLogo.filename || '', // Company Logo
+      orgDeatils.companyName || '', // Company Name
     ]);
 
     return res.status(200).json(
@@ -337,37 +338,37 @@ const qr_code_gen = async (req, res) => {
       );
   }
 };
-const qr_code_delete = (req, res) => {
-  const { token } = req.headers;
-  const link = req.body.LINK;
-  const isVerify = verifyToken(token);
+const qr_code_delete = async (req, res) => {
+  const { deleteId } = req.body;
+
+  const deleteSql =
+    'UPDATE qr_code SET valid = ? WHERE unique_id = ?';
+
   try {
-    const deleteSql =
-      'UPDATE qr_code SET valid = ? WHERE user_email = ?';
-    con.query(
-      deleteSql,
-      [false, isVerify.decoded.email],
-      (err, clientData) => {
-        if (err) {
-          return res.json(
-            responseMessage(
-              'error',
-              'Internal Server Error',
-            ),
-          );
-        }
-        res.json(
-          responseMessage('success', {
-            id: 'dfdfgd',
-            valid: false,
-          }),
-        );
-      },
-    );
-  } catch (error) {
+    const result = await con.query(deleteSql, [
+      false,
+      deleteId,
+    ]);
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json(responseMessage('error', 'User not found'));
+    }
+
     res.json(
-      responseMessage('error', 'Internal Server Error'),
+      responseMessage('success', {
+        id: deleteId,
+        message: 'QR code deleted successfully',
+      }),
     );
+  } catch (err) {
+    console.error('Error deleting QR code:', err); // Log the actual error for debugging
+    res
+      .status(500)
+      .json(
+        responseMessage('error', 'Internal Server Error'),
+      );
   }
 };
 const getReviewLogo = async (req, res) => {

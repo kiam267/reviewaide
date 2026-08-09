@@ -99,11 +99,14 @@ CREATE TABLE IF NOT EXISTS qr_code (
     id INT AUTO_INCREMENT PRIMARY KEY,
     unique_id VARCHAR(100) UNIQUE,
     user_email VARCHAR(255) NOT NULL,
-    valid BOOLEAN DEFAULT true,
+    company_name VARCHAR(255),
+    company_logo VARCHAR(255),
     facebook_link VARCHAR(2000) NOT NULL,
-    compnay_logo VARCHAR(255),
     google_link VARCHAR(2000) NOT NULL,
-    method VARCHAR(255) DEFAULT 'open_source'
+    method VARCHAR(255) DEFAULT 'open_source',
+    valid BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- OPEN PRIVATE REVIEW

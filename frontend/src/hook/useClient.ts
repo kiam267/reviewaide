@@ -44,26 +44,34 @@ export const useCreateQrCodeLink = () => {
   return useMutation({
     mutationKey: ['qrcode'],
 
-    mutationFn: async (user: QRCodeGen) => {
-      // if (!user.companyLogo) {
-      //   throw new Error('Please add a company logo');
-      // }
-  
-
+    mutationFn: async (orgDeatils: QRCodeGen) => {
       const formData = new FormData();
 
-      formData.append('companyName', user.companyName);
-      formData.append('companyLogo', user.companyLogo);
+      formData.append(
+        'companyName',
+        orgDeatils.companyName,
+      );
+      formData.append('googleLink', orgDeatils.googleLink);
+      formData.append(
+        'facebookLink',
+        orgDeatils.facebookLink,
+      );
 
-      if (user.googleLink) {
-        formData.append('googleLink', user.googleLink);
-      }
+      // IMPORTANT: append actual file object
+      formData.append(
+        'companyLogo',
+        orgDeatils.companyLogo,
+      );
 
-      if (user.facebookLink) {
-        formData.append('facebookLink', user.facebookLink);
-      }
-
-      return apiClient.post('/api/client/qr_gen', user);
+      return apiClient.post(
+        '/api/client/qr_gen',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
     },
 
     onSuccess: (data: any) => {
@@ -84,6 +92,14 @@ export const useGetClientLink = () => {
 
     queryFn: (): Promise<ClientLinkResponse> =>
       apiClient.get('/api/client/qr_gen'),
+
+    // ✅ ADD THESE
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+
+    // optional (very useful)
+    staleTime: 1000 * 60 * 5, // 5 minutes cache
   });
 };
 
@@ -93,9 +109,9 @@ export const useDeleteClientLink = () => {
   return useMutation({
     mutationKey: ['delete-client-link'],
 
-    mutationFn: ({ uniqueId }: { uniqueId: string }) =>
-      apiClient.delete('/api/client/link-generator', {
-        uniqueId,
+    mutationFn: (deleteId: string) =>
+      apiClient.delete('/api/client/qr_gen', {
+        deleteId,
       }),
 
     onSuccess: (data: any) => {

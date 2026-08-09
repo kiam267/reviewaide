@@ -9,5 +9,4 @@ export const sysEmailSender = () => {
      );
      console.log(emailData.messageId);
    });
-  console.log();
 }

@@ -47,6 +47,7 @@ swagger(app);
 
 // Static files
 app.use('/api/uploads', express.static('uploads'));
+app.use('/public', express.static('public'));
 app.use('/api/photos', express.static('photos'));
 
 // Routes

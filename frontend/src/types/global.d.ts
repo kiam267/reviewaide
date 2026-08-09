@@ -210,6 +210,7 @@ interface QRCodeGen {
   companyName: string;
   googleLink: string;
   facebookLink: string;
+  companyLogo?: File | null;
 }
 interface ClientLinkResponse {
   response: VisitorLinkResponse;

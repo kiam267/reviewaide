@@ -35,6 +35,7 @@ import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { REVIEW_LINK } from '@/helpers/url_helper';
+import { API_URL } from '@/api';
 function QRcode() {
   //@ts-ignore
   const { data: getClientLinkInfo, refetch } =
@@ -75,7 +76,7 @@ function QRcode() {
         : 'loading',
     );
   }, [getClientLinkInfo?.response.data]);
-
+  console.log(getClientLinkInfo?.response.data, 'datakiam');
 
   return (
     <CustomeContainer>
@@ -155,9 +156,6 @@ function QrGenForm({
       error: login.error,
     }),
   );
-  // api call to create a new qr code
-  const token: string | null =
-    localStorage.getItem('user-token');
   const {
     mutate: createQRCode,
     isSuccess,
@@ -188,11 +186,13 @@ function QrGenForm({
       facebookLink: Yup.string(),
     }),
     onSubmit: async (values: QrCode, { resetForm }) => {
-      const userData = { ...values };
-      console.log('userdata', 'visitor');
+      const userData = {
+        ...values,
+        companyLogo: fileDetails,
+      };
 
       //@ts-ignore
-      createQRCode({ user: userData });
+      createQRCode({ ...userData });
       resetForm();
       setFileDetail(null);
       setBase64URL('');
@@ -271,12 +271,12 @@ function QrGenForm({
         onChange={onFileChanged}
       >
         <div
-          className="my-3 border rounded-circle  d-flex justify-content-center align-items-center shadow-lg"
+          className="my-3 border rounded  d-flex justify-content-center align-items-center shadow-lg"
           style={{
-            // border:
             width: '100px',
             height: '100px',
             overflow: 'hidden',
+            cursor: 'pointer',
           }}
         >
           {base64URL ? (
@@ -287,9 +287,9 @@ function QrGenForm({
               style={{ width: '100%', objectFit: 'cover' }}
             />
           ) : (
-            <div className="d-block">
+            <div className="d-block ">
               <i
-                className="bx bx-upload"
+                className="fa-solid fa-upload"
                 style={{
                   fontSize: '3rem',
                 }}
@@ -450,16 +450,12 @@ function QrCodeItem({
   const token: string | null =
     localStorage.getItem('user-token');
   const {
-    data: createClient,
+    mutate: createClient,
     isSuccess,
     isPending,
   } = useDeleteClientLink();
   const QRCodeDeleteButton = async ({ id }) => {
-    await createClient({
-      //@ts-ignore
-      token,
-      uniqueId: id,
-    });
+    createClient(id);
   };
   useEffect(() => {
     handelQrCodeGenThenReaf();
@@ -468,7 +464,9 @@ function QrCodeItem({
     <div id={`myqrcode-${item}`}>
       <>
         <img
-          src={itemLogo}
+          src={`
+            ${API_URL}/public/orgImages/${itemLogo}
+            `}
           alt="logo"
           width={40}
           height={40}

@@ -21,7 +21,6 @@ import withRouter from '@/components/Common/withRouter';
 import { createSelector } from 'reselect';
 import CustomePass from '@/components/CustomePass';
 import { useMatchMyUser } from '@/hook/useUser';
-import TEST from './test';
 
 const UserLogin = (props: any) => {
   const {
@@ -78,7 +77,6 @@ const UserLogin = (props: any) => {
 
   return (
     <>
-      <TEST />
       <Form
         className="form-horizontal login-form"
         onSubmit={e => {

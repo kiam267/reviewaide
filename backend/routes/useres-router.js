@@ -22,7 +22,7 @@ router
 // Multer configuration
 let imgconfig = multer.diskStorage({
   destination: (req, file, callback) => {
-    console.log(file);
+    console.log(file, req.body);
     callback(null, './uploads');
   },
   filename: (req, file, callback) => {
@@ -32,7 +32,6 @@ let imgconfig = multer.diskStorage({
 
 // img filter
 const isImage = (req, file, callback) => {
-  console.log(file);
   if (file.mimetype.startsWith('image')) {
     callback(null, true);
   } else {
@@ -53,7 +52,7 @@ router
 router.route('/login').post(usresController.login);
 // User
 /**
- * 
+ *
  */
 router
   .route('/')
