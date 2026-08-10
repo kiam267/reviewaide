@@ -516,6 +516,69 @@ const getAllPrivateFeedback = async (req, res) => {
       .status(500);
   }
 };
+
+//
+
+const createPublicFeedback = async (req, res) => {
+  console.log(req.body);
+
+  try {
+    const { id, rating, method } = req.body;
+    // Validation
+    if (!id) {
+      return res
+        .status(400)
+        .json(
+          responseMessage(
+            'error',
+            'Missing required field: id',
+          ),
+        );
+    }
+
+    // Get QR Code
+    const sql = `SELECT * FROM qr_code WHERE unique_id = ?`;
+    const [[visitor]] = await con.query(sql, [id]);
+
+    if (!visitor) {
+      return res
+        .status(404)
+        .json(
+          responseMessage('error', 'QR code not found'),
+        );
+    }
+
+    // Insert Public Feedback
+    const insertSql = `
+      INSERT INTO public_review
+      (method, rating, company_name, user_email, date)
+      VALUES (?, ?, ?, ?, NOW())
+    `;
+    const [result] = await con.query(insertSql, [
+      method,
+      rating || null,
+      visitor.company_name || null,
+      visitor.user_email || null,
+    ]);
+
+    return res
+      .status(200)
+      .json(
+        responseMessage(
+          'success',
+          'Public feedback created successfully',
+        ),
+      );
+  } catch (error) {
+    console.log(error);
+
+    return res
+      .json(
+        responseMessage('error', 'Internal Server Error'),
+      )
+      .status(500);
+  }
+};
 module.exports = {
   visitor,
   getVisitor,
@@ -528,4 +591,5 @@ module.exports = {
   getReviewLogo,
   createNegativeFeedback,
   getAllPrivateFeedback,
+  createPublicFeedback,
 };

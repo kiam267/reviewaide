@@ -25,6 +25,22 @@ export const useGetClient = (
   });
 };
 
+export const usePublicFeedback = () => {
+  return useMutation({
+    mutationKey: ['client-create'],
+
+    mutationFn: (client: CreateClient) =>
+      apiClient.post('/api/client/public-feedback', client),
+
+    onSuccess: (data: any) => {
+      data.success
+        ? toast.success(data.message)
+        : toast.error(data.message);
+    },
+
+    onError: () => toast.error('Create failed'),
+  });
+};
 export const useCreateClient = () => {
   return useMutation({
     mutationKey: ['client-create'],

@@ -52,6 +52,10 @@ router.post(
   '/private-feedback',
   clientController.createNegativeFeedback,
 );
+router.post(
+  '/public-feedback',
+  clientController.createPublicFeedback,
+);
 router.use(isCheckUser);
 
 router

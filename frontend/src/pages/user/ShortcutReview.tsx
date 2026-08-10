@@ -25,6 +25,7 @@ import boopSfx from '@/assets/sounds/mixkit-message-pop-alert-2354.mp3';
 
 import {
   useCreateClient,
+  usePublicFeedback,
   useReviewLogo,
 } from '@/hook/useClient';
 import { API_URL } from '@/api';
@@ -33,6 +34,11 @@ const ShortcutReview = () => {
   const { id } = useParams();
   const { mutate: createClient, isPending } =
     useCreateClient();
+
+  const {
+    mutate: publicFeedback,
+    isPending: isPublicFeedbackPending,
+  } = usePublicFeedback();
   const uniqueId = String(id);
   const { data: getReviewLogoInfo } =
     useReviewLogo(uniqueId);
@@ -58,8 +64,8 @@ const ShortcutReview = () => {
 
   type Method = 'facebook' | 'google';
 
-  const methodHandeler = async (id, method: Method) => {
-    await createClient({
+  const methodHandeler = (id, method: Method) => {
+    publicFeedback({
       id: id.toString(),
       method,
       rating,
@@ -213,6 +219,7 @@ const ShortcutReview = () => {
                                         ?.response?.data
                                         ?.googleLink as string
                                     }
+                                    target="_blank"
                                     className="btn btn-primary  m-auto w-75  border-0"
                                     onClick={() => {
                                       methodHandeler(
@@ -222,7 +229,7 @@ const ShortcutReview = () => {
                                       setMethod('google');
                                     }}
                                   >
-                                    {isPending &&
+                                    {isPublicFeedbackPending &&
                                     method === 'google' ? (
                                       <Spin
                                         style={{
@@ -239,7 +246,7 @@ const ShortcutReview = () => {
                                       />
                                     ) : (
                                       <i
-                                        className="bx bxl-google"
+                                        className="fa-brands fa-google"
                                         style={{
                                           fontSize: '40px',
                                         }}
@@ -260,6 +267,7 @@ const ShortcutReview = () => {
                                       }`,
                                       background: '#F6653F',
                                     }}
+                                    target="_blank"
                                     to={
                                       getReviewLogoInfo
                                         ?.response?.data
@@ -275,7 +283,7 @@ const ShortcutReview = () => {
                                       setMethod('facebook');
                                     }}
                                   >
-                                    {isPending &&
+                                    {isPublicFeedbackPending &&
                                     method ===
                                       'facebook' ? (
                                       <Spin
@@ -293,7 +301,7 @@ const ShortcutReview = () => {
                                       />
                                     ) : (
                                       <i
-                                        className="bx bxl-facebook-circle"
+                                        className="fa-brands fa-facebook"
                                         style={{
                                           fontSize: '40px',
                                         }}
