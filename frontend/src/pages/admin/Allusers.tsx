@@ -61,9 +61,7 @@ function Allusers(props) {
       searchUserName: '',
       searchUserStatus: '',
     });
-  const token = localStorage.getItem(
-    'admin-token',
-  ) as string;
+
   //@ts-ignore
   const { getUserInfo, refetch } =
     useGetUserViaAdmin(userSearch);

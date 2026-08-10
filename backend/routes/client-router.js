@@ -61,6 +61,9 @@ router.use(isCheckUser);
 router
   .route('/private-feedback')
   .get(clientController.getAllPrivateFeedback);
+router
+  .route('/public-feedback')
+  .get(clientController.getAllPublicFeedback);
 
 router
   .route('/')

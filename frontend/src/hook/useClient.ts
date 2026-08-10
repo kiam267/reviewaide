@@ -24,11 +24,28 @@ export const useGetClient = (
     },
   });
 };
+export const usePublicFeedbacks = (
+  searchState: ClientSearchState,
+) => {
+  return useQuery({
+    queryKey: ['clients-public', searchState],
+    /* 
+ {
+        page: searchState.page,
+        clientName: searchState.clientName,
+        method: searchState.method,
+        rating: searchState.rating,
+      }
+*/
+    queryFn: (): Promise<PublicFeedback> => {
+      return apiClient.get('/api/client/public-feedback');
+    },
+  });
+};
 
 export const usePublicFeedback = () => {
   return useMutation({
     mutationKey: ['client-create'],
-
     mutationFn: (client: CreateClient) =>
       apiClient.post('/api/client/public-feedback', client),
 

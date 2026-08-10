@@ -20,7 +20,10 @@ import { useGetUser } from '@/hook/useUser';
 import { Navigate } from 'react-router-dom';
 // import UserForm from 'components/UserForm';
 import { Rating } from 'react-simple-star-rating';
-import { useGetClient } from '@/hook/useClient';
+import {
+  useGetClient,
+  usePublicFeedbacks,
+} from '@/hook/useClient';
 import dateFormat from 'dateformat';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
@@ -30,7 +33,6 @@ export interface DataType {
   method: Method;
   private?: string;
   rating: number;
-  clientName: string;
   date: any;
 }
 
@@ -44,7 +46,7 @@ function ClientRecoard() {
     });
 
   const { data: getClientInfo, refetch } =
-    useGetClient(clientSearch);
+    usePublicFeedbacks(clientSearch);
 
   const userData = getUerInfo;
   // console.log(searchText);
@@ -61,7 +63,6 @@ function ClientRecoard() {
   };
   const data: DataType[] = [
     {
-      clientName: 'John Brown',
       rating: 3,
       method: 'google',
       date: new Date(34897534895),
@@ -201,82 +202,76 @@ function ClientRecoard() {
       ),
   });
 
-  const columns: TableProps<DataType>['columns'] = [
-    {
-      title: 'Company Name',
-      dataIndex: 'companyName',
-      key: 'companyName',
+  const columns: TableProps<RawPublicFeedback>['columns'] =
+    [
+      {
+        title: 'Company Name',
+        dataIndex: 'companyName',
+        key: 'companyName',
 
-      render: (_, data) => {
-        if (data.companyName === '') {
-          return <>unknown</>;
-        }
+        render: (_, data) => {
+          if (data.companyName === '') {
+            return <>unknown</>;
+          }
 
-        return data.companyName;
+          return data.companyName;
+        },
       },
-    },
-    {
-      title: 'Client Name',
-      dataIndex: 'clientName',
-      key: 'clientName',
-      ...getColumnSearchProps('clientName'),
-    },
-    {
-      title: 'Method',
-      dataIndex: 'method',
-      key: 'method',
-      render: (_, data) => {
-        if (data.method === 'private') {
+      {
+        title: 'Method',
+        dataIndex: 'method',
+        key: 'method',
+        render: (_, data) => {
+          if (data.method === 'private') {
+            return (
+              <Tag color="error" className="fs-6 fw-bold">
+                {data.method}
+              </Tag>
+            );
+          }
+          if (data.method === 'facebook') {
+            return (
+              <Tag color="green" className="fs-6 fw-bold">
+                {data.method}
+              </Tag>
+            );
+          }
           return (
-            <Tag color="error" className="fs-6 fw-bold">
+            <Tag color="geekblue" className="fs-6 fw-bold">
               {data.method}
             </Tag>
           );
-        }
-        if (data.method === 'facebook') {
+        },
+      },
+      {
+        title: 'Rating',
+        dataIndex: 'rating',
+        key: 'rating',
+        render: (_, data) => {
           return (
-            <Tag color="green" className="fs-6 fw-bold">
-              {data.method}
-            </Tag>
+            <Rating
+              className="d-block pb-2"
+              size={20}
+              initialValue={Number(data.rating)}
+              transition
+              readonly
+            />
           );
-        }
-        return (
-          <Tag color="geekblue" className="fs-6 fw-bold">
-            {data.method}
-          </Tag>
-        );
+        },
       },
-    },
-    {
-      title: 'Rating',
-      dataIndex: 'rating',
-      key: 'rating',
-      render: (_, data) => {
-        return (
-          <Rating
-            className="d-block pb-2"
-            size={20}
-            initialValue={data.rating}
-            transition
-            readonly
-          />
-        );
+      {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+        render: (_, data) => {
+          const dateData = dateFormat(
+            data.date,
+            'ddd, mmm dS, yyyy',
+          );
+          return <p>{dateData}</p>;
+        },
       },
-    },
-    {
-      title: 'date',
-      dataIndex: 'date',
-      key: 'date',
-      render: (_, data) => {
-        const dateData = dateFormat(
-          data.date,
-          'ddd, mmm dS, yyyy',
-        );
-        return <p>{dateData}</p>;
-      },
-    },
-  ];
-
+    ];
 
   return (
     <>
@@ -294,10 +289,10 @@ function ClientRecoard() {
             <Table
               key={Math.random() * Date.now()}
               columns={columns}
-              dataSource={data as DataType[]}
-              // dataSource={
-              //   getClientInfo?.data as unknown as DataType[]
-              // }
+              dataSource={
+                getClientInfo?.response
+                  .data as unknown as RawPublicFeedback[]
+              }
               pagination={{
                 pageSize: 10,
                 //@ts-ignore

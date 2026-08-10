@@ -191,7 +191,24 @@ interface PrivateFeedback {
     data: RawPrivateFeedback[];
   };
 }
+interface RawPublicFeedback {
+  id: number;
+  logo: string | null;
+  userEmail: string;
+  date: string; // MySQL datetime string
+  method: string; // e.g. "google", "facebook"
+  companyName: string;
+  userEmialView: string | null;
+  rating: string; // you can change to number if you store numeric
+  createAt: string; // ISO string
+  updatedAt: string; // ISO string
+}
 
+interface PublicFeedback {
+  response: {
+    data: RawPublicFeedback[];
+  };
+}
 interface ClientResponse {
   data?: {
     createdAt: Date;

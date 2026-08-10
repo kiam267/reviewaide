@@ -517,7 +517,7 @@ const getAllPrivateFeedback = async (req, res) => {
   }
 };
 
-//
+// Public Feedback
 
 const createPublicFeedback = async (req, res) => {
   console.log(req.body);
@@ -579,6 +579,33 @@ const createPublicFeedback = async (req, res) => {
       .status(500);
   }
 };
+const getAllPublicFeedback = async (req, res) => {
+  const user = req.user; // Assuming user is attached to req in isCheckUser middleware
+  try {
+    const sql = `
+      SELECT * FROM public_review 
+      WHERE user_email = ? 
+      ORDER BY date DESC
+    `;
+    const [feedbacks] = await con.query(sql, [user.email]);
+    const publicFeedbacks = toCamelCase(feedbacks);
+    return res.json(
+      responseMessage(
+        'success',
+        'Public feedback retrieved successfully',
+        publicFeedbacks,
+      ),
+    );
+  } catch (error) {
+    console.log(error);
+
+    return res
+      .json(
+        responseMessage('error', 'Internal Server Error'),
+      )
+      .status(500);
+  }
+};
 module.exports = {
   visitor,
   getVisitor,
@@ -592,4 +619,5 @@ module.exports = {
   createNegativeFeedback,
   getAllPrivateFeedback,
   createPublicFeedback,
+  getAllPublicFeedback,
 };
