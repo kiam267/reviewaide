@@ -28,7 +28,10 @@ export const useCreateClient = () => {
     mutationKey: ['client-create'],
 
     mutationFn: (client: CreateClient) =>
-      apiClient.post('/api/client', client),
+      apiClient.post(
+        '/api/client/private-feedback',
+        client,
+      ),
 
     onSuccess: (data: any) => {
       data.success

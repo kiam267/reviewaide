@@ -12,7 +12,7 @@ const isCheckUser = (req, res, next) => {
       responseMessage('auth', 'Unauthorized access'),
     );
   }
-
+  req.user = { email: isVerified.decoded.email };
   next();
 };
 

@@ -433,6 +433,65 @@ const getReviewLogo = async (req, res) => {
     );
   }
 };
+const createNegativeFeedback = async (req, res) => {
+  try {
+    const { id, rating, clientName, clientMessage } =
+      req.body;
+    // Validation
+    if (!id) {
+      return res
+        .status(400)
+        .json(
+          responseMessage(
+            'error',
+            'Missing required field: id',
+          ),
+        );
+    }
+
+    // Get QR Code
+    const sql = `SELECT * FROM qr_code WHERE unique_id = ?`;
+    const [[visitor]] = await con.query(sql, [id]);
+
+    if (!visitor) {
+      return res
+        .status(404)
+        .json(
+          responseMessage('error', 'QR code not found'),
+        );
+    }
+
+    // Insert Private Feedback
+    const insertSql = `
+      INSERT INTO private_review 
+      (client_id, rating, textarea, username, user_email, number, date)
+      VALUES (?, ?, ?, ?, ?, ?, NOW())
+    `;
+    const [result] = await con.query(insertSql, [
+      id,
+      rating || null,
+      clientMessage,
+      clientName || null,
+      visitor.user_email || null,
+      null,
+    ]);
+
+    return res
+      .status(200)
+      .json(
+        responseMessage(
+          'success',
+          'Private feedback created successfully',
+        ),
+      );
+  } catch (error) {
+    return res
+      .json(
+        responseMessage('error', 'Internal Server Error'),
+      )
+      .status(500);
+  }
+};
 module.exports = {
   visitor,
   getVisitor,
@@ -443,4 +502,5 @@ module.exports = {
   qr_code_gen,
   qr_code_delete,
   getReviewLogo,
+  createNegativeFeedback,
 };

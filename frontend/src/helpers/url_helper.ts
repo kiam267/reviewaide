@@ -1,6 +1,4 @@
 const API_URL = import.meta.env.VITE_API_URL;
-const APP_URL = import.meta.env.VITE_APP_URL;
-export const REVIEW_LINK = APP_URL;
 export const REACT_APP_SERVER_API = API_URL;
 
 export const LINK = `${API_URL}/`;

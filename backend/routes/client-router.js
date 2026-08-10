@@ -48,6 +48,10 @@ router
   .route('/methods')
   .put(clientController.methodsClickVisitor);
 
+router.post(
+  '/private-feedback',
+  clientController.createNegativeFeedback,
+);
 router.use(isCheckUser);
 router
   .route('/')
