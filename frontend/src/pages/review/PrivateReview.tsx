@@ -15,8 +15,7 @@ import {
 import dateFormat from 'dateformat';
 import Logout from '@/pages/auth/Logout';
 import { useGetClient } from '@/hook/useClient';
-function PrivateReview(props) {
-  const sesstion = localStorage.getItem('user-token');
+function PrivateReview() {
   const [clientSearch, setClientSearch] =
     useState<ClientSearchState>({
       page: 1,
@@ -39,68 +38,30 @@ function PrivateReview(props) {
   useEffect(() => {
     refetch();
   }, [clientSearch]);
-  interface ClientItme {
-    clientName: string;
-    createdAt: string;
-    email: string;
-    id: number;
-    method: string;
-    private: string;
-    rating: number;
-    uniqueId: number;
-  }
-  const clientData: ClientItme[] = [
+  // interface PrivateFeedback {
+  //   clientName: string;
+  //   createdAt: string;
+  //   email: string;
+  //   id: number;
+  //   method: string;
+  //   private: string;
+  //   rating: number;
+  //   uniqueId: number;
+  // }
+  const clientData: RawPrivateFeedback[] = [
     {
       id: 1,
-      clientName: 'John Brown',
+      username: 'John Brown',
       email: 'john@example.com',
-      rating: 4,
-      method: 'google',
-      private: 'no',
-      uniqueId: 1001,
-      createdAt: '2026-07-30T10:30:00Z',
-    },
-    {
-      id: 2,
-      clientName: 'Sarah Smith',
-      email: 'sarah@example.com',
-      rating: 5,
-      method: 'facebook',
-      private: 'yes',
-      uniqueId: 1002,
-      createdAt: '2026-07-29T08:15:00Z',
-    },
-    {
-      id: 3,
-      clientName: 'Michael Lee',
-      email: 'michael@example.com',
-      rating: 3,
-      method: 'google',
-      private: 'no',
-      uniqueId: 1003,
-      createdAt: '2026-07-28T14:45:00Z',
-    },
-    {
-      id: 4,
-      clientName: 'Emily Davis',
-      email: 'emily@example.com',
-      rating: 5,
-      method: 'open_source',
-      private: 'yes',
-      uniqueId: 1004,
-      createdAt: '2026-07-27T12:00:00Z',
-    },
-    {
-      id: 5,
-      clientName: 'David Wilson',
-      email: 'david@example.com',
       rating: 2,
-      method: 'google',
-      private: 'no',
-      uniqueId: 1005,
-      createdAt: '2026-07-26T09:20:00Z',
+      textarea: 'Great service!',
+      date: '2026-07-30T10:30:00Z',
     },
   ];
+  console.log(
+    getClientInfo?.response.data,
+    'private review',
+  );
 
   // if (!getClientInfo?.pagination?.total) {
   //   return (
@@ -122,8 +83,8 @@ function PrivateReview(props) {
       <List
         itemLayout="vertical"
         size="large"
-        dataSource={clientData as any}
-        renderItem={(item: ClientItme) => {
+        dataSource={getClientInfo?.response.data || []}
+        renderItem={(item: RawPrivateFeedback) => {
           const checkItem = item.rating >= 4;
 
           if (checkItem) return null;
@@ -150,7 +111,7 @@ function PrivateReview(props) {
                     </Col>
                     <Col span={24}>
                       <h3 className="fs-3 text-capitalize">
-                        {item.clientName}
+                        {item.username}
                       </h3>
                     </Col>
                     <Col span={24}>
@@ -162,7 +123,7 @@ function PrivateReview(props) {
                       span={24}
                       className="text-body-tertiary"
                     >
-                      {item?.private}
+                      {item?.textarea}
                     </Col>
                     <Col
                       className="fw-semibold fs-6 rounded-5 px-3 py-2 text-white"
@@ -170,7 +131,7 @@ function PrivateReview(props) {
                         background: '#F6653F',
                       }}
                     >
-                      <Date dateData={item?.createdAt} />
+                      <Date dateData={item?.date} />
                     </Col>
                   </Row>
                 </Card>
@@ -179,13 +140,13 @@ function PrivateReview(props) {
           );
         }}
       />
-      <Pagination
+      {/* <Pagination
         className="mt-2 p-2 d-flex justify-content-end "
         pageSize={10}
         defaultCurrent={getClientInfo?.pagination?.page}
         total={getClientInfo?.pagination?.total}
         onChange={handlePageChange}
-      />
+      /> */}
     </CustomeContainer>
   );
 }

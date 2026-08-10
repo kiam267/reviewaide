@@ -492,6 +492,30 @@ const createNegativeFeedback = async (req, res) => {
       .status(500);
   }
 };
+const getAllPrivateFeedback = async (req, res) => {
+  const user = req.user; // Assuming user is attached to req in isCheckUser middleware
+  try {
+    const sql = `
+      SELECT * FROM private_review 
+      WHERE user_email = ? 
+      ORDER BY date DESC
+    `;
+    const [feedbacks] = await con.query(sql, [user.email]);
+    return res.json(
+      responseMessage(
+        'success',
+        'Private feedback retrieved successfully',
+        feedbacks,
+      ),
+    );
+  } catch (error) {
+    return res
+      .json(
+        responseMessage('error', 'Internal Server Error'),
+      )
+      .status(500);
+  }
+};
 module.exports = {
   visitor,
   getVisitor,
@@ -503,4 +527,5 @@ module.exports = {
   qr_code_delete,
   getReviewLogo,
   createNegativeFeedback,
+  getAllPrivateFeedback,
 };

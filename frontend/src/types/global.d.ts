@@ -177,6 +177,20 @@ interface Profile {
     userSmsText?: string;
   } | null;
 }
+interface RawPrivateFeedback {
+  username: string;
+  textarea: string;
+  rating: number;
+  email?: string;
+  id: number | undefined;
+  date: string;
+}
+
+interface PrivateFeedback {
+  response: {
+    data: RawPrivateFeedback[];
+  };
+}
 
 interface ClientResponse {
   data?: {

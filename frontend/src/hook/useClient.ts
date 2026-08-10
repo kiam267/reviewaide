@@ -11,14 +11,16 @@ export const useGetClient = (
 ) => {
   return useQuery({
     queryKey: ['clients', searchState],
-
-    queryFn: (): Promise<ClientResponse> => {
-      return apiClient.get('/api/client', {
+    /* 
+ {
         page: searchState.page,
         clientName: searchState.clientName,
         method: searchState.method,
         rating: searchState.rating,
-      });
+      }
+*/
+    queryFn: (): Promise<PrivateFeedback> => {
+      return apiClient.get('/api/client/private-feedback');
     },
   });
 };
