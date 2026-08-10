@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import CustomeContainer from '@/components/Common/CustomeContainer';
 
 import { Card, QRCode, Button, Modal } from 'antd';
-import Logout from '@/pages/auth/Logout';
 import { Row, Col } from 'reactstrap';
 import {
   useDeleteClientLink,
@@ -34,7 +33,6 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { REVIEW_LINK } from '@/helpers/url_helper';
 import { API_URL } from '@/api';
 import { Link } from 'react-router-dom';
 function QRcode() {
@@ -77,7 +75,6 @@ function QRcode() {
         : 'loading',
     );
   }, [getClientLinkInfo?.response.data]);
-  console.log(getClientLinkInfo?.response.data, 'datakiam');
 
   return (
     <CustomeContainer>
@@ -433,6 +430,9 @@ function QrCodeItem({
   itemName: string;
   itemLogo: string;
 }) {
+  // Domain name for QR code genration
+  const domain = window.location.origin;
+
   const downloadQRCode = ({ id }) => {
     const canvas = document
       .getElementById(`myqrcode-${id}`) // Use unique ID
@@ -480,7 +480,7 @@ function QrCodeItem({
           </div>
 
           <Link
-            to={`${REVIEW_LINK}/review/shortcut/${item}`}
+            to={`${domain}/review/shortcut/${item}`}
             target="_blank"
             className="position-absolute top-0 end-0 m-2 text-black"
           >
@@ -488,9 +488,9 @@ function QrCodeItem({
           </Link>
         </div>
         <QRCode
-          className='mt-2'
+          className="mt-2"
           status={status}
-          value={`${REVIEW_LINK}/review/shortcut/${item}`}
+          value={`${domain}/review/shortcut/${item}`}
           bgColor="#fff"
           style={{ marginBottom: 16 }}
         />
