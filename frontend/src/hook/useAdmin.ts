@@ -14,16 +14,15 @@ export const useAdminLogin = () => {
         admin,
       );
 
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-
       return data;
     },
 
     onSuccess: data => {
-      toast.success(data.message);
-      localStorage.setItem('token', data.token);
+      toast.success(data.response.message);
+      localStorage.setItem(
+        'authorization',
+        data.response.data.token,
+      );
       window.location.href = '/super-admin/allUsers';
     },
 

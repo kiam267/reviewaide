@@ -7,6 +7,7 @@ const morgan = require('morgan');
 
 const authRouter = require('./routes/auth-router.js');
 const userRouter = require('./routes/useres-router');
+const adminRouter = require('./routes/admin-router.js');
 const clientRouter = require('./routes/client-router.js');
 const reviewRouter = require('./routes/review-router');
 const customerSupportRouter = require('./routes/customer-router');
@@ -55,6 +56,7 @@ app.use('/api/photos', express.static('photos'));
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/client', clientRouter);
+app.use('/api/admin', adminRouter);
 app.use('/api/review', reviewRouter);
 app.use('/api/customer', customerSupportRouter);
 app.use('/api/marketing', marketingRouter);

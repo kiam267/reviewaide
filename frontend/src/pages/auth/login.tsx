@@ -65,7 +65,7 @@ const Login = (props: any) => {
       ),
     }),
     onSubmit: async (values: any) => {
-      await adminLogin(values);
+       adminLogin(values);
     },
   });
 

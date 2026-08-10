@@ -50,7 +50,7 @@ function Allusers(props) {
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
   const [selectedUser, setSelectedUser] =
-    useState<DataType>();
+    useState<RawUser>();
   const { confirm } = Modal;
   const [userSearch, setUserSearch] =
     useState<UserViaAdminSeachState>({
@@ -63,10 +63,10 @@ function Allusers(props) {
     });
 
   //@ts-ignore
-  const { getUserInfo, refetch } =
+  const { data: getUserInfo, refetch } =
     useGetUserViaAdmin(userSearch);
   const {
-    data: deleteUserViaAdmin,
+    mutate: deleteUserViaAdmin,
     isSuccess: isDelteSuccess,
   } = useDeleteUserViaAdmin();
 
@@ -85,7 +85,7 @@ function Allusers(props) {
 
   type InputRef = GetRef<typeof ANTInput>;
 
-  type DataIndex = keyof DataType;
+  type DataIndex = keyof RawUser;
 
   const onClose = () => {
     setOpen(false);
@@ -139,7 +139,7 @@ function Allusers(props) {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex,
-  ): TableColumnType<DataType> => ({
+  ): TableColumnType<RawUser> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -262,26 +262,31 @@ function Allusers(props) {
       ),
   });
 
-  const columns: TableColumnsType<DataType> = [
+  const columns: TableColumnsType<RawUser> = [
     {
       title: 'User Image',
       dataIndex: 'companyLogo',
       key: 'companyLogo',
       render: (_, item) => {
         return (
-          <Avatar>
-            {item?.fullName.trim().substring(0, 1)}
-          </Avatar>
+          <div>
+            {item?.username
+              ?.trim()
+              ?.charAt(0)
+              ?.toUpperCase() || 'U'}
+          </div>
         );
       },
     },
+
     {
-      title: 'User Name',
-      dataIndex: 'fullName',
-      key: 'fullName',
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
       width: '30%',
-      ...getColumnSearchProps('fullName'),
+      ...getColumnSearchProps('username'),
     },
+
     {
       title: 'Email',
       dataIndex: 'email',
@@ -289,69 +294,74 @@ function Allusers(props) {
       width: '30%',
       ...getColumnSearchProps('email'),
     },
+
     {
       title: 'Phone Number',
       dataIndex: 'phone',
       key: 'phone',
       ...getColumnSearchProps('phone'),
     },
-    // {
-    //   title: 'Company Name',
-    //   dataIndex: 'companyName',
-    //   key: 'companyName',
-    //   ...getColumnSearchProps('companyName'),
-    // },
-    // {
-    //   title: 'Google Link',
-    //   dataIndex: 'googleLink',
-    //   key: 'googleLink',
-    // },
-    // {
-    //   title: 'Facebook Link',
-    //   dataIndex: 'facebookLink',
-    //   key: 'facebookLink',
-    // },
-    {
-      title: 'Mode',
-      dataIndex: 'userStatus',
-      key: 'userStatus',
-      ...getColumnSearchProps('userStatus'),
-      render: (_, data) => {
-        if (data.userStatus === 'active') {
-          return (
-            <Tag color="green" className="fs-6 fw-bold">
-              {data.userStatus}
-            </Tag>
-          );
-        }
 
-        if (data.userStatus === 'deactivated') {
-          return (
-            <Tag color="yellow" className="fs-6 fw-bold">
-              {data.userStatus}
-            </Tag>
-          );
-        }
-        return (
-          <Tag color="geekblue" className="fs-6 fw-bold">
-            {data.userStatus}
-          </Tag>
-        );
-      },
-    },
     {
-      title: 'Date',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      width: '30%',
-      render: (_, data) => {
-        const dateData = dateFormat(
-          data.createdAt,
-          'ddd, mmm dS, yyyy',
-        );
-        return <p>{dateData}</p>;
-      },
+      title: 'Company Name',
+      dataIndex: 'companyName',
+      key: 'companyName',
+      ...getColumnSearchProps('companyName'),
     },
+
+    {
+      title: 'Google Link',
+      dataIndex: 'googleLink',
+      key: 'googleLink',
+    },
+
+    {
+      title: 'Facebook Link',
+      dataIndex: 'facebookLink',
+      key: 'facebookLink',
+    },
+
+    // {
+    //   title: 'Mode',
+    //   dataIndex: 'userStatus',
+    //   key: 'userStatus',
+    //   ...getColumnSearchProps('userStatus'),
+    //   render: (_, data) => {
+    //     if (data.userStatus === 'active') {
+    //       return (
+    //         <span style={{ color: 'green' }}>Active</span>
+    //       );
+    //     }
+
+    //     if (data.userStatus === 'deactivated') {
+    //       return (
+    //         <span style={{ color: 'orange' }}>
+    //           Deactivated
+    //         </span>
+    //       );
+    //     }
+
+    //     return (
+    //       <span style={{ color: 'blue' }}>
+    //         {data.userStatus}
+    //       </span>
+    //     );
+    //   },
+    // },
+
+    // {
+    //   title: 'Date',
+    //   dataIndex: 'createdAt',
+    //   key: 'createdAt',
+    //   width: '30%',
+    //   render: (_, data) => {
+    //     if (!data.createdAt) return '-';
+    //     const date = new Date(
+    //       data.createdAt,
+    //     ).toLocaleDateString();
+    //     return <span>{date}</span>;
+    //   },
+    // },
 
     {
       title: 'Action',
@@ -361,34 +371,21 @@ function Allusers(props) {
           <Space size="middle">
             <Button
               key={record.id}
-              className="rounded-5"
-              style={{ border: ' 1px solid #F6653F' }}
               onClick={() => {
-                setSelectedUser(record as DataType);
+                setSelectedUser(record);
                 setOpen(true);
               }}
             >
-              <i className="bx bxs-edit-alt text-black fs-4"></i>
+              Edit
             </Button>
-            <UserEdit
-              key={record.email}
-              onClose={onClose}
-              open={open}
-              user={selectedUser}
-              handelUpdateUser={isChange =>
-                handelUpdateUser({ isChange })
-              }
-            />
+
             <Button
               danger
-              className="rounded-5"
-              style={{ border: ' 1px solid #F6653F' }}
               onClick={() =>
                 showDeleteConfirm(record.email)
               }
-              type="dashed"
             >
-              <i className="bx bxs-trash-alt"></i>
+              Delete
             </Button>
           </Space>
         );
@@ -396,23 +393,24 @@ function Allusers(props) {
     },
   ];
 
-  if (getUserInfo?.tokenInvalid) {
-    return <Navigate to="/super-admin/logout" />;
-  }
   return (
     <CustomeContainer>
-      {getUserInfo?.pagination?.total ? (
-        <Table<DataType>
-          key={getUserInfo?.data?.email}
+      {getUserInfo?.response?.data?.pagination?.total ? (
+        <Table<RawUser>
+          key={getUserInfo?.response.data.data.at(0)?.id}
           columns={columns}
           //@ts-ignore
           dataSource={
-            getUserInfo?.data as (User | undefined)[]
+            getUserInfo.response.data
+              .data as unknown as UserViaAdmin
           }
           pagination={{
             pageSize: 10,
-            current: getUserInfo?.pagination?.page || 1,
-            total: getUserInfo?.pagination?.total,
+            current:
+              getUserInfo?.response.data.pagination?.page ||
+              1,
+            total:
+              getUserInfo?.response.data.pagination?.total,
             onChange: handePageChange,
           }}
           scroll={{ x: 700 }}

@@ -90,26 +90,19 @@ interface ClientSearchState {
 
 type UserStatus = 'active' | 'pending' | 'deactivated';
 interface UserViaAdmin {
-  data?: {
-    id: number;
-    fullName: string;
-    email: string;
-    phone: number;
-    companyLogo: string;
-    companyName: string;
-    googleLink: string;
-    facebookLink: string;
-    userStatus: UserStatus;
-    createdAt: string;
+  response: {
+    data: {
+      data: RawUser[];
+      pagination: {
+        total: number;
+        page: number;
+        pages: number;
+      };
+    };
   };
   success: boolean;
   message?: string;
   tokenInvalid: boolean;
-  pagination: {
-    total: number;
-    page: number;
-    pages: number;
-  };
 }
 
 interface UserViaAdminSeachState {
@@ -140,10 +133,26 @@ type ResetPassword = {
   token: string | undefined;
   password: string;
 };
+
+interface RawUser {
+  id: number;
+  username: string;
+  email: string;
+  phone: string;
+  companyName: string;
+  facebookLink: string;
+  googleLink: string;
+}
+
 type User = {
   tokenInvalid?: boolean;
   message?: string;
   success: boolean;
+  response: {
+    data: {
+      data: RawUser[];
+    };
+  };
   readonly redirect?: boolean;
   readonly verify: boolean;
 };

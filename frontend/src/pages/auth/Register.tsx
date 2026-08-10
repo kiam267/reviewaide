@@ -23,7 +23,8 @@ import { useCreateAdmin } from '@/hook/useAdmin';
 import { Spin } from 'antd';
 const Register = () => {
   const [show, setShow] = useState(false);
-  const { userSignUp, isPending } = useCreateAdmin();
+  const { mutate: userSignUp, isPending } =
+    useCreateAdmin();
 
   const validation = useFormik({
     enableReinitialize: true,

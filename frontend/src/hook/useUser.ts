@@ -23,7 +23,7 @@ export const useMatchMyUser = () => {
       toast.success(data.message);
 
       if (data.token) {
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('authorization', data.token);
         window.location.href = '/user';
       }
     },

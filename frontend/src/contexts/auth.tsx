@@ -11,7 +11,7 @@ interface Auth {
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState<string | null>(
-    localStorage.getItem('admin-token')
+    localStorage.getItem('authorization'),
   );
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
   let isLoggedIn = !!token;
@@ -20,13 +20,16 @@ export const AuthProvider = ({ children }) => {
   const storeToken = (serverToken : string, isAdmin : boolean) => {
     setToken(serverToken);
     setIsAdmin(isAdmin);
-    return localStorage.setItem('admin-token', serverToken);
+    return localStorage.setItem(
+      'authorization',
+      serverToken,
+    );
   };
 
   const LogoutUser = () => {
     setToken('');
     setIsAdmin(false);
-    return localStorage.removeItem('admin-token');
+    return localStorage.removeItem('authorization');
   };
 
   const obj: Auth = useMemo(
